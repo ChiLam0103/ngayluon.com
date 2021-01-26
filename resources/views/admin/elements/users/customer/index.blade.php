@@ -9,6 +9,7 @@
 @endsection
 
 @section('content')
+
     <div class="row">
         @include('admin.partial.log.err_log',['name' => 'delete'])
         @include('admin.partial.log.success_log',['name' => 'success'])
@@ -31,6 +32,7 @@
                     ['data' => 'name', 'title' => 'Tên'],
                     ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
                     ['data' => 'email', 'title' => 'Email'],
+                    ['data' => 'is_advance_money', 'title' => 'Tạm ứng'],
                     ['data' => 'password_code', 'title' => 'Mã mật khẩu'],
                     ['data' => 'phone_number', 'title' => 'Số điện thoại'],
                     ['data' => 'role', 'title' => 'Vai trò'],

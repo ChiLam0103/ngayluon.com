@@ -28,7 +28,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <table class="table table-bordered">
+            <table class="table table-bordered district">
                 <thead>
                 <tr>
                 </tr>
@@ -37,7 +37,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
     <div class="modal fade" id="changeType" role="dialog">
         <div class="modal-dialog" style="width: 20%">
@@ -69,6 +68,41 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="changeInfo" role="dialog">
+        <div class="modal-dialog modal-lg" >
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 style="font-weight: bold; color: red" class="modal-title">Danh sách phường/xã của Quận/Huyện</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top: 15px">
+                        {{csrf_field()}}
+                        <input type="hidden" id="district_id" name="district">
+                        <div class="col-lg-12">
+                            <table class="table table-bordered ward">
+                                <thead>
+                                 <tr>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="changeType()" class="btn btn-primary"
+                            data-dismiss="modal">Thực hiện
+                    </button>
+                    <button onclick="$('#changeType').modal('hide')" type="button"
+                            class="btn btn-default" data-dismiss="modal">Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('script')
     <script>
@@ -79,13 +113,13 @@
         function loadData(province) {
             province_active(province);
             provinceType(province);
-            $("table thead tr th").remove();
-            $("table tbody tr").remove();
+            $(".district thead tr th").remove();
+            $(".district tbody tr").remove();
             $.ajax({
                 type: "GET",
                 url: '{{url('/ajax/load_data_district/')}}/' + province
             }).done(function (msg) {
-                $("table thead tr").append('<th> STT </th>');
+                $(".district thead tr").append('<th> STT </th>');
                 $.each(msg[0], function (f, title) {
                     if (f == 'allow_booking') {
                         f = 'Trạng thái áp dụng';
@@ -96,12 +130,12 @@
                     if (f == 'district_type_name') {
                         f = 'Loại';
                     }
-                    $("table thead tr").append('<th>' + f + '</th>');
+                    $(".district thead tr").append('<th>' + f + '</th>');
                 });
-                $("table thead tr").append('<th> Hành động </th>');
+                $(".district thead tr").append('<th> Hành động </th>');
                 var num = 1;
                 $.each(msg, function (f, data_rep) {
-                    $("table tbody").append("<tr id='" + num + "'></tr>");
+                    $(".district tbody").append("<tr id='" + num + "'></tr>");
                     $("#" + num + "").append('<th>' + num + '</th>');
                     
                     // $.each(data_rep, function (d, value) {
@@ -131,7 +165,7 @@
                     $("#" + num + "").append('<td>' + data_rep.district_name + '</td>');
                     $("#" + num + "").append('<td>' + data_rep.district_type_name + '</td>');
                     $("#" + num + "").append('<td>' + btn + '</td>');
-                    $("#" + num + "").append('<td> <button onclick="showModal(' + data_rep.id + ')" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> sửa</button></td>');
+                    $("#" + num + "").append('<td> <button onclick="showModal(' + data_rep.id + ')" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> sửa</button> <button onclick="showModalInfo(' + data_rep.id + ')" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> xem</button></td>');
                     num += 1;
                 });
             });
@@ -206,7 +240,33 @@
             $('#district_id').val(data);
             $('#changeType').modal('show');
         }
-
+        function showModalInfo(data) {
+           $('#district_id').val(data);
+            $('#changeInfo').modal('show');
+            $(".ward thead tr th").remove();
+            $(".ward tbody tr").remove();
+            $(".ward tbody td").remove();
+            $(".ward tbody th").remove();
+            $.ajax({
+                type: "GET",
+                url: "{{url('/ajax/get_ward/')}}/" + data,
+                dataType: "JSON"
+            }).done(function (msg) {
+                $(".ward thead tr").append('<th> STT </th>');
+                $(".ward thead tr").append('<th> ID </th>');
+                $(".ward thead tr").append('<th>Tên Phường </th>');
+                $(".ward thead tr").append('<th> Slug </th>');
+                var num = 1;
+                $.each(msg, function (f, data_rep) {
+                    $(".ward tbody").append("<tr id='" + num + "'></tr>");
+                    $(".ward tbody").append('<th>' + num + '</th>');
+                    $(".ward tbody").append('<td>' + data_rep.id + '</td>');
+                    $(".ward tbody").append('<td>' + data_rep.name + '</td>');
+                    $(".ward tbody").append('<td>' + data_rep.name_slug + '</td>');
+                    num += 1;
+                });
+            });
+        }
         function changeType() {
             var province = $('#province').val();
             var district_id = $('#district_id').val();

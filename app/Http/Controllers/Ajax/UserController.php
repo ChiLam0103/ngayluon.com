@@ -87,6 +87,15 @@ class UserController extends Controller
                 }
                 return $name;
             })
+            ->editColumn('is_advance_money', function ($user) {
+                $name ='';
+                if ($user->is_advance_money == 0) {
+                    $name .= '<input type="checkbox" value="0" readonly>';
+                } elseif ($user->is_advance_money == 1) {
+                    $name .= '<input type="checkbox"  checked value="1" readonly >';
+                }
+                return $name;
+            })
             ->addColumn('owe', function ($user) {
                 $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
                     $query->where('status', 'completed');
@@ -130,7 +139,7 @@ class UserController extends Controller
                 $wallet = round($cod - $data);
                 return number_format($wallet);
             })
-            ->rawColumns(['avatar', 'name', 'owe', 'total_COD', 'wallet', 'action'])
+            ->rawColumns(['avatar', 'name', 'owe', 'total_COD', 'wallet','is_advance_money' ,'action'])
             ->make(true);
     }
     public function getCustomer2()

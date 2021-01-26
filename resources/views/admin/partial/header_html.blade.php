@@ -25,4 +25,6 @@
 <link href="{{asset('public/bower_components/lightbox2/src/css/lightbox.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
 <!-- <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet" /> -->
+
+<link href="{{asset('public/css/style.css')}}" rel="stylesheet">
 @stack('css')
