@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Middleware\VerifyJWTToken;
-
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,7 +39,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api', 'middleware' => VerifyJ
 
 Route::group(['prefix' => 'users', 'namespace' => 'Api'], function () {
     // Route::get('location', 'LocationController@location');
-    Route::post('login', 'APIUserController@login');
+    Route::post('login', 'APIUserController@login'); //login customer
     Route::post('login_shipper', 'APIUserController@loginWithPassword');
     Route::post('login_warehouse', 'APIUserController@loginWarehouse');
     Route::post('login_fb', 'APIUserController@loginfb');
@@ -52,6 +52,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api'], function () {
 
 Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJWTToken::class], function () {
     Route::get('listbook', 'Customer\OrderController@getListBook');
+    Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType');// listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');
     Route::post('booking', 'OrderController@booking');
     Route::put('updatebook/{id}', 'OrderController@updateBook');
