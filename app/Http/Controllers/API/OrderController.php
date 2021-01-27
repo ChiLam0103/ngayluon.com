@@ -32,9 +32,11 @@ use Illuminate\Support\Facades\DB;
 use App\Helpers\NotificationHelper;
 use App\Jobs\NotificationJob;
 
-class OrderController extends ApiController {
+class OrderController extends ApiController
+{
 
-    protected function changeStatus($status) {
+    protected function changeStatus($status)
+    {
         switch ($status) {
             case "new":
                 return 'mới';
@@ -56,7 +58,8 @@ class OrderController extends ApiController {
         }
     }
 
-    private function getShipperScope() {
+    private function getShipperScope()
+    {
         $wards = ManagementWardScope::where('shipper_id', request()->user()->id)->pluck('ward_id');
         return $wards;
     }
@@ -64,7 +67,7 @@ class OrderController extends ApiController {
     protected function loadAgency(Request $req)
     {
         $limit = $req->get('limit', 10);
-//        $earthRadius = 6372.795477598;
+        //        $earthRadius = 6372.795477598;
         $distanceQuery = DB::raw("(6372.795477598 * 2 * ATAN2(SQRT(SIN(RADIANS(lat - {$req->lat}) / 2) * SIN(RADIANS(lat - {$req->lat}) / 2) + COS(RADIANS({$req->lat})) * COS(RADIANS(lat))
          * SIN(RADIANS(lng - {$req->lng}) / 2) * SIN(RADIANS(lng - {$req->lng}) / 2)), SQRT(1 - SIN(RADIANS(lat - {$req->lat}) / 2) * SIN(RADIANS(lat - {$req->lat}) / 2) + COS(RADIANS({$req->lat}))
           * COS(RADIANS(lat)) * SIN(RADIANS(lng - {$req->lng}) / 2) * SIN(RADIANS(lng - {$req->lng}) / 2)))) AS distance");
@@ -72,7 +75,8 @@ class OrderController extends ApiController {
         return $this->apiOk($query);
     }
 
-    protected function setSendOrReceiveAddress($req, $type) {
+    protected function setSendOrReceiveAddress($req, $type)
+    {
         $user_id = $req->sender_id;
         $check = SendAndReceiveAddress::where('user_id', $user_id);
         if ($type == 'send') {
@@ -113,7 +117,8 @@ class OrderController extends ApiController {
         return $this->apiOk('success');
     }
 
-    public function getBooking(Request $req) {
+    public function getBooking(Request $req)
+    {
         if (isset($this->user)) {
             $query = DeliveryAddress::where('user_id', $this->user->id)->with('users', 'provinces', 'districts', 'wards')->get();
             $data = [];
@@ -243,16 +248,20 @@ class OrderController extends ApiController {
             if ($check == 0) {
                 $book->is_customer_new = 1;
             }
-            
+
             $book->save();
             $uuid = Booking::find($book->id);
+            //tạo uuid
             $uuid->uuid = str_random(5) . $uuid->id;
+            $id=$this->generateBookID();
+            dd($id);
+            $uuid->uuid =$id;
             //tạo qrcode
-            date_default_timezone_set('Asia/Ho_Chi_Minh');
-            $qrcode_id=DB::table('qrcode')->insertGetId(
-                ['name' => $uuid->uuid, 'is_used' => 1,'created_at'=>date('Y-m-d H:i:s'),'used_at'=>date('Y-m-d H:i:s')]
-            );
-            $uuid->qrcode_id=$qrcode_id;
+            // date_default_timezone_set('Asia/Ho_Chi_Minh');
+            // $qrcode_id=DB::table('qrcode')->insertGetId(
+            //     ['name' => $uuid->uuid, 'is_used' => 1,'created_at'=>date('Y-m-d H:i:s'),'used_at'=>date('Y-m-d H:i:s')]
+            // );
+            // $uuid->qrcode_id=$qrcode_id;
             $uuid->save();
             $this->setSendOrReceiveAddress($book, 'send');
             $this->setSendOrReceiveAddress($book, 'receive');
@@ -270,10 +279,21 @@ class OrderController extends ApiController {
         }
         return $this->apiOk($uuid);
     }
+    public static function generateBookID()
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $countRecordToday = DB::table('bookings')->where(date('Y-m-d', strtotime('created_at')), date("Y-m-d"))->count();
+        $countRecordToday = (int) $countRecordToday + 1;
+        do {
+            $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);
+            $countRecordToday++;
+        } while (DB::table('bookings')->where('uuid', $id)->first());
+        return $id;
+    }
 
-    
 
-    public function getBookShipper(Request $req) {
+    public function getBookShipper(Request $req)
+    {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
         if (empty($shipperOnline)) {
             return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng1!');
@@ -290,7 +310,7 @@ class OrderController extends ApiController {
                 });
                 $query->where('sub_status', '!=', 'deny')->where('bookings.status', '!=', 'completed');
                 if (isset($req->keyword) && !empty($req->keyword)) {
-                    $query->where(function($q) use($req) {
+                    $query->where(function ($q) use ($req) {
                         $q->where('send_name', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('send_phone', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('send_full_address', 'LIKE', '%' . $req->keyword . '%');
@@ -310,9 +330,9 @@ class OrderController extends ApiController {
                     $query->where('book_deliveries.category', '=', 'send')->where('book_deliveries.sending_active', '=', 1)->where('book_deliveries.status', 'processing');
                 });
                 $query->where('bookings.status', '!=', 'completed');
-                $query->whereNotIn('sub_status',['deny']);
+                $query->whereNotIn('sub_status', ['deny']);
                 if (isset($req->keyword) && !empty($req->keyword)) {
-                    $query->where(function($q) use($req) {
+                    $query->where(function ($q) use ($req) {
                         $q->where('receive_name', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('receive_phone', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('receive_full_address', 'LIKE', '%' . $req->keyword . '%');
@@ -329,14 +349,14 @@ class OrderController extends ApiController {
             }
             if ($req->category == 'return') {
                 $query->where('bookings.status', 'return');
-                
+
                 $query->where(function ($query) {
                     $query->where('book_deliveries.category', '=', 'return');
-                   $query->where('book_deliveries.status', 'processing');
+                    $query->where('book_deliveries.status', 'processing');
                 });
                 $query->where('sub_status', '!=', 'deny')->where('bookings.status', '!=', 'completed');
                 if (isset($req->keyword) && !empty($req->keyword)) {
-                    $query->where(function($q) use($req){
+                    $query->where(function ($q) use ($req) {
                         $q->where('send_name', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('send_phone', 'LIKE', '%' . $req->keyword . '%');
                         $q->orWhere('send_full_address', 'LIKE', '%' . $req->keyword . '%');
@@ -390,22 +410,22 @@ class OrderController extends ApiController {
                     'lng' => $item->receive_lng
                 ]
             ];
-            unset(
-                $item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address, $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id, $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address, $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng);
+            unset($item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address, $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id, $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address, $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng);
         }
         return $this->apiOk($rows);
     }
-        
-    public function newGetBookShipperWait(Request $req) {
-        
+
+    public function newGetBookShipperWait(Request $req)
+    {
     }
 
-    public function getBookShipperWait(Request $req) {
+    public function getBookShipperWait(Request $req)
+    {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
         if (empty($shipperOnline)) {
             return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
         }
-        
+
         $limit = $req->get('limit', 10);
 
         $messages = [
@@ -432,18 +452,18 @@ class OrderController extends ApiController {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
             // bao gồm cả đơn hàng delay
-            $rows = Booking::where(function($q) {
-                    $q->where('status', 'new');
-                    $q->orWhere(function($q) {
-                        $q->where('bookings.status', 'taking');
-                        $q->where('bookings.sub_status', 'delay');
-                        $q->whereHas('deliveries', function($q) {
-                            //$q->where('book_deliveries.user_id',0);
-                            $q->where('book_deliveries.status', '=', 'delay');
-                            $q->where('book_deliveries.category', 'receive');
-                        });
+            $rows = Booking::where(function ($q) {
+                $q->where('status', 'new');
+                $q->orWhere(function ($q) {
+                    $q->where('bookings.status', 'taking');
+                    $q->where('bookings.sub_status', 'delay');
+                    $q->whereHas('deliveries', function ($q) {
+                        //$q->where('book_deliveries.user_id',0);
+                        $q->where('book_deliveries.status', '=', 'delay');
+                        $q->where('book_deliveries.category', 'receive');
                     });
-                })->groupBy('sender_id')
+                });
+            })->groupBy('sender_id')
                 ->whereIn('send_ward_id', $this->getShipperScope());
 
             if (isset($req->district_id) && !empty($req->district_id)) {
@@ -453,7 +473,7 @@ class OrderController extends ApiController {
                 $rows = $rows->where('send_ward_id', $req->ward_id);
             }
             if (isset($req->keyword) && !empty($req->keyword)) {
-                $rows = $rows->where(function($q) use($req) {
+                $rows = $rows->where(function ($q) use ($req) {
                     $q->where('send_name', 'LIKE', '%' . $req->keyword . '%');
                     $q->orWhere('send_phone', 'LIKE', '%' . $req->keyword . '%');
                     $q->orWhere('name', 'LIKE', '%' . $req->keyword . '%');
@@ -463,18 +483,18 @@ class OrderController extends ApiController {
             }
 
             $rows = $rows->select('status', 'id', 'uuid', 'sender_id', 'created_at', 'send_name', 'send_phone', 'send_full_address', 'send_province_id', 'send_district_id', 'send_ward_id', 'send_homenumber', 'is_prioritize', 'name', DB::raw('count(sender_id) as total_book'))
-                    ->orderBy('is_prioritize', 'DESC')
-                    ->orderBy('bookings.created_at', 'desc')
-                   ->paginate($limit);
-//            dump($rows->toSql());
-//                 $query = str_replace(array('?'), array('\'%s\''), $rows->toSql());
-//    $query = vsprintf($query, $rows->getBindings());
-//    dump($query);
+                ->orderBy('is_prioritize', 'DESC')
+                ->orderBy('bookings.created_at', 'desc')
+                ->paginate($limit);
+            //            dump($rows->toSql());
+            //                 $query = str_replace(array('?'), array('\'%s\''), $rows->toSql());
+            //    $query = vsprintf($query, $rows->getBindings());
+            //    dump($query);
 
             foreach ($rows as $item) {
                 $address = str_replace($item->send_homenumber . ', ', '', $item->send_full_address);
                 $item->send_full_address = $address;
-               
+
                 $item->sender_info = [
                     'name' => $item->send_name,
                     'phone' => $item->send_phone,
@@ -499,25 +519,25 @@ class OrderController extends ApiController {
             }
 
             $rows = Booking::join('book_deliveries as bd', 'bookings.id', '=', 'bd.book_id')
-                    ->join('users', 'bd.user_id', '=', 'users.id')
-                    ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
-                ->where(function($q) {
-                    $q->where(function($q1) {
-                            $q1->where('bookings.status', 'sending')
-                                ->where('bd.status', 'completed')
-                                ->where('bd.category', 'receive');
-                        });
-                    $q->orWhere(function($q2) {
-                            $q2->where('bookings.status', 'return')
-                                ->where('bd.status', 'deny')
-                                ->where('bd.category', 'return');
-                        });
-                    })
-                    ->where('bookings.status', '!=', 'cancel')
-                    ->where('bookings.status', '!=', 'completed')
-                    ->where('sub_status', '!=', 'deny')
-                    ->where('bd.sending_active', 1)
-                    ->whereIn('receive_ward_id', $this->getShipperScope());
+                ->join('users', 'bd.user_id', '=', 'users.id')
+                ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
+                ->where(function ($q) {
+                    $q->where(function ($q1) {
+                        $q1->where('bookings.status', 'sending')
+                            ->where('bd.status', 'completed')
+                            ->where('bd.category', 'receive');
+                    });
+                    $q->orWhere(function ($q2) {
+                        $q2->where('bookings.status', 'return')
+                            ->where('bd.status', 'deny')
+                            ->where('bd.category', 'return');
+                    });
+                })
+                ->where('bookings.status', '!=', 'cancel')
+                ->where('bookings.status', '!=', 'completed')
+                ->where('sub_status', '!=', 'deny')
+                ->where('bd.sending_active', 1)
+                ->whereIn('receive_ward_id', $this->getShipperScope());
 
             if (isset($req->district_id) && !empty($req->district_id)) {
                 $rows = $rows->where('receive_district_id', $req->district_id);
@@ -526,7 +546,7 @@ class OrderController extends ApiController {
                 $rows = $rows->where('receive_ward_id', $req->ward_id);
             }
             if (isset($req->keyword) && !empty($req->keyword)) {
-                $rows = $rows->where(function($q) use($req){
+                $rows = $rows->where(function ($q) use ($req) {
                     $q->where('receive_name', 'LIKE', '%' . $req->keyword . '%');
                     $q->orWhere('receive_phone', 'LIKE', '%' . $req->keyword . '%');
                     $q->orWhere('bookings.name', 'LIKE', '%' . $req->keyword . '%');
@@ -539,9 +559,9 @@ class OrderController extends ApiController {
             }
 
             $rows = $rows->select('bookings.status', 'bookings.id', 'bookings.uuid', 'bookings.created_at', 'receive_name', 'bookings.transport_type', 'bookings.send_name', 'bookings.send_phone', 'bookings.send_province_id', 'bookings.send_district_id', 'bookings.send_ward_id', 'bookings.send_homenumber', 'bookings.send_full_address', 'receive_phone', 'bookings.receive_full_address', 'receive_province_id', 'receive_district_id', 'receive_ward_id', 'receive_homenumber', 'is_prioritize', 'bookings.name', 'bookings.note', 'bookings.other_note', 'users.name as shipper_receive_name', 'users.phone_number as shipper_receive_phone', 'bd.id as task_id', 'bookings.agency_confirm_id', 'agencies.name as agency_name')
-                    ->orderBy('is_prioritize', 'DESC')
-                    ->orderBy('bookings.created_at', 'desc')
-                    ->paginate($limit);
+                ->orderBy('is_prioritize', 'DESC')
+                ->orderBy('bookings.created_at', 'desc')
+                ->paginate($limit);
 
             foreach ($rows as $item) {
                 if (!empty($item->agency_confirm_id) && !empty($item->agency_name)) {
@@ -581,7 +601,8 @@ class OrderController extends ApiController {
         return $this->apiOk('Không có dữ liệu!');
     }
 
-    public function getAreaScope() {
+    public function getAreaScope()
+    {
         $messages = [
             'category.required' => 'Vui lòng chọn hình thức: đi lấy/đi giao/đi trả'
         ];
@@ -604,7 +625,7 @@ class OrderController extends ApiController {
             }
 
             $rows = Booking::where('bookings.status', 'new')
-                    ->whereIn('send_ward_id', $this->getShipperScope());
+                ->whereIn('send_ward_id', $this->getShipperScope());
 
             $districtIds = $rows->pluck('send_district_id');
             $wardIds = $rows->pluck('send_ward_id');
@@ -621,23 +642,23 @@ class OrderController extends ApiController {
             }
 
             $rows = Booking::join('book_deliveries as bd', 'bookings.id', '=', 'bd.book_id')
-                    ->join('users', 'bd.user_id', '=', 'users.id')
-                    ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
-                    ->where(function($q){
-                        $q->where(function($q1){
-                            $q1->where('bookings.status', 'sending')
-                                ->where('bd.status', 'completed')
-                                ->where('bd.category', 'receive');
-                        });
-                        $q->orWhere(function($q2){
-                            $q2->where('bookings.status', 'return')
-                                ->where('bd.status', 'deny')
-                                ->where('bd.category', 'return');
-                        });
-                    })
-                    ->where('sub_status', '!=', 'deny')
-                    ->where('bd.sending_active', 1)
-                    ->whereIn('receive_ward_id', $this->getShipperScope());
+                ->join('users', 'bd.user_id', '=', 'users.id')
+                ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
+                ->where(function ($q) {
+                    $q->where(function ($q1) {
+                        $q1->where('bookings.status', 'sending')
+                            ->where('bd.status', 'completed')
+                            ->where('bd.category', 'receive');
+                    });
+                    $q->orWhere(function ($q2) {
+                        $q2->where('bookings.status', 'return')
+                            ->where('bd.status', 'deny')
+                            ->where('bd.category', 'return');
+                    });
+                })
+                ->where('sub_status', '!=', 'deny')
+                ->where('bd.sending_active', 1)
+                ->whereIn('receive_ward_id', $this->getShipperScope());
 
             $districtIds = $rows->pluck('receive_district_id');
             $wardIds = $rows->pluck('receive_ward_id');
@@ -648,7 +669,8 @@ class OrderController extends ApiController {
         return $this->apiOk('Không có dữ liệu!');
     }
 
-    public function getAreaScopeShipping() {
+    public function getAreaScopeShipping()
+    {
         $query = DB::table('bookings')
             ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id');
         $query->where('bookings.status', '!=', 'cancel')->where('book_deliveries.user_id', request()->user()->id);
@@ -677,13 +699,14 @@ class OrderController extends ApiController {
                 $districtIds = $query->pluck('send_district_id');
                 $wardIds = $query->pluck('send_ward_id');
             }
-        }        
+        }
         $data['districts'] = District::whereIn('id', $districtIds)->select('id', 'name')->get();
         $data['wards'] = Ward::whereIn('id', $wardIds)->select('id', 'districtId as district_id', 'name')->get();
         return $this->apiOk($data);
     }
 
-    public function getBookShipperWaitDetail(Request $req) {
+    public function getBookShipperWaitDetail(Request $req)
+    {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
         if (empty($shipperOnline)) {
             return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
@@ -712,21 +735,21 @@ class OrderController extends ApiController {
             if ($req->user()->auto_receive != 1) {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
-            
+
             $bookings = Booking::where('sender_id', request()->sender_id)
-                ->where(function($q) {
+                ->where(function ($q) {
                     $q->where('status', 'new');
-                    $q->orWhere(function($q) {
+                    $q->orWhere(function ($q) {
                         $q->where('bookings.status', 'taking');
                         $q->where('bookings.sub_status', 'delay');
-                        $q->whereHas('deliveries', function($q) {
+                        $q->whereHas('deliveries', function ($q) {
                             $q->where('book_deliveries.status', '!=', 'completed');
                             $q->where('book_deliveries.category', 'receive');
                         });
                     });
                 })
                 ->select('id', 'uuid', 'send_full_address', 'sender_id', 'send_province_id', 'send_district_id', 'send_ward_id', 'send_name', 'send_phone', 'other_note', 'note', 'created_at', 'updated_at', 'completed_at', 'is_prioritize')
-                            ->paginate($limit);
+                ->paginate($limit);
 
             foreach ($bookings as $item) {
                 $item->sender_info = [
@@ -743,11 +766,12 @@ class OrderController extends ApiController {
             }
             return $this->apiOk($bookings);
         }
-        
+
         return $this->apiOk('Không có dữ liệu!');
     }
 
-    public function assignShipperAuto() { 
+    public function assignShipperAuto()
+    {
         $messages = [
             'sender_id.required' => 'Vui lòng chọn người gửi (khách hàng)',
             'category.required' => 'Vui lòng chọn hình thức: đi lấy/đi giao/đi trả'
@@ -771,17 +795,17 @@ class OrderController extends ApiController {
             if (request()->user()->auto_receive != 1) {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
-            $bookingIds = Booking::where(function($q) {
-                    $q->where('status', 'new');
-                    $q->orWhere(function($q) {
-                        $q->where('bookings.status', 'taking');
-                        $q->where('bookings.sub_status', 'delay');
-                        $q->whereHas('deliveries', function($q) {
-                            $q->where('book_deliveries.status', '=', 'delay');
-                            $q->where('book_deliveries.category', 'receive');
-                        });
+            $bookingIds = Booking::where(function ($q) {
+                $q->where('status', 'new');
+                $q->orWhere(function ($q) {
+                    $q->where('bookings.status', 'taking');
+                    $q->where('bookings.sub_status', 'delay');
+                    $q->whereHas('deliveries', function ($q) {
+                        $q->where('book_deliveries.status', '=', 'delay');
+                        $q->where('book_deliveries.category', 'receive');
                     });
-                })->where('sender_id', request()->sender_id)->pluck('id');
+                });
+            })->where('sender_id', request()->sender_id)->pluck('id');
             //$bookingIds = Booking::where('sender_id', request()->sender_id)->where('status', 'new')->pluck('id');
 
             if (count($bookingIds) == 0) {
@@ -794,10 +818,10 @@ class OrderController extends ApiController {
                     $booking = Booking::find($bookingId);
                     $booking->status = 'taking';
                     $booking->save();
-                     $bookDelivery = BookDelivery::where('book_id', $booking->id)->where('category', 'receive')->first();
+                    $bookDelivery = BookDelivery::where('book_id', $booking->id)->where('category', 'receive')->first();
                     if (empty($bookDelivery)) {
                         $bookDelivery = new BookDelivery;
-                    } 
+                    }
                     $bookDelivery->status = 'processing';
                     $bookDelivery->user_id = request()->user()->id;
                     $bookDelivery->send_address = $booking->send_full_address;
@@ -827,7 +851,8 @@ class OrderController extends ApiController {
         }
     }
 
-    public function updatePrioritize() { 
+    public function updatePrioritize()
+    {
         $messages = [
             'category.required' => 'Vui lòng chọn hình thức: đi lấy/đi giao/đi trả',
             'is_prioritize.required' => 'Vui lòng nhập trạng thái ưu tiên',
@@ -891,7 +916,8 @@ class OrderController extends ApiController {
         return $this->apiError('Chọn hình thức chưa đúng. Vui lòng kiểm tra lại');
     }
 
-    public function assignSingleShipperAuto() { 
+    public function assignSingleShipperAuto()
+    {
         $messages = [
             'id.required' => 'Vui lòng nhập ID đơn hàng',
             'category.required' => 'Vui lòng chọn hình thức: đi lấy/đi giao/đi trả'
@@ -916,18 +942,18 @@ class OrderController extends ApiController {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
 
-            $booking = Booking::where(function($q) {
-                    $q->where('status', 'new');
-                    $q->orWhere(function($q) {
-                        $q->where('bookings.status', 'taking');
-                        $q->where('bookings.sub_status', 'delay');
-                        $q->whereHas('deliveries', function($q) {
-                            //  $q->where('book_deliveries.user_id', 0);
-                            $q->where('book_deliveries.status', '=', 'delay');
-                            $q->where('book_deliveries.category', 'receive');
-                        });
+            $booking = Booking::where(function ($q) {
+                $q->where('status', 'new');
+                $q->orWhere(function ($q) {
+                    $q->where('bookings.status', 'taking');
+                    $q->where('bookings.sub_status', 'delay');
+                    $q->whereHas('deliveries', function ($q) {
+                        //  $q->where('book_deliveries.user_id', 0);
+                        $q->where('book_deliveries.status', '=', 'delay');
+                        $q->where('book_deliveries.category', 'receive');
                     });
-                })->where('id', request()->id)->first();
+                });
+            })->where('id', request()->id)->first();
 
             if (empty($booking)) {
                 return $this->apiError('Đơn hàng đã được phân công cho shipper khác. Hãy làm mới lại danh sách!');
@@ -937,8 +963,8 @@ class OrderController extends ApiController {
             try {
                 $booking->status = 'taking';
                 $booking->save();
-                $bookDelivery = BookDelivery::where('book_id',$booking->id)->where('category','receive')->first();
-                if(empty($bookDelivery)){
+                $bookDelivery = BookDelivery::where('book_id', $booking->id)->where('category', 'receive')->first();
+                if (empty($bookDelivery)) {
                     $bookDelivery = new BookDelivery;
                 }
                 $bookDelivery->status = 'processing';
@@ -948,7 +974,7 @@ class OrderController extends ApiController {
                 $bookDelivery->book_id = $booking->id;
                 $bookDelivery->category = 'receive';
                 $bookDelivery->sending_active = 1;
-                $bookDelivery->save();  
+                $bookDelivery->save();
 
                 DB::commit();
             } catch (\Exception $e) {
@@ -971,15 +997,15 @@ class OrderController extends ApiController {
             $countBookDeliveries = $bookDeliveries->count();
             if ($countBookDeliveries == 2) {
                 $deliverySend = $bookDeliveries->where('category', '!=', 'recive')
-                                    ->where('sending_active', 1)
-                                    ->first();
+                    ->where('sending_active', 1)
+                    ->first();
                 if (empty($deliverySend)) {
                     return $this->apiError('Chọn đi giao thất bại. Task không tồn tại!');
                 }
                 DB::beginTransaction();
                 try {
                     $booking->update(['status' => 'sending']);
-                    $deliverySend->update(['status' => 'processing', 'category' => 'send', 'user_id' => request()->user()->id]);                    
+                    $deliverySend->update(['status' => 'processing', 'category' => 'send', 'user_id' => request()->user()->id]);
 
                     DB::commit();
                 } catch (\Exception $e) {
@@ -1020,28 +1046,29 @@ class OrderController extends ApiController {
             $booking = Booking::find(request()->id);
             $bookDeliveries = BookDelivery::where('book_id', $booking->id);
             $deliverySend = $bookDeliveries->where('category', '!=', 'recive')
-                                ->where('sending_active', 1)
-                                ->first();
+                ->where('sending_active', 1)
+                ->first();
             if (empty($deliverySend)) {
                 return $this->apiError('Chọn đi trả thất bại. Task không tồn tại!');
             }
             DB::beginTransaction();
             try {
                 $booking->update(['status' => 'return']);
-                $deliverySend->update(['status' => 'processing', 'category' => 'return', 'user_id' => request()->user()->id]);                    
+                $deliverySend->update(['status' => 'processing', 'category' => 'return', 'user_id' => request()->user()->id]);
 
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
                 return $e;
             }
-           
+
             return $this->apiOk('Chọn đơn đi trả thành công!');
         }
         return $this->apiError('Chọn đơn thất bại. Kiểm tra lại hình thức chọn đơn');
     }
 
-    public function getBookShipperCount() {
+    public function getBookShipperCount()
+    {
         $data = [
             'reveice_wait' => 0,
             'reveice' => 0,
@@ -1056,41 +1083,41 @@ class OrderController extends ApiController {
         }
 
         // chờ lấy
-        $data['reveice_wait'] = Booking::where(function($q) {
-                $q->where('status', 'new');
-                $q->orWhere(function($q) {
-                    $q->where('bookings.status', 'taking');
-                    $q->where('bookings.sub_status', 'delay');
-                    $q->whereHas('deliveries', function($q) {
-                        //$q->where('book_deliveries.user_id',0);
-                        $q->where('book_deliveries.status', '=', 'delay');
-                        $q->where('book_deliveries.category', 'receive');
-                    });
+        $data['reveice_wait'] = Booking::where(function ($q) {
+            $q->where('status', 'new');
+            $q->orWhere(function ($q) {
+                $q->where('bookings.status', 'taking');
+                $q->where('bookings.sub_status', 'delay');
+                $q->whereHas('deliveries', function ($q) {
+                    //$q->where('book_deliveries.user_id',0);
+                    $q->where('book_deliveries.status', '=', 'delay');
+                    $q->where('book_deliveries.category', 'receive');
                 });
-            })
+            });
+        })
             ->whereIn('send_ward_id', $this->getShipperScope())
             ->count();
 
         // chờ giao
         $data['send_wait'] = Booking::join('book_deliveries as bd', 'bookings.id', '=', 'bd.book_id')
-                    ->join('users', 'bd.user_id', '=', 'users.id')
-                    ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
-                    ->where(function($q){
-                        $q->where(function($q1){
-                            $q1->where('bookings.status', 'sending')
-                                ->where('bd.status', 'completed')
-                                ->where('bd.category', 'receive');
-                        });
-                        $q->orWhere(function($q2){
-                            $q2->where('bookings.status', 'return')
-                                ->where('bd.status', 'deny')
-                                ->where('bd.category', 'return');
-                        });
-                    })
-                    ->where('sub_status', '!=', 'deny')
-                    ->where('bd.sending_active', 1)
-                    ->whereIn('receive_ward_id', $this->getShipperScope())
-                    ->count();
+            ->join('users', 'bd.user_id', '=', 'users.id')
+            ->leftJoin('agencies', 'bookings.agency_confirm_id', '=', 'agencies.id')
+            ->where(function ($q) {
+                $q->where(function ($q1) {
+                    $q1->where('bookings.status', 'sending')
+                        ->where('bd.status', 'completed')
+                        ->where('bd.category', 'receive');
+                });
+                $q->orWhere(function ($q2) {
+                    $q2->where('bookings.status', 'return')
+                        ->where('bd.status', 'deny')
+                        ->where('bd.category', 'return');
+                });
+            })
+            ->where('sub_status', '!=', 'deny')
+            ->where('bd.sending_active', 1)
+            ->whereIn('receive_ward_id', $this->getShipperScope())
+            ->count();
 
         // đi lấy
         $data['reveice'] = DB::table('bookings')
@@ -1102,7 +1129,7 @@ class OrderController extends ApiController {
                     ->where('book_deliveries.status', 'processing');
             })
             ->count();
-            
+
         // đi giao
         $data['send'] = DB::table('bookings')
             ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
@@ -1230,7 +1257,7 @@ class OrderController extends ApiController {
     {
         $validator = Validator::make($req->all(), [
             'status' => 'required',
-        
+
         ]);
         if ($validator->fails()) {
             return $this->apiError($validator->errors()->first());
@@ -1260,7 +1287,7 @@ class OrderController extends ApiController {
         DB::beginTransaction();
         try {
             switch ($req->status) {
-                case 'processing' :
+                case 'processing':
                     if ($delivery->status == 'delay' && $delivery->delay_total > 0) {
                         $delivery->delay_total -= 1;
                     }
@@ -1280,13 +1307,13 @@ class OrderController extends ApiController {
                         }
                     }
                     break;
-                case 'delay' :
-                    
+                case 'delay':
+
                     if (in_array($booking->status, ['taking', 'sending'])) {
                         //$delivery->user_id = 0;
-//                        if ($booking->status == 'taking') {
-//                            // $booking->status = 'new';
-//                        }
+                        //                        if ($booking->status == 'taking') {
+                        //                            // $booking->status = 'new';
+                        //                        }
                     }
                     if ($delivery->delay_total >= 2) {
                         $delivery->status = 'cancel';
@@ -1384,7 +1411,7 @@ class OrderController extends ApiController {
                     $delivery->status = $req->status;
                     $revenue->save();
                     break;
-                case 'deny' :
+                case 'deny':
                     if ($delivery->category == 'send') {
                         if ($delivery->status == 'completed') {
                             if ($booking->COD > 0) {
@@ -1405,7 +1432,7 @@ class OrderController extends ApiController {
                     // thông báo đơn hàng giao lại/trả lại
                     dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được giao lại/trả lại', 'push_order_change'));
                     break;
-                case 'cancel' :
+                case 'cancel':
                     $delivery->status = 'cancel';
                     $booking->status = 'cancel';
                     $booking->sub_status = 'none';
@@ -1435,8 +1462,7 @@ class OrderController extends ApiController {
             $delivery->save();
             DB::commit();
             return $this->apiOk('success');
-        } catch
-        (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->apiError($e->getMessage());
         }
@@ -1495,12 +1521,11 @@ class OrderController extends ApiController {
             ];
             $query->total_price = $query->payment_type == 1 ? @$query->price + @$query->incurred :
                 @$query->price + @$query->incurred + @$query->COD;
-            unset(
-                $query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
-                $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
-                $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
-                $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
-                $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
+            unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
+            $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
+            $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
+            $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
+            $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
             return $this->apiOk($query);
         } catch (\Exception $e) {
             return $this->apiError($e->getMessage());
@@ -1513,23 +1538,23 @@ class OrderController extends ApiController {
             $item = Booking::query()
                 ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
                 ->where('book_deliveries.id', $id)
-                ->select('bookings.*','bookings.id as book_id', 'bookings.status as booking_status', 'book_deliveries.id', 'book_deliveries.category', 'book_deliveries.category', 'book_deliveries.status')
+                ->select('bookings.*', 'bookings.id as book_id', 'bookings.status as booking_status', 'book_deliveries.id', 'book_deliveries.category', 'book_deliveries.category', 'book_deliveries.status')
                 ->with('transactionTypeService.service')
-                
+
                 ->first();
 
             // cập nhật thông báo đã đọc
             if (isset(request()->notification_id) && request()->notification_id > 0) {
                 NotificationUser::where('notification_id', request()->notification_id)->where('user_id', $req->user()->id)->update(['is_readed' => 1]);
             }
-           
+
             // end cập nhật thông báo đã đọc
-            if(empty($item)){
+            if (empty($item)) {
                 return $this->apiError('Không tìm thấy task này');
             }
-//            $services = $item->transactionTypeService->pluck('service.name');
-//            unset($item->transactionTypeService);
-//            $item->transaction_type_service = $services;
+            //            $services = $item->transactionTypeService->pluck('service.name');
+            //            unset($item->transactionTypeService);
+            //            $item->transaction_type_service = $services;
 
             $item->sender_info = [
                 'name' => $item->send_name,
@@ -1564,62 +1589,59 @@ class OrderController extends ApiController {
             $item->allow_owe = 1;
             $item->total_price = @$item->price;
             if ($item->category == 'send' && $item->status == 'processing') {
-                if($item->payment_type == 1){
+                if ($item->payment_type == 1) {
                     unset($item->allow_owe);
-                }
-                else if ($item->payment_type == 2) {
+                } else if ($item->payment_type == 2) {
                     $item->allow_owe = 0;
                 }
                 $item->total_price = @$item->payment_type == 1 ? @$item->COD + @$item->incurred :
-                @$item->price + @$item->incurred + @$item->COD;
+                    @$item->price + @$item->incurred + @$item->COD;
             }
             if ($item->category == 'return' && $item->status == 'processing') {
                 $item->allow_owe = 1;
                 $item->total_price = @$item->price + @$item->incurred;
             }
             if ($item->category == 'receive' && $item->status == 'processing') {
-                if($item->payment_type == 2){
+                if ($item->payment_type == 2) {
                     unset($item->allow_owe);
                 }
                 $item->total_price = @$item->payment_type == 1 ? @$item->price + @$item->incurred :
-                @$item->incurred;
+                    @$item->incurred;
             }
 
             if ($item->status == 'completed') {
                 if ($item->category == 'send') {
-                    if($item->payment_type == 1){
+                    if ($item->payment_type == 1) {
                         unset($item->allow_owe);
-                    }
-                    else if ($item->payment_type == 2) {
+                    } else if ($item->payment_type == 2) {
                         $item->allow_owe = 0;
                     }
                     $item->total_price = @$item->payment_type == 1 ? @$item->COD + @$item->incurred :
-                    @$item->price + @$item->incurred + @$item->COD;
+                        @$item->price + @$item->incurred + @$item->COD;
                 }
                 if ($item->category == 'return') {
                     $item->allow_owe = 1;
                     $item->total_price = @$item->price + @$item->incurred;
                 }
                 if ($item->category == 'receive') {
-                    if($item->payment_type == 2){
+                    if ($item->payment_type == 2) {
                         unset($item->allow_owe);
                     }
                     $item->total_price = @$item->payment_type == 1 ? @$item->price + @$item->incurred :
-                    @$item->incurred;
+                        @$item->incurred;
                 }
             }
 
             // $item->total_price = @$item->payment_type == 1 ? @$item->COD + @$item->incurred :
             //     @$item->price + @$item->incurred + @$item->COD;
-            unset(
-                $item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address,
-                $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id,
-                $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address,
-                $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng, $item->booking,
-                $item->send_address, $item->receive_address, $item->receive_homenumber, $item->receive_full_address);
+            unset($item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address,
+            $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id,
+            $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address,
+            $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng, $item->booking,
+            $item->send_address, $item->receive_address, $item->receive_homenumber, $item->receive_full_address);
             return $this->apiOk($item);
         } catch (\Exception $e) {
-           
+
             return $this->apiError($e->getMessage());
         }
     }
@@ -1660,12 +1682,11 @@ class OrderController extends ApiController {
                         'lng' => $query->receive_lng
                     ]
                 ];
-                unset(
-                    $query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
-                    $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
-                    $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
-                    $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
-                    $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
+                unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
+                $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
+                $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
+                $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
+                $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
             }
             return $this->apiOk($rows);
         } catch (\Exception $e) {
@@ -1707,10 +1728,10 @@ class OrderController extends ApiController {
     {
         // $total = User::find($req->user()->id);
         $total = Booking::where('sender_id', $req->user()->id)
-                    ->where('COD_status', 'pending')
-                    ->where('COD', '>', '0')
-                    ->where('status', 'completed')
-                    ->sum('COD');
+            ->where('COD_status', 'pending')
+            ->where('COD', '>', '0')
+            ->where('status', 'completed')
+            ->sum('COD');
         $received = DB::table('bookings')->where('sender_id', $req->user()->id)->where('COD', '>', 0)->where('COD_status', 'finish')->where('status', 'completed')->sum('COD');
         $data = [
             "total" => $total, //$total->total_COD
@@ -1759,8 +1780,8 @@ class OrderController extends ApiController {
                 ]
             ];
             unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address, $query->send_lat, $query->send_lng,
-                $query->receive_province_id, $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address, $query->receive_lat, $query->receive_lng,
-                $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone);
+            $query->receive_province_id, $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address, $query->receive_lat, $query->receive_lng,
+            $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone);
         }
         return $this->apiOk($rows);
     }
@@ -1790,7 +1811,7 @@ class OrderController extends ApiController {
         if ($validator->fails()) {
             return $this->apiError($validator->errors()->first());
         }
-        $result = Booking::Pricing($req,true);
+        $result = Booking::Pricing($req, true);
         return  $this->apiRes(true, $result['msg'], $result['total'], null, null, 1);
     }
 
@@ -1847,42 +1868,46 @@ class OrderController extends ApiController {
     }
 
 
-    public function countBook(Request $req) {
+    public function countBook(Request $req)
+    {
         $data['all'] = 0;
+        $data['new'] = 0;
         $data['received'] = 0;
         $data['sented'] = 0;
         $data['return'] = 0;
         $data['cancel'] = 0;
         $data['re-send'] = 0;
         $query = Booking::where('sender_id', $req->user()->id)
-                    ->select('id', 'sender_id', 'status')
-                    ->get();
+            ->select('id', 'sender_id', 'status')
+            ->get();
 
         $data['all'] = count($query);
         if (!empty($query) && count($query) > 0) {
             foreach ($query as $item) {
                 if ($item->status == 'sending') {
-                    $data['received'] ++;
-
+                    $data['received']++;
                 } elseif ($item->status == 'completed') {
                     $data['sented']++;
                 } elseif ($item->status == 'return') {
-                    
-                    if(!empty($item->returnDeliveries)){
+
+                    if (!empty($item->returnDeliveries)) {
                         $data['return']++;
                     }
                     if (!empty($item->requestDeliveries)) {
-                        $data['re-send'] ++;
+                        $data['re-send']++;
                     }
                 } elseif ($item->status == 'cancel') {
                     $data['cancel']++;
+                } elseif ($item->status == 'new') {
+                    $data['new']++;
                 }
             }
         }
         return $this->apiOk($data);
     }
 
-    private function addNotificationBook($booking, $title, $userIds = []) {
+    private function addNotificationBook($booking, $title, $userIds = [])
+    {
         $notification = new Notification();
         $notification->title = 'Đơn hàng [' . $booking['uuid'] . ']' . $title;
         $notification->booking_id = $booking['id'];
@@ -1920,18 +1945,18 @@ class OrderController extends ApiController {
         //         dispatch(new PushNotificationBook($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey));
         //     }
         // }
-    
+
 
     }
 
     //----------------RAYMOND API-----------
-    public function create(Request $req) {
+    public function create(Request $req)
+    {
         try {
-            $booking=Booking::create($req);
-            if($booking==200)
-            {
+            $booking = Booking::create($req);
+            if ($booking == 200) {
                 return response()->json(['msg' => 'Bạn đã tạo đơn hàng thành công', 'code' => 200]);
-            }else{
+            } else {
                 return response()->json(['msg' => 'Vui lòng kiểm tra lại địa chỉ cá nhân', 'code' => 201]);
             }
         } catch (\Exception $e) {
@@ -1939,5 +1964,3 @@ class OrderController extends ApiController {
         }
     }
 }
-
-
