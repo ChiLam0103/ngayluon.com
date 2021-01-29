@@ -75,11 +75,11 @@ class PushNotificationBook implements ShouldQueue
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
         \Log::info('Start' . date('Y-m-d H:i:s'));
-        if ($deviceType == 'ios') {
+        // if ($deviceType == 'ios') {
             $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
-        } else {
-            $downstreamResponse = FCM::sendTo($tokens, $option, null, $data);
-        }
+        // } else {
+            // $downstreamResponse = FCM::sendTo($tokens, $option, null, $data);
+        // }
         return $downstreamResponse;
     }
 }

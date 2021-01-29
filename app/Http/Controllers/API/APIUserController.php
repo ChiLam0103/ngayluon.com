@@ -36,6 +36,7 @@ class APIUserController extends ApiController
 
     public function login(Request $req)
     {
+        // try{
         $check = false;
         $messages = [
             'account.required' => 'Vui lòng nhập tài khoản đăng nhập',
@@ -72,7 +73,9 @@ class APIUserController extends ApiController
         // })->where('delete_status', 0)
         //     ->with('provinces', 'districts', 'wards')
         //     ->first();
-
+        if($user ==null){
+            return $this->apiError('Tài khoản không đúng!');
+        }
         if (empty($user)) {
             $check = true;
 
@@ -83,10 +86,8 @@ class APIUserController extends ApiController
             if (isset($req->password_code)) {
                 $createUser['password_code'] = $req->password_code;
             }
-
             $user = User::create($createUser);
         }
-
         if (isset($req->password_code)) {
             if (empty($user->password_code)) {
                 $user = User::find($user->id);
@@ -172,10 +173,14 @@ class APIUserController extends ApiController
                 $child['bank_info'] = null;
             }
             unset($child['provinces'], $child['districts'], $child['wards'], $child['province_id'], $child['district_id'], $child['ward_id'], $child['home_number'],
-                $child['bank_account'], $child['bank_account_number'], $child['bank_name'], $child['bank_branch']);
+            $child['bank_account'], $child['bank_account_number'], $child['bank_name'], $child['bank_branch']);
             $profile = ['profile' => $child];
         }
         return $this->apiOk(array_merge($data, $profile));
+        // }catch(\Exception $e){
+        //     return $this->apiError($e,404);
+        // }
+
     }
 
     public function loginWithPassword(Request $req)
@@ -201,7 +206,7 @@ class APIUserController extends ApiController
                 'errors' => $validator->errors(),
             ], 422);
         }
-        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role','shipper')->with('provinces', 'districts', 'wards')->first();
+        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'shipper')->with('provinces', 'districts', 'wards')->first();
         if (empty($user)) {
             return response([
                 'msg' => 'Account does not exist',
@@ -337,7 +342,7 @@ class APIUserController extends ApiController
                 'errors' => $validator->errors(),
             ], 422);
         }
-        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role','warehouse')->with('provinces', 'districts', 'wards')->first();
+        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'warehouse')->with('provinces', 'districts', 'wards')->first();
         if (empty($user)) {
             return response([
                 'msg' => 'Account does not exist',
@@ -674,7 +679,6 @@ class APIUserController extends ApiController
                 'ward_id' => $data->ward_id,
                 'home_number' => $data->home_number,
             ];
-
         } else {
             $data->address = null;
             $data->bank_info = null;
@@ -691,7 +695,7 @@ class APIUserController extends ApiController
         }
 
         unset($data['provinces'], $data['districts'], $data['wards'], $data['province_id'], $data['district_id'], $data['ward_id'], $data['home_number'],
-            $data['bank_account'], $data['bank_account_number'], $data['bank_name'], $data['bank_branch']);
+        $data['bank_account'], $data['bank_account_number'], $data['bank_name'], $data['bank_branch']);
         return $this->apiOk($data);
     }
 
@@ -705,7 +709,6 @@ class APIUserController extends ApiController
             return $this->apiError($validator->errors()->first());
         }
         return 1;
-
     }
 
     public function resetPassword(Request $req)

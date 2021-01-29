@@ -120,12 +120,12 @@ class NotificationJob implements ShouldQueue
                         $message['booking_id'] = isset($booking['book_delivery_id']) ? intval($booking['book_delivery_id']) : intval($booking['id']);
                     }
 
-                    // if (count($devices) > 0 && !empty($devices)) {
+                    if (count($devices) > 0 && !empty($devices)) {
                         foreach ($devices as $device) {
                             // $this->send($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey);
                             dispatch(new PushNotificationBook($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey));
                         }
-                    // }
+                    }
 
                 }
 
