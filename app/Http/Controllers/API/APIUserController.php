@@ -73,7 +73,7 @@ class APIUserController extends ApiController
         // })->where('delete_status', 0)
         //     ->with('provinces', 'districts', 'wards')
         //     ->first();
-        if($user ==null){
+        if ($user == null) {
             return $this->apiError('Tài khoản không đúng!');
         }
         if (empty($user)) {
@@ -207,12 +207,15 @@ class APIUserController extends ApiController
             ], 422);
         }
         $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'shipper')->with('provinces', 'districts', 'wards')->first();
+
         if (empty($user)) {
             return response([
                 'msg' => 'Account does not exist',
             ], 404);
         }
-
+        if ($user == null) {
+            return $this->apiError('Tài khoản không đúng!');
+        }
         if (!empty($req->device_token) && !empty($req->device_type)) {
             $deviceInfo = [
                 'user_id' => $user->id,

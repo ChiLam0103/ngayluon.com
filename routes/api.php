@@ -28,7 +28,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api', 'middleware' => VerifyJ
     Route::post('adddelivery', 'APIUserController@addDelivery');
     Route::post('updateavatar', 'APIUserController@updateAvatar');
     Route::get('updateaddress/{id}', 'APIUserController@updateAddress');
-    Route::delete('removedelivery/{id}', 'APIUserController@removeDelivery');
+    Route::post('removedelivery/{id}', 'APIUserController@removeDelivery');
     Route::get('getaddress', 'APIUserController@getSendOrReceiveAddress');
     
     Route::post('location', 'LocationController@location');
@@ -55,8 +55,8 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType');// listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');
     Route::post('booking', 'OrderController@booking');
-    Route::put('updatebook/{id}', 'OrderController@updateBook');
-    Route::put('cancelbook/{id}', 'OrderController@cancelBook');
+    Route::post('updatebook/{id}', 'OrderController@updateBook');
+    Route::post('cancelbook/{id}', 'OrderController@cancelBook');
     Route::get('listCOD', 'OrderController@getCOD');
     Route::get('listCOD_details', 'OrderController@getCODDetails');
     Route::get('detail/{id}', 'OrderController@bookDetail');
@@ -72,8 +72,8 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
 
     Route::group(['prefix' => 'customer'], function() {
         Route::get('last-book', 'Customer\OrderController@lastedBookSender');
-        Route::put('updatebook/{id}/other-note', 'Customer\OrderController@updateNote');
-        Route::put('deny/{id}', 'Customer\OrderController@RequestReturn');
+        Route::post('updatebook/{id}/other-note', 'Customer\OrderController@updateNote');
+        Route::post('deny/{id}', 'Customer\OrderController@RequestReturn');
         //Route::get('listbook', 'Customer\OrderController@getBook');
     });
 
@@ -84,23 +84,23 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::get('listbook-wait/detail', 'Shipper\OrderController@getBookShipperWaitDetail');
         Route::post('auto-assign', 'OrderController@assignShipperAuto');
         Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto');
-        Route::put('update-prioritize', 'OrderController@updatePrioritize');
-        Route::put('updatebook/{id}', 'Shipper\OrderController@updateBookShipper');
-        Route::put('updatebook/{id}/other-note', 'Shipper\OrderController@updateNote');
+        Route::post('update-prioritize', 'OrderController@updatePrioritize');
+        Route::post('updatebook/{id}', 'Shipper\OrderController@updateBookShipper');
+        Route::post('updatebook/{id}/other-note', 'Shipper\OrderController@updateNote');
         Route::get('detail/{id}', 'OrderController@bookDetailShipper');
         Route::post('upload_image', 'OrderController@uploadImage');
         Route::get('area-scope', 'OrderController@getAreaScope');
         Route::get('area-scope-shipping', 'OrderController@getAreaScopeShipping');
         Route::get('listbook-count', 'Shipper\OrderController@getBookShipperCount');
         
-        Route::put('updatebook/{id}/weight', 'Shipper\OrderController@updateWeightPrice');
+        Route::post('updatebook/{id}/weight', 'Shipper\OrderController@updateWeightPrice');
     });
 
     Route::group(['prefix' => 'notifications'], function () {
         Route::get('/', 'NotificationController@getNotification');
         Route::get('/detail', 'NotificationController@getNotificationDetail');
         Route::get('/unread-count', 'NotificationController@getUnreadCount');
-        Route::put('/read-all', 'NotificationController@readAll');
+        Route::post('/read-all', 'NotificationController@readAll');
     });
 
     Route::get('count-book', 'OrderController@countBook');

@@ -141,7 +141,7 @@ class OrderController extends ApiController
             return $this->apiOk(null);
         }
     }
-
+    //tạo mới booking
     public function booking(Request $req)
     {
         $validate = [
