@@ -237,7 +237,7 @@ class OrderController extends ApiController
                 $filePath = 'img/order/';
                 $movePath = public_path($filePath);
                 $file->move($movePath, $filename);
-                $booking->image_order = $filePath . $filename;
+                $book->image_order = $filePath . $filename;
             }
             $book->transport_type_services = $req->transport_type_services;
             $book->transport_type_service1 = (isset($req->transport_type_service1) && $req->transport_type_service1 == 1) ? 1 : 0;
@@ -251,10 +251,9 @@ class OrderController extends ApiController
 
             $book->save();
             $uuid = Booking::find($book->id);
+
             //tạo uuid
-            $uuid->uuid = str_random(5) . $uuid->id;
             $id=$this->generateBookID();
-            dd($id);
             $uuid->uuid =$id;
             //tạo qrcode
             // date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -273,16 +272,19 @@ class OrderController extends ApiController
             // $this->addNotificationBook($bookingTmp, $title, $userIds = []);
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được tạo', 'push_order'));
             dispatch(new NotificationJob($bookingTmp, 'customer', ' vừa được tạo', 'push_order'));
+
+            
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->apiError($e->getMessage());
         }
         return $this->apiOk($uuid);
     }
+    //tạo mã uuid
     public static function generateBookID()
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $countRecordToday = DB::table('bookings')->where(date('Y-m-d', strtotime('created_at')), date("Y-m-d"))->count();
+        $countRecordToday = DB::table('bookings')->whereDate('created_at',date("Y-m-d"))->count();
         $countRecordToday = (int) $countRecordToday + 1;
         do {
             $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);

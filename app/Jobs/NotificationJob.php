@@ -120,14 +120,51 @@ class NotificationJob implements ShouldQueue
                         $message['booking_id'] = isset($booking['book_delivery_id']) ? intval($booking['book_delivery_id']) : intval($booking['id']);
                     }
 
-                    if (count($devices) > 0 && !empty($devices)) {
+                    // if (count($devices) > 0 && !empty($devices)) {
                         foreach ($devices as $device) {
                             // $this->send($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey);
                             dispatch(new PushNotificationBook($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey));
                         }
-                    }
+                    // }
 
                 }
+
+                //booking detail
+                $notification = Notification::where('booking_id', $booking['id'])->where('title', 'ĐH [' . $booking['uuid'] . ']' . $title)->first();
+                if (empty($notification)) {
+                    $notification = new Notification();
+                    $notification->title = 'ĐH [' . $booking['uuid'] . ']' . $title;
+                    $notification->booking_id = $booking['id'];
+                    $notification->type = 'book_detail';
+                    $notification->save();
+                    $notificationId = $notification->id;
+                } else {
+                    $notificationId = $notification->id;
+                }
+                if ($notificationId != 0) {
+                    $notificationUser = new NotificationUser();
+                    $notificationUser->notification_id = $notificationId;
+                    $notificationUser->user_id = $user->id;
+                    $notificationUser->is_readed = 0;
+                    $notificationUser->save();
+                    DB::commit();
+
+                    $message = array(
+                        'notification_id' => intval($notificationId),
+                        'title' => $notification->title,
+                        'type' => $notification->type,
+                        'booking_id' => intval($booking['id']),
+                        'user_id' => intval($notificationUser->user_id),
+                        'body' => $notification->content,
+                        'booking_status' => $booking['status'],
+                        'amount' => intval($booking['price']),
+                        'badge' => intval($this->getUnreadCount($notificationUser->user_id))
+                    );
+                    if ($toObject == 'shipper') {
+                        $message['booking_id'] = isset($booking['book_delivery_id']) ? intval($booking['book_delivery_id']) : intval($booking['id']);
+                    }
+                }
+
             } catch (Exception $e) {
                 DB::rollBack();
                 dd($e);
