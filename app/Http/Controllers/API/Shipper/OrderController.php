@@ -275,9 +275,9 @@ class OrderController extends ApiController
             $booking->save();
             DB::commit();
             return $this->orderDetail($booking);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             DB::rollBack();
-            return $this->apiError($e->getMessage());
+            return $this->apiError($ex->getMessage());
         }
     }
 

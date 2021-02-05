@@ -166,6 +166,7 @@ class OrderController extends ApiController
             'receive_type' => 'required|integer',
             'payment_type' => 'required|integer',
             'COD' => 'required|numeric|min:0',
+            'COD_edit' => 'required|numeric|min:0',
         ];
         /* if ($req->other_note){
              $validate['other_note'] = 'regex:/(^[A-Za-z0-9 ]+$)+/';
@@ -229,6 +230,7 @@ class OrderController extends ApiController
             $book->transport_type = $req->transport_type;
             $book->payment_type = $req->payment_type;
             $book->COD = $req->COD;
+            $book->COD = $req->COD_edit;
             $book->other_note = $req->other_note;
             $book->status = 'new';
             if ($req->hasFile('image_order')) {
@@ -1242,6 +1244,7 @@ class OrderController extends ApiController
             $book->transport_type = $req->transport_type;
             $book->payment_type = $req->payment_type;
             $book->COD = $req->COD != null ? $req->COD : 0;
+            $book->COD_edit = $req->COD_edit != null ? $req->COD_edit : 0;
             $book->other_note = $req->other_note;
             $book->status = 'new';
             $book->save();
