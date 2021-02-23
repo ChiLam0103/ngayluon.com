@@ -1491,7 +1491,7 @@ class OrderController extends ApiController
         // end cập nhật thông báo đã đọc
         try {
             // log đơn hàng
-            $log = DB::table('notifications')->where('booking_id', $id)->where('type_detail', 'book_detail')->select('title','status','created_at','updated_at')->get();
+            $log = DB::table('notifications')->where('booking_id', $id)->where('type_detail', 'book_detail')->select('title', 'status', 'created_at', 'updated_at')->get();
             $query = Booking::where('id', $id)->first();
             $query->returnBookingInfo;
             $query->sender_info = [
@@ -1525,7 +1525,7 @@ class OrderController extends ApiController
                     'lng' => $query->receive_lng
                 ]
             ];
-           
+
             $query->log = $log;
 
             $query->total_price = $query->payment_type == 1 ? @$query->price + @$query->incurred :
@@ -1952,8 +1952,10 @@ class OrderController extends ApiController
     }
 
 
-    public function countBook(Request $req)
+    public function countBook($type, Request $req)
     {
+        $today = date("Y-m-d 00:00:00");
+
         $data['all'] = 0;
         $data['new'] = 0;
         $data['received'] = 0;
@@ -1962,12 +1964,17 @@ class OrderController extends ApiController
         $data['cancel'] = 0;
         $data['re-send'] = 0;
         $query = Booking::where('sender_id', $req->user()->id)
-            ->select('id', 'sender_id', 'status')
-            ->get();
+            ->select('id', 'sender_id', 'status');
+        $check_today = '';
+        if ($type == 'today') {
+            $check_today = $query->where('updated_at', '>=', $today);
+        }
 
-        $data['all'] = count($query);
-        if (!empty($query) && count($query) > 0) {
-            foreach ($query as $item) {
+        $check_today = $query->get();
+
+        $data['all'] = count($check_today);
+        if (!empty($check_today) && count($check_today) > 0) {
+            foreach ($check_today as $item) {
                 if ($item->status == 'sending') {
                     $data['received']++;
                 } elseif ($item->status == 'completed') {

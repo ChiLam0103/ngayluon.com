@@ -103,7 +103,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::post('/read-all', 'NotificationController@readAll');
     });
 
-    Route::get('count-book', 'OrderController@countBook');
+    Route::get('count-book/type={type}', 'OrderController@countBook');
 });
 
 Route::group(['prefix' => 'order', 'namespace' => 'API'], function () {
