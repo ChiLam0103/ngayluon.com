@@ -111,10 +111,11 @@ class BookingController extends Controller
                 return $image;
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return $b->uuid;
             })
             ->editColumn('status', function ($b) {
                 return $b->status == 'new' ? 'Mới' : 'Đang lấy';

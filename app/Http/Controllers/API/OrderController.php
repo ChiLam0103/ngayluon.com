@@ -166,7 +166,7 @@ class OrderController extends ApiController
             'receive_type' => 'required|integer',
             'payment_type' => 'required|integer',
             'COD' => 'required|numeric|min:0',
-            'COD_edit' => 'required|numeric|min:0',
+            'COD_edit' => 'numeric|min:0',
         ];
         /* if ($req->other_note){
              $validate['other_note'] = 'regex:/(^[A-Za-z0-9 ]+$)+/';
@@ -233,14 +233,7 @@ class OrderController extends ApiController
             $book->COD = $req->COD_edit;
             $book->other_note = $req->other_note;
             $book->status = 'new';
-            if ($req->hasFile('image_order')) {
-                $file = $req->image_order;
-                $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
-                $filePath = 'img/order/';
-                $movePath = public_path($filePath);
-                $file->move($movePath, $filename);
-                $book->image_order = $filePath . $filename;
-            }
+
             $book->transport_type_services = $req->transport_type_services;
             $book->transport_type_service1 = (isset($req->transport_type_service1) && $req->transport_type_service1 == 1) ? 1 : 0;
             $book->transport_type_service2 = (isset($req->transport_type_service2) && $req->transport_type_service2 == 1) ? 1 : 0;
@@ -250,13 +243,21 @@ class OrderController extends ApiController
             if ($check == 0) {
                 $book->is_customer_new = 1;
             }
-
             $book->save();
             $uuid = Booking::find($book->id);
-
             //tạo uuid
-            $id=$this->generateBookID();
-            $uuid->uuid =$id;
+            $id = $this->generateBookID();
+            $uuid->uuid = $id;
+            //tạo image
+            if ($req->hasFile('image_order')) {
+                $file = $req->image_order;
+                // $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
+                $filename =  $id . '_booking.png';
+                $filePath = 'img/order/';
+                $movePath = public_path($filePath);
+                $file->move($movePath, $filename);
+                $uuid->image_order = $filePath . $filename;
+            }
             //tạo qrcode
             // date_default_timezone_set('Asia/Ho_Chi_Minh');
             // $qrcode_id=DB::table('qrcode')->insertGetId(
@@ -274,8 +275,6 @@ class OrderController extends ApiController
             // $this->addNotificationBook($bookingTmp, $title, $userIds = []);
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được tạo', 'push_order'));
             dispatch(new NotificationJob($bookingTmp, 'customer', ' vừa được tạo', 'push_order'));
-
-            
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->apiError($e->getMessage());
@@ -286,7 +285,7 @@ class OrderController extends ApiController
     public static function generateBookID()
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $countRecordToday = DB::table('bookings')->whereDate('created_at',date("Y-m-d"))->count();
+        $countRecordToday = DB::table('bookings')->whereDate('created_at', date("Y-m-d"))->count();
         $countRecordToday = (int) $countRecordToday + 1;
         do {
             $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);
@@ -1490,8 +1489,9 @@ class OrderController extends ApiController
             NotificationUser::where('notification_id', request()->notification_id)->where('user_id', $req->user()->id)->update(['is_readed' => 1]);
         }
         // end cập nhật thông báo đã đọc
-
         try {
+            // log đơn hàng
+            $log = DB::table('notifications')->where('booking_id', $id)->where('type_detail', 'book_detail')->select('title','status','created_at','updated_at')->get();
             $query = Booking::where('id', $id)->first();
             $query->returnBookingInfo;
             $query->sender_info = [
@@ -1509,6 +1509,7 @@ class OrderController extends ApiController
                     'lng' => $query->send_lng
                 ]
             ];
+
             $query->receiver_info = [
                 'name' => $query->receive_name,
                 'phone' => $query->receive_phone,
@@ -1524,13 +1525,35 @@ class OrderController extends ApiController
                     'lng' => $query->receive_lng
                 ]
             ];
+           
+            $query->log = $log;
+
             $query->total_price = $query->payment_type == 1 ? @$query->price + @$query->incurred :
                 @$query->price + @$query->incurred + @$query->COD;
-            unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
-            $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
-            $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
-            $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
-            $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
+            unset(
+                $query->send_province_id,
+                $query->send_district_id,
+                $query->send_ward_id,
+                $query->send_homenumber,
+                $query->send_full_address,
+                $query->send_name,
+                $query->send_phone,
+                $query->receive_name,
+                $query->receive_phone,
+                $query->receive_province_id,
+                $query->receive_district_id,
+                $query->receive_ward_id,
+                $query->receive_homenumber,
+                $query->receive_full_address,
+                $query->send_lat,
+                $query->send_lng,
+                $query->receive_lat,
+                $query->receive_lng,
+                $query->send_address,
+                $query->receive_address,
+                $query->receive_homenumber,
+                $query->receive_full_address
+            );
             return $this->apiOk($query);
         } catch (\Exception $e) {
             return $this->apiError($e->getMessage());
@@ -1639,11 +1662,31 @@ class OrderController extends ApiController
 
             // $item->total_price = @$item->payment_type == 1 ? @$item->COD + @$item->incurred :
             //     @$item->price + @$item->incurred + @$item->COD;
-            unset($item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address,
-            $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id,
-            $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address,
-            $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng, $item->booking,
-            $item->send_address, $item->receive_address, $item->receive_homenumber, $item->receive_full_address);
+            unset(
+                $item->send_province_id,
+                $item->send_district_id,
+                $item->send_ward_id,
+                $item->send_homenumber,
+                $item->send_full_address,
+                $item->send_name,
+                $item->send_phone,
+                $item->receive_name,
+                $item->receive_phone,
+                $item->receive_province_id,
+                $item->receive_district_id,
+                $item->receive_ward_id,
+                $item->receive_homenumber,
+                $item->receive_full_address,
+                $item->send_lat,
+                $item->send_lng,
+                $item->receive_lat,
+                $item->receive_lng,
+                $item->booking,
+                $item->send_address,
+                $item->receive_address,
+                $item->receive_homenumber,
+                $item->receive_full_address
+            );
             return $this->apiOk($item);
         } catch (\Exception $e) {
 
@@ -1687,11 +1730,30 @@ class OrderController extends ApiController
                         'lng' => $query->receive_lng
                     ]
                 ];
-                unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address,
-                $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id,
-                $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address,
-                $query->send_lat, $query->send_lng, $query->receive_lat, $query->receive_lng,
-                $query->send_address, $query->receive_address, $query->receive_homenumber, $query->receive_full_address);
+                unset(
+                    $query->send_province_id,
+                    $query->send_district_id,
+                    $query->send_ward_id,
+                    $query->send_homenumber,
+                    $query->send_full_address,
+                    $query->send_name,
+                    $query->send_phone,
+                    $query->receive_name,
+                    $query->receive_phone,
+                    $query->receive_province_id,
+                    $query->receive_district_id,
+                    $query->receive_ward_id,
+                    $query->receive_homenumber,
+                    $query->receive_full_address,
+                    $query->send_lat,
+                    $query->send_lng,
+                    $query->receive_lat,
+                    $query->receive_lng,
+                    $query->send_address,
+                    $query->receive_address,
+                    $query->receive_homenumber,
+                    $query->receive_full_address
+                );
             }
             return $this->apiOk($rows);
         } catch (\Exception $e) {
@@ -1784,9 +1846,26 @@ class OrderController extends ApiController
                     'lng' => $query->receive_lng
                 ]
             ];
-            unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address, $query->send_lat, $query->send_lng,
-            $query->receive_province_id, $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address, $query->receive_lat, $query->receive_lng,
-            $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone);
+            unset(
+                $query->send_province_id,
+                $query->send_district_id,
+                $query->send_ward_id,
+                $query->send_homenumber,
+                $query->send_full_address,
+                $query->send_lat,
+                $query->send_lng,
+                $query->receive_province_id,
+                $query->receive_district_id,
+                $query->receive_ward_id,
+                $query->receive_homenumber,
+                $query->receive_full_address,
+                $query->receive_lat,
+                $query->receive_lng,
+                $query->send_name,
+                $query->send_phone,
+                $query->receive_name,
+                $query->receive_phone
+            );
         }
         return $this->apiOk($rows);
     }
