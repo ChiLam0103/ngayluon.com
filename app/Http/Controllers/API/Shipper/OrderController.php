@@ -71,9 +71,9 @@ class OrderController extends ApiController
     public function getListBook(Request $req)
     {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
-        if (empty($shipperOnline)) {
-            return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng1!');
-        }
+        // if (empty($shipperOnline)) {
+        //     return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng1!');
+        // }
 
         $limit = $req->get('limit', 10);
         $query = Booking::query()
@@ -284,9 +284,10 @@ class OrderController extends ApiController
     public function getBookShipperWait(Request $req)
     {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
-        if (empty($shipperOnline)) {
-            return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
-        }
+
+        // if (empty($shipperOnline)) {
+        //     return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
+        // }
 
         $limit = $req->get('limit', 10);
 
@@ -476,26 +477,26 @@ class OrderController extends ApiController
         ];
 
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
-        if (empty($shipperOnline)) {
-            // return $this->apiError('Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
-            return $this->apiOk($data);
-        }
-
+        // if (empty($shipperOnline)) {
+        //     // return $this->apiError('Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
+        //     return $this->apiOk($data);
+        // }
         // chờ lấy
         $data['reveice_wait'] = Booking::where(function ($q) {
             $q->where('bookings.status', 'new');
             $q->orWhere(function ($q) {
                 $q->where('bookings.status', 'taking');
                 $q->where('bookings.sub_status', 'delay');
-                $q->whereHas('deliveries', function ($q) {
-                    //$q->where('book_deliveries.user_id',0);
-                    $q->where('book_deliveries.status', '=', 'delay');
-                    $q->where('book_deliveries.category', 'receive');
-                });
+                // $q->whereHas('deliveries', function ($q) {
+                //     //$q->where('book_deliveries.user_id',0);
+                //     $q->where('book_deliveries.status', '=', 'delay');
+                //     $q->where('book_deliveries.category', 'receive');
+                // });
             });
         })
             ->whereIn('send_ward_id', $this->getShipperScope())
             ->count();
+            // dd(1);
 
         // chờ giao
         $data['send_wait'] = Booking::join('book_deliveries as bd', 'bookings.id', '=', 'bd.book_id')
@@ -514,7 +515,7 @@ class OrderController extends ApiController
                 });
                 $q->orWhere(function ($q3) {
                     $q3->where('bookings.status', 're-send');
-                    $q3->where('book_deliveries.user_id', 0);
+                    // $q3->where('book_deliveries.user_id', 0);
                     //                    $q3->where('book_deliveries.status', '=', 'deny');
                     //                    $q3->where('book_deliveries.category', 're-send');
 
@@ -531,10 +532,10 @@ class OrderController extends ApiController
             ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
             ->where('bookings.status', '!=', 'cancel')
             ->where('book_deliveries.user_id', request()->user()->id)
-            ->where(function ($query) {
-                $query->where('book_deliveries.category', '=', 'receive')
-                    ->where('book_deliveries.status', 'processing');
-            })
+            // ->where(function ($query) {
+            //     $query->where('book_deliveries.category', '=', 'receive')
+            //         ->where('book_deliveries.status', 'processing');
+            // })
             ->count();
 
         // đi giao
@@ -542,11 +543,11 @@ class OrderController extends ApiController
             ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
             ->where('bookings.status', '!=', 'cancel')
             ->where('book_deliveries.user_id', request()->user()->id)
-            ->where(function ($query) {
-                $query->where('book_deliveries.category', '=', 'send')
-                    ->where('book_deliveries.sending_active', '=', 1)
-                    ->where('book_deliveries.status', 'processing');
-            })
+            // ->where(function ($query) {
+            //     $query->where('book_deliveries.category', '=', 'send')
+            //         ->where('book_deliveries.sending_active', '=', 1)
+            //         ->where('book_deliveries.status', 'processing');
+            // })
             ->count();
 
         // kiểm tra shipper có được thấy những đơn hàng mới không
@@ -577,7 +578,6 @@ class OrderController extends ApiController
         if (!in_array($req->status, ['processing', 'completed', 'delay', 'return', 'cancel', 'deny', 're-send'])) {
             return $this->apiError('status invalid');
         }
-
         $delivery = BookDelivery::where('id', $id)->first();
         if (empty($delivery)) {
             return $this->apiError('task can not found');
@@ -789,9 +789,9 @@ class OrderController extends ApiController
     public function getBookShipperWaitDetail(Request $req)
     {
         $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
-        if (empty($shipperOnline)) {
-            return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
-        }
+        // if (empty($shipperOnline)) {
+        //     return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng!');
+        // }
         $limit = $req->get('limit', 10);
 
         $messages = [
@@ -903,7 +903,6 @@ class OrderController extends ApiController
             if (request()->user()->auto_receive != 1) {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
-
             $booking = Booking::where(function ($q) {
                 $q->where('status', 'new');
                 $q->orWhere(function ($q) {

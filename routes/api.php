@@ -54,7 +54,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::get('listbook', 'Customer\OrderController@getListBook');
     Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType');// listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');
-    Route::post('booking', 'OrderController@booking');
+    Route::post('booking', 'OrderController@booking');//tạo mới đơn hàng
     Route::post('updatebook/{id}', 'OrderController@updateBook');
     Route::post('cancelbook/{id}', 'OrderController@cancelBook');
     Route::get('listCOD', 'OrderController@getCOD');
@@ -80,9 +80,9 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::group(['prefix' => 'shipper'], function () {
         Route::get('listbook', 'Shipper\OrderController@getListBook');
         Route::post('listbook-wait', 'Shipper\OrderController@getBookShipperWait');
-
+   
         Route::get('listbook-wait/detail', 'Shipper\OrderController@getBookShipperWaitDetail');
-        Route::post('auto-assign', 'OrderController@assignShipperAuto');
+        Route::post('auto-assign', 'OrderController@assignShipperAuto'); //phân công đơn hàng
         Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto');
         Route::post('update-prioritize', 'OrderController@updatePrioritize');
         Route::post('updatebook/{id}', 'Shipper\OrderController@updateBookShipper');
