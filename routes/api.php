@@ -82,9 +82,9 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::post('listbook-wait', 'Shipper\OrderController@getBookShipperWait');
    
         Route::get('listbook-wait/detail', 'Shipper\OrderController@getBookShipperWaitDetail');
-        Route::post('auto-assign', 'OrderController@assignShipperAuto'); //phân công đơn hàng
-        Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto');
-        Route::post('update-prioritize', 'OrderController@updatePrioritize');
+        Route::post('auto-assign', 'OrderController@assignShipperAuto'); // xác nhận lấy/giao/trả của khách hàng
+        Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto');// xác nhận lấy/giao/trả của đơn hàng
+        Route::post('update-prioritize', 'OrderController@updatePrioritize');//Cập nhật đơn hàng ưu tiên 
         Route::post('updatebook/{id}', 'Shipper\OrderController@updateBookShipper');
         Route::post('updatebook/{id}/other-note', 'Shipper\OrderController@updateNote');
         Route::get('detail/{id}', 'OrderController@bookDetailShipper');

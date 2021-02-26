@@ -896,7 +896,6 @@ class OrderController extends ApiController
                 'errors' => $validator->errors()
             ], 422);
         }
-
         // đi lấy
         if (request()->category == 'new') {
             // kiểm tra shipper có được thấy những đơn hàng mới không
@@ -908,11 +907,11 @@ class OrderController extends ApiController
                 $q->orWhere(function ($q) {
                     $q->where('bookings.status', 'taking');
                     $q->where('bookings.sub_status', 'delay');
-                    $q->whereHas('deliveries', function ($q) {
-                        //  $q->where('book_deliveries.user_id', 0);
-                        $q->where('book_deliveries.status', '=', 'delay');
-                        $q->where('book_deliveries.category', 'receive');
-                    });
+                    // $q->whereHas('deliveries', function ($q) {
+                    //     //  $q->where('book_deliveries.user_id', 0);
+                    //     $q->where('book_deliveries.status', '=', 'delay');
+                    //     $q->where('book_deliveries.category', 'receive');
+                    // });
                 });
             })->where('id', request()->id)->first();
 
