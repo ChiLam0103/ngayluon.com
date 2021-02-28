@@ -579,6 +579,7 @@ class OrderController extends ApiController
             return $this->apiError('status invalid');
         }
         $delivery = BookDelivery::where('id', $id)->first();
+        // dd($delivery);
         if (empty($delivery)) {
             return $this->apiError('task can not found');
         }
