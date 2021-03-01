@@ -30,7 +30,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api', 'middleware' => VerifyJ
     Route::get('updateaddress/{id}', 'APIUserController@updateAddress');
     Route::post('removedelivery/{id}', 'APIUserController@removeDelivery');
     Route::get('getaddress', 'APIUserController@getSendOrReceiveAddress');
-    
+
     Route::post('location', 'LocationController@location');
     Route::post('turn-on-parttime', 'APIUserController@turnOnParttime');
     Route::post('update/device', 'APIUserController@updateDevice');
@@ -52,9 +52,9 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api'], function () {
 
 Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJWTToken::class], function () {
     Route::get('listbook', 'Customer\OrderController@getListBook');
-    Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType');// listbook lấy danh sách trong ngày -chilam
+    Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType'); // listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');
-    Route::post('booking', 'OrderController@booking');//tạo mới đơn hàng
+    Route::post('booking', 'OrderController@booking'); //tạo mới đơn hàng
     Route::post('updatebook/{id}', 'OrderController@updateBook');
     Route::post('cancelbook/{id}', 'OrderController@cancelBook');
     Route::get('listCOD', 'OrderController@getCOD');
@@ -70,7 +70,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::get('wallet/description', 'WalletController@getWalletDescription');
     Route::get('total-summary', 'WalletController@getTotalSummary');
 
-    Route::group(['prefix' => 'customer'], function() {
+    Route::group(['prefix' => 'customer'], function () {
         Route::get('last-book', 'Customer\OrderController@lastedBookSender');
         Route::post('updatebook/{id}/other-note', 'Customer\OrderController@updateNote');
         Route::post('deny/{id}', 'Customer\OrderController@RequestReturn');
@@ -80,11 +80,11 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::group(['prefix' => 'shipper'], function () {
         Route::get('listbook', 'Shipper\OrderController@getListBook');
         Route::post('listbook-wait', 'Shipper\OrderController@getBookShipperWait');
-   
+
         Route::get('listbook-wait/detail', 'Shipper\OrderController@getBookShipperWaitDetail');
         Route::post('auto-assign', 'OrderController@assignShipperAuto'); // xác nhận lấy/giao/trả của khách hàng
-        Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto');// xác nhận lấy/giao/trả của đơn hàng
-        Route::post('update-prioritize', 'OrderController@updatePrioritize');//Cập nhật đơn hàng ưu tiên 
+        Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto'); // xác nhận lấy/giao/trả của đơn hàng
+        Route::post('update-prioritize', 'OrderController@updatePrioritize'); //Cập nhật đơn hàng ưu tiên 
         Route::post('updatebook/{id}', 'Shipper\OrderController@updateBookShipper');
         Route::post('updatebook/{id}/other-note', 'Shipper\OrderController@updateNote');
         Route::get('detail/{id}', 'OrderController@bookDetailShipper');
@@ -92,7 +92,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::get('area-scope', 'OrderController@getAreaScope');
         Route::get('area-scope-shipping', 'OrderController@getAreaScopeShipping');
         Route::get('listbook-count', 'Shipper\OrderController@getBookShipperCount');
-        
+
         Route::post('updatebook/{id}/weight', 'Shipper\OrderController@updateWeightPrice');
     });
 
@@ -103,7 +103,10 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::post('/read-all', 'NotificationController@readAll');
     });
 
-    Route::group(['prefix' => 'warehouse'], function() {});
+    Route::group(['prefix' => 'warehouse'], function () {
+        Route::post('updatebook/{id}', 'WareHouse\OrderController@updateBookWareHouse');
+        Route::get('listbook', 'WareHouse\OrderController@getListBook');
+    });
     Route::get('count-book/type={type}', 'OrderController@countBook');
 });
 
@@ -131,20 +134,20 @@ Route::group(['prefix' => 'policy', 'namespace' => 'API'], function () {
 });
 //--------RAYMOND------
 Route::group(['prefix' => 'qrcode', 'namespace' => 'API'], function () {
-    Route::group(['prefix' => 'customer'], function() {
-        Route::post('check-new', 'QRCodeController@checkNew');//1 check qrcode tạo đơn hàng
+    Route::group(['prefix' => 'customer'], function () {
+        Route::post('check-new', 'QRCodeController@checkNew'); //1 check qrcode tạo đơn hàng
     });
-    Route::group(['prefix' => 'shipper'], function() {
-        Route::post('receive', 'QRCodeController@receiveOrder');//2 lấy đơn
-        Route::post('sender', 'QRCodeController@senderOrder');//4 nhận đơn giao
+    Route::group(['prefix' => 'shipper'], function () {
+        Route::post('receive', 'QRCodeController@receiveOrder'); //2 lấy đơn
+        Route::post('sender', 'QRCodeController@senderOrder'); //4 nhận đơn giao
     });
-    Route::group(['prefix' => 'warehouse'], function() {
-        Route::post('into', 'QRCodeController@intoWarehouse');//3 nhập đơn mới vào kho
-        Route::post('fail', 'QRCodeController@failWarehouse');//5 nhập đơn hủy vào kho
+    Route::group(['prefix' => 'warehouse'], function () {
+        Route::post('into', 'QRCodeController@intoWarehouse'); //3 nhập đơn mới vào kho
+        Route::post('fail', 'QRCodeController@failWarehouse'); //5 nhập đơn hủy vào kho
     });
 });
 Route::group(['prefix' => 'order', 'namespace' => 'API'], function () {
-    Route::group(['prefix' => 'customer'], function() {
-        Route::post('create', 'OrderController@create');//1.1 nhập COD,image_order,qrcode
+    Route::group(['prefix' => 'customer'], function () {
+        Route::post('create', 'OrderController@create'); //1.1 nhập COD,image_order,qrcode
     });
 });
