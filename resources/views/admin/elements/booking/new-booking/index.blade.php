@@ -75,6 +75,7 @@
                 ],
                 'url' => url("/ajax/new_booking"),
                 'columns' => [
+                        ['data' => 'action', 'title' => 'Hành động', 'orderable' => false],
                         ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
                         ['data' => 'uuid', 'title' => 'UUID'],
                         ['data' => 'created_at', 'title' => 'Ngày tạo'],
@@ -99,7 +100,6 @@
                         ['data' => 'note', 'title' => 'Ghi chú hệ thống'],
                         ['data' => 'report_image', 'title' => 'Ảnh báo cáo'],
                         ['data' => 'shipper', 'title' => 'Tên Shipper'],
-                        ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                 ]
                 ])
         </div>

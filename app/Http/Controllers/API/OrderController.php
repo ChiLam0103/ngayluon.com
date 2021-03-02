@@ -791,14 +791,14 @@ class OrderController extends ApiController
                 'errors' => $validator->errors()
             ], 422);
         }
-
         // đi lấy
         if (request()->category == 'new') {
             // kiểm tra shipper có được thấy những đơn hàng mới không
             if (request()->user()->auto_receive != 1) {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
-            $bookingIds = Booking::where(function ($q) {
+
+            $bookingIds = DB::table('bookings')->where(function ($q) {
                 $q->where('status', 'new');
                 $q->orWhere(function ($q) {
                     $q->where('bookings.status', 'taking');
@@ -1698,7 +1698,13 @@ class OrderController extends ApiController
     {
         $limit = $req->get('limit', 10);
         try {
-            $rows = DB::table('bookings')->where('uuid', $id)->orWhere('send_phone', $id)->orWhere('receive_phone', $id)->orWhere('name', $id)->orderBy('id', 'desc')->paginate($limit);
+            $rows = DB::table('bookings')
+            ->where('uuid', $id)
+            ->orWhere('send_phone', $id)
+            ->orWhere('receive_name', $id)
+            ->orWhere('receive_phone', $id)
+            ->orWhere('name', $id)
+            ->orderBy('id', 'desc')->paginate($limit);
             foreach ($rows->items() as $query) {
                 $query->sender_info = [
                     'name' => $query->send_name,
@@ -1958,11 +1964,18 @@ class OrderController extends ApiController
 
         $data['all'] = 0;
         $data['new'] = 0;
-        $data['received'] = 0;
-        $data['sented'] = 0;
+        $data['taking'] = 0;
+        $data['warehouse'] = 0;
+        $data['sending'] = 0;
+        $data['completed'] = 0;
         $data['return'] = 0;
         $data['cancel'] = 0;
-        $data['re-send'] = 0;
+        $data['move'] = 0;
+        // $data['received'] = 0;
+        // $data['sented'] = 0;
+        // $data['return'] = 0;
+        // $data['cancel'] = 0;
+        // $data['re-send'] = 0;
         $query = Booking::where('sender_id', $req->user()->id)
             ->select('id', 'sender_id', 'status');
         $check_today = '';
@@ -1975,23 +1988,32 @@ class OrderController extends ApiController
         $data['all'] = count($check_today);
         if (!empty($check_today) && count($check_today) > 0) {
             foreach ($check_today as $item) {
-                if ($item->status == 'sending') {
-                    $data['received']++;
+                if ($item->status == 'new') {
+                    $data['new']++;
+                } elseif ($item->status == 'taking') {
+                    $data['taking']++;
+                } elseif ($item->status == 'warehouse') {
+                    $data['warehouse']++;
+                } elseif ($item->status == 'sending') {
+                    $data['sending']++;
                 } elseif ($item->status == 'completed') {
-                    $data['sented']++;
+                    $data['completed']++;
                 } elseif ($item->status == 'return') {
-
-                    if (!empty($item->returnDeliveries)) {
-                        $data['return']++;
-                    }
-                    if (!empty($item->requestDeliveries)) {
-                        $data['re-send']++;
-                    }
+                    $data['return']++;
                 } elseif ($item->status == 'cancel') {
                     $data['cancel']++;
-                } elseif ($item->status == 'new') {
-                    $data['new']++;
+                } elseif ($item->status == 'move') {
+                    $data['move']++;
                 }
+                //  elseif ($item->status == 'return') {
+
+                //     if (!empty($item->returnDeliveries)) {
+                //         $data['return']++;
+                //     }
+                //     if (!empty($item->requestDeliveries)) {
+                //         $data['re-send']++;
+                //     }
+                // }
             }
         }
         return $this->apiOk($data);

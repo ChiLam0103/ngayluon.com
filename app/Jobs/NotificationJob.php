@@ -55,6 +55,7 @@ class NotificationJob implements ShouldQueue
     }
 
     public function notificationBooking($booking = null, $toObject = 'admin', $title = ' vừa được tạo', $collapseKey = 'push_order') {
+        dd($booking);
         $db = User::where('status', 'active')->where('delete_status', 0);
         switch ($toObject) {
             case 'admin':
@@ -93,6 +94,7 @@ class NotificationJob implements ShouldQueue
                     $notification->booking_id = $booking['id'];
                     $notification->type = 'book';
                     $notification->type_detail = 'book_detail'; //booking detail
+                    $notification->status = $booking['status']; 
                     $notification->save();
                     $notificationId = $notification->id;
                 } else {
