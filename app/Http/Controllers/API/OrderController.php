@@ -1698,7 +1698,13 @@ class OrderController extends ApiController
     {
         $limit = $req->get('limit', 10);
         try {
-            $rows = DB::table('bookings')->where('uuid', $id)->orWhere('send_phone', $id)->orWhere('receive_phone', $id)->orWhere('name', $id)->orderBy('id', 'desc')->paginate($limit);
+            $rows = DB::table('bookings')
+            ->where('uuid', $id)
+            ->orWhere('send_phone', $id)
+            ->orWhere('receive_name', $id)
+            ->orWhere('receive_phone', $id)
+            ->orWhere('name', $id)
+            ->orderBy('id', 'desc')->paginate($limit);
             foreach ($rows->items() as $query) {
                 $query->sender_info = [
                     'name' => $query->send_name,
