@@ -1491,7 +1491,7 @@ class OrderController extends ApiController
         // end cập nhật thông báo đã đọc
         try {
             // log đơn hàng
-            $log = DB::table('notifications')->where('booking_id', $id)->where('type_detail', 'book_detail')->select('id','title', 'status', 'created_at', 'updated_at')->get();
+            $log = DB::table('notifications')->where('booking_id', $id)->where('type_detail', 'book_detail')->select()->get();
             $query = Booking::where('id', $id)->first();
             $query->returnBookingInfo;
             $query->sender_info = [
