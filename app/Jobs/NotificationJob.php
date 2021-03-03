@@ -50,12 +50,13 @@ class NotificationJob implements ShouldQueue
         $this->notificationBooking($this->booking, $this->toObject, $this->title, $this->collapseKey);
     }
 
-    public function test() {
+    public function test()
+    {
         dd(Auth::user());
     }
 
-    public function notificationBooking($booking = null, $toObject = 'admin', $title = ' vừa được tạo', $collapseKey = 'push_order') {
-        dd($booking);
+    public function notificationBooking($booking = null, $toObject = 'admin', $title = ' vừa được tạo', $collapseKey = 'push_order')
+    {
         $db = User::where('status', 'active')->where('delete_status', 0);
         switch ($toObject) {
             case 'admin':
@@ -93,8 +94,7 @@ class NotificationJob implements ShouldQueue
                     $notification->title = 'Đơn hàng [' . $booking['uuid'] . ']' . $title;
                     $notification->booking_id = $booking['id'];
                     $notification->type = 'book';
-                    $notification->type_detail = 'book_detail'; //booking detail
-                    $notification->status = $booking['status']; 
+                    $notification->status = $booking['status'];
                     $notification->save();
                     $notificationId = $notification->id;
                 } else {
@@ -129,7 +129,6 @@ class NotificationJob implements ShouldQueue
                             dispatch(new PushNotificationBook($device->device_token, $notification->title, $notification->title, $message, $device->device_type, $collapseKey));
                         }
                     }
-
                 }
             } catch (Exception $e) {
                 DB::rollBack();
@@ -137,14 +136,38 @@ class NotificationJob implements ShouldQueue
             }
         }
     }
+    public static function logBooking($booking = null, $title = ' vừa được tạo')
+    {
+        DB::beginTransaction();
+        try {
+            $notification = Notification::where('booking_id', $booking['id'])->where('title', 'Đơn hàng [' . $booking['uuid'] . ']' . $title)->first();
+            if (empty($notification)) {
+                $notification = new Notification();
+                $notification->title = 'Đơn hàng [' . $booking['uuid'] . ']' . $title;
+                $notification->booking_id = $booking['id'];
+                $notification->type_detail = 'book_detail'; //booking detail
+                $notification->status = $booking['status'];
+                $notification->save();
+                DB::commit();
+            } else {
+                $notification->type_detail = 'book_detail'; //booking detail
+            }
+            $notification->save();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
 
-    public function getUnreadCount($user_id) {
+    public function getUnreadCount($user_id)
+    {
         $query = DB::table('notifications_users')
-                    ->join('notifications', 'notifications_users.notification_id', '=', 'notifications.id')
-                    ->select('notifications_users.*', 'notifications.*')
-                    ->where('is_deleted', 0)
-                    ->where('is_readed', 0)
-                    ->where('user_id', $user_id);
+            ->join('notifications', 'notifications_users.notification_id', '=', 'notifications.id')
+            ->select('notifications_users.*', 'notifications.*')
+            ->where('is_deleted', 0)
+            ->where('is_readed', 0)
+            ->where('user_id', $user_id);
         $notifications = $query->count();
         return $notifications;
     }

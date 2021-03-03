@@ -106,6 +106,8 @@ class OrderController extends ApiController
                 ]
             ];
             unset($item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address, $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id, $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address, $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng);
+            $bookingTmp = $query->toArray();
+            NotificationJob::logBooking($bookingTmp, ' đã được nhập kho');
         }
         return $this->apiOk($rows);
     }

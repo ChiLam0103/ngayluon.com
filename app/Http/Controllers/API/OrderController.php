@@ -275,6 +275,7 @@ class OrderController extends ApiController
             // $this->addNotificationBook($bookingTmp, $title, $userIds = []);
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được tạo', 'push_order'));
             dispatch(new NotificationJob($bookingTmp, 'customer', ' vừa được tạo', 'push_order'));
+            NotificationJob::logBooking($bookingTmp, ' vừa được tạo');
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->apiError($e->getMessage());
@@ -876,7 +877,7 @@ class OrderController extends ApiController
 
         // đi lấy
         if (request()->category == 'new') {
-            // kiểm tra shipper có được thấy những đơn hàng mới không
+            // kiểm tra shipper có được thấy những đơn hàng mới không 
             if (request()->user()->auto_receive != 1) {
                 return $this->apiError('Shipper chưa được quyền thấy những đơn hàng mới đợi lấy');
             }
@@ -1362,6 +1363,7 @@ class OrderController extends ApiController
 
                         // thông báo đơn hàng được trả lại
                         dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được trả lại', 'push_order_change'));
+                        NotificationJob::logBooking($bookingTmp, ' đã được trả lại');
                     } else {
                         if ($delivery->category == 'receive') {
                             if ($booking->payment_type == 1) {
@@ -1373,6 +1375,7 @@ class OrderController extends ApiController
                                         $revenue->total_price += $booking->price;
 
                                         dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được thanh toán nợ', 'push_customer_owe'));
+                                        NotificationJob::logBooking($bookingTmp, ' đã được thanh toán nợ');
                                     }
                                 }
                             }
@@ -1383,6 +1386,7 @@ class OrderController extends ApiController
 
                             // thông báo đơn hàng được lấy
                             dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được lấy', 'push_order_change'));
+                            NotificationJob::logBooking($bookingTmp, ' đã được lấy');
                         } elseif ($delivery->category == 'send') {
                             $check = BookDelivery::where('book_id', $delivery->book_id)->where('category', 'receive')->where('status', 'processing')->first();
                             if ($check != null) {
@@ -1407,6 +1411,7 @@ class OrderController extends ApiController
 
                             // thông báo đơn hàng được giao
                             dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được giao', 'push_order_change'));
+                            NotificationJob::logBooking($bookingTmp, ' đã được giao');
                         }
                         $booking->sub_status = 'none';
                     }
@@ -1435,6 +1440,7 @@ class OrderController extends ApiController
 
                     // thông báo đơn hàng giao lại/trả lại
                     dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được giao lại/trả lại', 'push_order_change'));
+                    NotificationJob::logBooking($bookingTmp, ' đã được giao lại/trả lại');
                     break;
                 case 'cancel':
                     $delivery->status = 'cancel';
@@ -1443,6 +1449,7 @@ class OrderController extends ApiController
 
                     // thông báo đơn hàng hủy
                     dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được hủy', 'push_order_change'));
+                    NotificationJob::logBooking($bookingTmp, ' đã được hủy');
                     break;
                 default:
                     $delivery->status = $req->status;
@@ -1790,6 +1797,7 @@ class OrderController extends ApiController
             // $notificationHelper->notificationBooking($bookingTmp, 'customer', ' vừa được hủy', 'push_order_change');
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được hủy', 'push_order_change'));
             dispatch(new NotificationJob($bookingTmp, 'customer', ' vừa được hủy', 'push_order_change'));
+            NotificationJob::logBooking($bookingTmp, ' đã được hủy');
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->apiError($e->getMessage());
