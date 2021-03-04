@@ -51,7 +51,7 @@
             </a>
         </li>
     @endif
-    <li class="nav-item start @if(isset($active)&& $active == 'col_register' || $active == 'shipper_register') active open @endif">
+    {{-- <li class="nav-item start @if(isset($active)&& $active == 'col_register' || $active == 'shipper_register') active open @endif">
         <a href="javascript:;" class="nav-link nav-toggle">
             <i class="fa fa-user-plus" aria-hidden="true"></i>
             <span class="title">Quản lý lượt đăng ký mới</span>
@@ -74,7 +74,7 @@
             </li>
         </ul>
 
-    </li>
+    </li> --}}
     <li class="nav-item start @if(isset($active)&& $active == 'collaborators' || $active == 'shipper' || $active == 'agency' || $active == 'warehouse') active open @endif">
         <a href="javascript:;" class="nav-link nav-toggle">
             <i class="fa fa-user" aria-hidden="true"></i>
@@ -85,12 +85,11 @@
         </a>
         <ul class="sub-menu">
             @if(\Auth::user()->role == 'admin')
-                <li class="nav-item start @if(isset($active)&& $active == 'agency') active @endif">
+                {{-- <li class="nav-item start @if(isset($active)&& $active == 'agency') active @endif">
                     <a href="{{ url('/admin/agencies') }}" class="nav-link">
-                        {{--<i class="fa fa-shopping-cart" aria-hidden="true"></i>--}}
                         <span class="title">Quản lý đại lý</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item   @if($active == 'collaborators') active @endif">
                     <a href="{{ url('/admin/collaborators') }}" class="nav-link">
                         {{--<i class="fa fa-user" aria-hidden="true"></i>--}}
@@ -120,13 +119,13 @@
             <span class="arrow"></span>
         </a>
         <ul class="sub-menu">
-            @if(\Auth::user()->role == 'admin')
+            {{-- @if(\Auth::user()->role == 'admin')
                 <li class="nav-item start @if(isset($active)&& $active == 'partner') active @endif">
                     <a href="{{ url('/admin/partners') }}" class="nav-link">
                         <span class="title">Quản lý đối tác</span>
                     </a>
                 </li>
-            @endif
+            @endif --}}
             <li class="nav-item  @if(isset($active)&& $active == 'customer') active @endif">
                 <a href="{{ url('/admin/customers') }}" class="nav-link ">
                     <span class="title">Quản lý khách hàng</span>

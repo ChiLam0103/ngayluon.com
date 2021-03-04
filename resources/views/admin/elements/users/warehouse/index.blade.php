@@ -34,7 +34,7 @@
                        ['data' => 'phone_number', 'title' => 'Số điện thoại'],
                        ['data' => 'role', 'title' => 'Vai trò'],
                        ['data' => 'status', 'title' => 'Trạng thái'],
-                       ['data' => 'agency', 'title' => 'Đại lý'],
+                    //    ['data' => 'agency', 'title' => 'Đại lý'],
                        ['data' => 'revenue_price', 'title' => 'Tổng giá cước đã thu'],
                        ['data' => 'revenue_cod', 'title' => 'Tổng COD đã thu'],
                        ['data' => 'created_at', 'title' => 'Ngày tạo'],

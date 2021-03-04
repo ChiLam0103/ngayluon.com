@@ -18,8 +18,8 @@
                     <img src="{!! asset('public/landing_page/images/ico-partner.png') !!}"/>
                     <h2>Đăng ký làm đại lý thu gom</h2>
                     <p>Bạn đang muốn khởi nghiệp, muốn làm chủ, thu nhập không giới hạn, mà lại vốn ít, hãy liên hệ với
-                        Ship668. Chế độ hoa hồng, chiết khấu cực hấp dẫn.</p>
-                    <p>Ship668 luôn luôn chào đón bạn.</p>
+                        Ngay & Luôn. Chế độ hoa hồng, chiết khấu cực hấp dẫn.</p>
+                    <p>Ngay & Luôn luôn luôn chào đón bạn.</p>
                     <p>Hãy click vào đây đăng kí ngay. Hoặc liên hệ hotline: 0396.504.701 - 09640.222.63</p>
                 </a>
             </div>

@@ -59,7 +59,7 @@
                     type: '{{ $method or "GET"}}'
                 },
                 stateSave: true,
-                // processing: true,
+                 processing: true,
                 @if (isset($columns))
                 columns: <?php echo json_encode($columns); ?>,
                 @endif

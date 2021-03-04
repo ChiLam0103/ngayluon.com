@@ -111,7 +111,6 @@ class OrderController extends ApiController
         }
         return $this->apiOk($rows);
     }
-
     public function updateBookWareHouse($id, Request $req)
     {
         $validator = Validator::make($req->all(), [

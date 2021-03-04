@@ -4,7 +4,7 @@
             <div class="col-md-2 col-sm-12"></div>
             <div class="col-md-8 col-sm-12 title-large">
                 <h1>Liên hệ</h1>
-                <p>Để giải đáp thêm về thắc mắc hoặc cần hỗ trợ thêm. Quý khách vui lòng liên hệ với Ship668 theo
+                <p>Để giải đáp thêm về thắc mắc hoặc cần hỗ trợ thêm. Quý khách vui lòng liên hệ với Ngay & Luôn theo
                     thông tin dưới đây.</p>
             </div>
         </div>
@@ -58,11 +58,11 @@
                     </li>
                     <li>
                         <i class="fas fa-envelope cyan"></i>
-                        <span>hotro.ship668@gmail.com</span>
+                        <span>hotro8@gmail.com</span>
                     </li>
                     <li>
                         <i class="fas fa-globe cyan"></i>
-                        <span><a href="https://ship668.com/" style="color: #4c96d7 ; text-decoration: none">https://ship668.com/</a> </span>
+                        <span><a href="https://ngayluon.com/" style="color: #4c96d7 ; text-decoration: none">https://ngayluon.com/</a> </span>
                     </li>
                 </ul>
             </div>

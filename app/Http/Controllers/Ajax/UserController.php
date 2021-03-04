@@ -375,7 +375,9 @@ class UserController extends Controller
             $user = $user->whereHas('shipper', function ($query) use ($scope) {
                 $query->whereIn('agency_id', $scope);
             });
+            
         }
+
         return datatables()->of($user)
             ->addColumn('action', function ($user) {
                 $action = [];
@@ -452,7 +454,7 @@ class UserController extends Controller
                 $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
                 $action[] = '<a style="float:left" href="' . url('admin/warehouse/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
                 $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/warehouse/' . $user->id]]) .
-                    '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' .
+                    '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button><br/>' .
                     Form::close() . '</div>';
                 if (Auth::user()->role == 'admin') {
                     $action[] = '<div style="float: left">' . Form::open(['method' => 'GET', 'url' => ['admin/warehouse/' . $user->id]]) .
@@ -463,13 +465,13 @@ class UserController extends Controller
                 $action[] = '<a style="float:left" href="' . url('admin/warehouse/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
                 return implode(' ', $action);
             })
-            ->addColumn('agency', function ($user) {
-                $data = '';
-                if (!empty($user->shipper)) {
-                    $data = Agency::find($user->shipper->agency_id)->name;
-                }
-                return $data;
-            })
+            // ->addColumn('agency', function ($user) {
+            //     $data = '';
+            //     if (!empty($user->shipper)) {
+            //         $data = Agency::find($user->shipper->agency_id)->name;
+            //     }
+            //     return $data;
+            // })
             ->addColumn('revenue_price', function ($user) {
                 $data = 0;
                 if ($user->revenues != null) {

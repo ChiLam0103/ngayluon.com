@@ -20,7 +20,7 @@ ul {
 
 h1 {
     font-size: 40px !important;
-    color: #4c96d7 !important;
+    color: #dc3545 !important;
     text-transform: uppercase;
 }
 
@@ -40,7 +40,7 @@ a {
 }
 
 a:hover {
-    color: #4c96d7;
+    color: #dc3545;
     text-decoration: none;
 }
 
@@ -53,7 +53,7 @@ p {
 }
 
 .cyan {
-    color: #4c96d7;
+    color: #dc3545;
 }
 
 .title-large {
@@ -79,7 +79,7 @@ input[type="submit"] {
     border: none;
     padding: 12px 25px;
     color: #fff;
-    background: #4c96d7;
+    background: #dc3545;
     margin-top: 15px;
     text-transform: uppercase;
     float: left;
@@ -99,7 +99,7 @@ button {
     border: none;
     padding: 12px 25px;
     color: #fff;
-    background: #4c96d7;
+    background: #dc3545;
     margin-top: 15px;
     text-transform: uppercase !important;
     float: left;
@@ -137,7 +137,7 @@ button {
 }
 
 .menu li a:hover {
-    color: #4c96d7;
+    color: #dc3545;
     text-decoration: none;
 }
 
@@ -180,7 +180,7 @@ section {
 /* ORDER */
 
 .order {
-    background: #4c96d7;
+    background: #dc3545;
     color: #fff;
     padding: 30px 0;
     font-family: 'SFUEurostile';
@@ -197,7 +197,7 @@ section {
     text-align: center;
     font-family: 'SFUEurostile';
     font-size: 20px;
-    background: #f15922;
+    background: #117a8b;
     color: #fff;
     text-transform: uppercase;
     border: none;
@@ -241,7 +241,7 @@ section {
 }
 
 .service .service-cyan {
-    background: #4c96d7;
+    background: #dc3545;
     color: #fff;
     padding: 35px 10px;
     text-align: center;
@@ -262,7 +262,7 @@ section {
 
 .intro {
     clear: both;
-    background: #4c96d7;
+    background: #dc3545;
     float: left;
     width: 100%;
     color: #fff;
@@ -447,13 +447,13 @@ section {
     height: 50px;
     min-width: 150px;
     text-align: center;
-    background: #4c96d7;
+    background: #dc3545;
     padding: 14px 15px;
     border-radius: 8px 8px 0 0;
 }
 
 .sub-title .line {
-    background: #4c96d7;
+    background: #dc3545;
     position: absolute;
     width: 100%;
     float: left;
@@ -512,7 +512,7 @@ section {
     position: relative;
     float: left;
     background: #fff;
-    border: 1px solid #4c96d7;
+    border: 1px solid #dc3545;
     top: 15px;
 }
 
