@@ -77,8 +77,9 @@
                'url' => url("/ajax/receive_booking"),
                'customSearch' => true,
                'columns' => [
+                        ['data' => 'action', 'title' => 'Hành động', 'orderable' => false],
                         ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
-                        ['data' => 'uuid', 'title' => 'QR Code'],
+                        ['data' => 'uuid', 'title' => 'UUID'],
                         ['data' => 'created_at', 'title' => 'Ngày tạo'],
                         ['data' => 'send_created_at', 'title' => 'Ngày đi giao', 'orderable' => false, 'searchable' => false],
                         ['data' => 'user_create', 'title' => 'Người tạo đơn', 'orderable' => false, 'searchable' => false],
@@ -103,7 +104,6 @@
                         ['data' => 'shipper_name', 'title' => 'Tên Shipper'],
                         ['data' => 'first_agency_name', 'title' => 'Đại lý lấy hàng'],
                         ['data' => 'current_agency_name', 'title' => 'Kho hiện tại'],
-                        ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                    ]
                ])
         </div>

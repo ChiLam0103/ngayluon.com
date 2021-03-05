@@ -176,6 +176,11 @@
                     <span class="title">Đơn hàng chưa giao</span>
                 </a>
             </li>
+            <li class="nav-item @if(isset($active)&& $active == 'warehouse_booking') active @endif">
+                <a href="{{ url('/admin/booking/warehouse_booking') }}" class="nav-link ">
+                    <span class="title">Đơn hàng trong kho</span>
+                </a>
+            </li>
             <li class="nav-item @if(isset($active)&& $active == 'move_booking') active @endif">
                 <a href="{{ url('/admin/booking/move_booking') }}" class="nav-link ">
                     <span class="title">Đơn hàng chuyển kho</span>

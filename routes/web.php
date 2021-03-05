@@ -124,6 +124,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
         Route::get('delay', 'BookingController@getDelayBooking');
         Route::get('cancel', 'BookingController@getCancelBooking');
         Route::get('move_booking', 'BookingController@moveBooking');
+        Route::get('warehouse_booking', 'BookingController@warehouseBooking');
         Route::post('move', 'BookingController@postMoveBooking');
         Route::get('moved/{id}', 'BookingController@movedBooking');
         Route::get('sent', 'BookingController@getSentBooking');
@@ -240,6 +241,7 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     Route::get('deny_booking', 'BookingController@denyBooking');
     Route::get('change_cod_status/{id}', 'BookingController@changeCODStatus');
     Route::get('remove_booking', 'BookingController@removeBookingByTime');
+    Route::get('warehouse', 'BookingController@warehouseBooking');
     //end booking route
     //COD
     Route::get('total_COD', 'CODController@totalCOD');

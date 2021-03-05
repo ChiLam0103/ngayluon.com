@@ -233,10 +233,10 @@ class BookingController extends Controller
             ->addColumn('action', function ($b) {
                 $action = [];
                 if ($b->action_status == 0) {
-                    $action[] = '<div style="display: inline-flex"><a href="' . url('admin/booking/send_assign/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công</a>';
+                    $action[] = '<div style="display: inline"><a href="' . url('admin/booking/send_assign/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công</a>';
                     $action[] = '<a class="btn btn-xs btn-warning" href="#" onclick="moveBooking(' . $b->id . ')"><i class="fa fa-share" aria-hidden="true"></i> Chuyển kho</a>';
                 } else {
-                    $action[] = '<div style="display: inline-flex"><a href="' . url('admin/booking/reassign/sending/' . $b->id) . '" class="btn btn-xs btn-success"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
+                    $action[] = '<div style="display: inline"><a href="' . url('admin/booking/reassign/sending/' . $b->id) . '" class="btn btn-xs btn-success"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
                     $action[] = '<a href="' . url('admin/booking/completed/send/' . $b->id) . '" class="btn btn-xs btn-success" style="background: green" ><i class="fa fa-check"></i> Đã giao</a>';
                     $action[] = '<a href="' . url('admin/booking/deny/' . $b->id) . '" class="btn btn-xs btn-danger"><i class="fa fa-retweet" aria-hidden="true"></i> Trả lại</a>';
                 }
@@ -247,11 +247,11 @@ class BookingController extends Controller
                 return implode(' ', $action);
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
             })
-            ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-            })
+            // ->editColumn('uuid', function ($b) {
+            //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+            // })
             ->editColumn('status', function ($b) {
                 return 'Chưa giao';
             })
@@ -300,7 +300,7 @@ class BookingController extends Controller
                 $delivery = BookDelivery::where('book_id', $b->id)->where('category', 'send')->where('status', 'processing')->where('sending_active', 1)->select('created_at as send_created_at')->first();
                 return !empty($delivery) ? $delivery->send_created_at : '';
             })
-            ->rawColumns(['report_image', 'action','image_order','uuid'])
+            ->rawColumns(['report_image', 'action','image_order'])
             ->make(true);
     }
 
@@ -828,6 +828,134 @@ class BookingController extends Controller
                 }
                 return $last_agency;
             })
+            ->editColumn('transport_type', function ($b) {
+                $tran = '';
+                if ($b->transport_type == 1) {
+                    $tran = 'Giao chuẩn';
+                } else if ($b->transport_type == 2) {
+                    $tran = 'Giao tiết kiệm';
+                } else if ($b->transport_type == 3) {
+                    $tran = 'Giao siêu tốc';
+                } else {
+                    $tran = 'Giao thu COD';
+                }
+                return $tran;
+            })
+            ->rawColumns(['image_order','uuid'])
+            ->make(true);
+    }
+    public function warehouseBooking()
+    {
+        // $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
+        //     ->where('bookings.status', 'move')->where('book_deliveries.category', '=', 'move');
+        if (Auth::user()->role == 'collaborators') {
+            $user_id = Auth::user()->id;
+            $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
+            // $booking = $booking->whereIn('book_deliveries.current_agency', $scope)
+            //     ->orWhere('book_deliveries.category', 'move')->whereIn('book_deliveries.last_agency', $scope);
+
+            // $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
+            // ->where(function($q) use ($scope){
+            //     $q->where(function($q1){
+            //         $q1->where('bookings.status', 'move')->where('book_deliveries.category', '=', 'move');
+            //     });
+            //     $q->orWhere(function($q2) use ($scope){
+            //         $q2->whereIn('book_deliveries.current_agency', $scope)
+            //             ->orWhere('book_deliveries.category', 'move')->whereIn('book_deliveries.last_agency', $scope);
+            //     });
+            // });
+            $booking = Booking::where(function($q) use ($scope){
+                $q->where(function($q1){
+                    $q1->where('bookings.status', 'warehouse');
+                    // $q1->whereHas('deliveries', function($query){
+                    //     $query->where('category', 'warehouse')->where('status', 'processing');
+                    // });
+                });
+                // $q->orWhere(function($q2) use ($scope){
+                //     $q2->whereHas('deliveries', function($query) use ($scope){
+                //         $query->whereIn('current_agency', $scope);
+                //     });
+                //     $q2->orWhere(function($q) use ($scope){
+                //         $q->whereHas('deliveries', function($query) use ($scope){
+                //             $query->where('category', 'warehouse')->where('status', 'processing');
+                //             $query->whereIn('last_agency', $scope);
+                //         });
+                //     });
+                // });
+            });
+        } else {
+            // $booking = $booking->where('book_deliveries.status', '=', 'processing');
+
+            //$booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
+            $booking = Booking::where(function($q){
+                $q->where(function($q1){
+                    $q1->where('bookings.status', 'warehouse');
+                        // ->where('book_deliveries.category', '=', 'move');
+                        // ->whereHas('deliveries', function ($query) {
+                        //     $query->where('category', 'warehouse');
+                        // });
+                });
+                // $q->where(function($q2){
+                //     // $q2->where('book_deliveries.status', '=', 'processing');
+                //     $q2->whereHas('deliveries', function ($query) {
+                //         $query->where('status', 'processing');
+                //     });
+                // });
+            });
+        }
+        // dd($booking);
+        return datatables()->of($booking)
+            // ->addColumn('action', function ($b) {
+            //     $action = [];
+            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'warehouse')->first();
+            //     if (Auth::user()->role == 'collaborators') {
+            //         $user_id = Auth::user()->id;
+            //         $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
+            //         if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
+            //             $action[] = '<a style="float: left" href="' . url('admin/booking/moved/' . $bookDelivery->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-check-circle"></i> Đã nhận hàng</a>';
+            //         }
+            //     } else if (Auth::user()->role == 'admin') {
+            //         $action[] = '<a style="float: left" href="' . url('admin/booking/moved/' . $bookDelivery->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-check-circle"></i> Đã nhận hàng</a>';
+            //     }
+            //     return implode(' ', $action);
+            // })
+            ->editColumn('image_order', function ($b) {
+                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+            })
+            // ->editColumn('uuid', function ($b) {
+            //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+            // })
+            // ->editColumn('status', function ($b) {
+            //     $status = '';
+            //     $user_id = Auth::user()->id;
+            //     $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
+            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'move')->first();
+            //     if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
+            //         $status = 'Đang chuyển đến';
+            //     } else if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'completed') {
+            //         $status = 'Đã chuyển đến';
+            //     } else if (in_array($bookDelivery->current_agency, $scope) && $bookDelivery->status == 'processing') {
+            //         $status = 'Đang chuyển đi';
+            //     } else {
+            //         $status = 'Đã chuyển đi';
+            //     }
+            //     return $status;
+            // })
+            // ->editColumn('current_agency', function ($b) {
+            //     $current_agency = '';
+            //     if ($b->current_agency) {
+            //         $current_agency = Agency::find($b->current_agency)->name;
+            //     }
+            //     return $current_agency;
+            // })
+            // ->editColumn('last_agency', function ($b) {
+            //     $last_agency = '';
+            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'warehouse')->first();
+            //     if ($bookDelivery->last_agency) {
+            //         $last_agency = Agency::find($bookDelivery->last_agency)->name;
+            //     }
+            //     return $last_agency;
+            // })
             ->editColumn('transport_type', function ($b) {
                 $tran = '';
                 if ($b->transport_type == 1) {

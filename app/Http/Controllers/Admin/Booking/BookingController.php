@@ -189,17 +189,18 @@ class BookingController extends Controller
             if ($check == 0) {
                 $booking->is_customer_new = 1;
             }
+            //tạo uuid
+            $id = $this->generateBookID();
+            $booking->uuid = $id;
             $booking->save();
-            $qrcode = new QRCode();
-            $qrcode->name = str_random(5) . $booking->id;
-            $qrcode->created_at = date('Y-m-d h:i:s');
-            $qrcode->used_at = date('Y-m-d h:i:s');
-            $qrcode->is_used = 1;
-            $qrcode->save();
-            
-            $booking->uuid = $qrcode->name;
-            $booking->qrcode_id = $qrcode->id;
-            $booking->save();
+            // $qrcode = new QRCode();
+            // $qrcode->name = str_random(5) . $booking->id;
+            // $qrcode->created_at = date('Y-m-d h:i:s');
+            // $qrcode->used_at = date('Y-m-d h:i:s');
+            // $qrcode->is_used = 1;
+            // $qrcode->save();
+            // $booking->uuid = $qrcode->name;
+
             DB::commit();
 
             // Thông báo tới admin có đơn hàng mới
@@ -208,6 +209,7 @@ class BookingController extends Controller
             // $notificationHelper = new NotificationHelper();
             // $notificationHelper->notificationBooking($bookingTmp, 'admin', ' vừa được tạo', 'push_order');
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được tạo', 'push_order'));
+            NotificationJob::logBooking($bookingTmp, ' vừa được tạo');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);
@@ -215,7 +217,7 @@ class BookingController extends Controller
         return redirect(url('admin/booking/new'))->with('success', 'tạo mới đơn hàng thành công');
     }
 
-    //updaye booking
+    //update booking
     public function updateBooking($active, $id)
     {
         if ($active == 'return') {
@@ -230,7 +232,8 @@ class BookingController extends Controller
         }
         $this->breadcrumb[] = 'Chỉnh sửa đơn hàng';
         $booking = Booking::where('id', $id)->first();
-        return view('admin.elements.booking.create.edit', ['active' => $active, 'breadcrumb' => $this->breadcrumb, 'booking' => $booking]);
+        $log = DB::table('notifications')->where('booking_id', $id)->get();
+        return view('admin.elements.booking.create.edit', ['active' => $active, 'breadcrumb' => $this->breadcrumb, 'booking' => $booking, 'log' => $log]);
     }
 
     public function postUpdateBooking(UpdateBookingRequest $req, $active, $id)
@@ -325,7 +328,6 @@ class BookingController extends Controller
             dd($e);
         }
         return redirect()->back()->with('success', 'Xóa đơn hàng thành công');
-
     }
 
     //cancel booking
@@ -362,12 +364,12 @@ class BookingController extends Controller
             // $notificationHelper->notificationBooking($bookingTmp, 'customer', ' vừa được hủy', 'push_order_change');
             dispatch(new NotificationJob($bookingTmp, 'admin', ' vừa được hủy', 'push_order_change'));
             dispatch(new NotificationJob($bookingTmp, 'customer', ' vừa được hủy', 'push_order_change'));
+            NotificationJob::logBooking($bookingTmp, ' vừa được hủy');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e);
         }
         return redirect()->back()->with('success', 'Hủy đơn hàng thành công');
-
     }
 
     //start index route function
@@ -425,7 +427,17 @@ class BookingController extends Controller
         $this->breadcrumb[] = 'đơn hàng chuyển kho';
         return view('admin.elements.booking.move.index', ['active' => 'move_booking', 'breadcrumb' => $this->breadcrumb, 'time_from' => $time_from]);
     }
-
+    public function warehouseBooking()
+    {
+        if (Auth::user()->role == 'collaborators') {
+            $time = Booking::whereIn('send_ward_id', $this->getBookingScope())->where('status', 'warehouse')->min('created_at');
+        } else {
+            $time = Booking::Where('status', 'warehouse')->min('created_at');
+        }
+        $time_from = $time != null ? date("Y-m-d", strtotime($time)) : Carbon::today()->toDateString();
+        $this->breadcrumb[] = 'đơn hàng trong kho';
+        return view('admin.elements.booking.warehouse.index', ['active' => 'warehouse_booking', 'breadcrumb' => $this->breadcrumb, 'time_from' => $time_from]);
+    }
     public function getCancelBooking()
     {
         $this->breadcrumb[] = 'đơn hàng đã hủy';
@@ -630,7 +642,6 @@ class BookingController extends Controller
                     $check->save();
                 }
                 $url = 'new';
-
             }
             if ($cate == 'sending') {
                 $check = BookDelivery::where('book_id', $id)->where('category', 'send')->where('status', 'processing')->first();
@@ -727,8 +738,8 @@ class BookingController extends Controller
                 $agency = null;
 
                 $delivery = BookDelivery::where('book_id', $booking->id)
-                                ->where('category', 'move')
-                                ->first();
+                    ->where('category', 'move')
+                    ->first();
                 if (empty($delivery)) {
                     $delivery = new  BookDelivery();
                 }
@@ -828,16 +839,18 @@ class BookingController extends Controller
                         }
                         // thông báo tới khách hàng là đơn hàng đã được trả lại
                         dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được trả lại', 'push_order_change'));
+                        NotificationJob::logBooking($bookingTmp, ' vừa được trả lại');
                     } else {
                         if ($category == 'receive') {
                             //Tạo và gửi thông báo tới customer là: đã thanh toán tiền nợ
                             if ($request->owe && $request->owe == 1) {
                                 dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được thanh toán nợ', 'push_customer_owe'));
+                                NotificationJob::logBooking($bookingTmp, ' vừa được thanh toán nợ');
                             }
 
                             // thông báo tới khách hàng là đơn hàng đã được lấy
                             dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được lấy', 'push_order_change'));
-
+                            NotificationJob::logBooking($bookingTmp, ' vừa được lấy');
                             if ($booking->payment_type == 1) {
                                 if (isset($request->owe) && $request->owe == 1) {
                                     $booking->paid = $booking->price;
@@ -901,7 +914,7 @@ class BookingController extends Controller
         return redirect()->back();
     }
 
-//deny
+    //deny
     public function deny($id)
     {
         DB::beginTransaction();
@@ -909,7 +922,7 @@ class BookingController extends Controller
             $booking = Booking::where('id', $id)->first();
             $delivery = BookDelivery::where('book_id', $id);
             $bookingTmp = $booking->toArray();
-            
+
             if ($booking->status == 'return') {
                 $delivery = $delivery->where('category', 'return')->first();
                 if ($delivery->user_id != 0) {
@@ -929,7 +942,7 @@ class BookingController extends Controller
             $bookingTmp['book_delivery_id'] = $delivery->id;
             // thông báo tới khách hàng là đơn hàng đã được giao
             dispatch(new NotificationJob($bookingTmp, 'customer', ' đã được giao lại/trả lại', 'push_order_change'));
-            
+            NotificationJob::logBooking($bookingTmp, ' vừa được giao lại/trả lại');
             $booking->save();
             DB::commit();
         } catch (\Exception $e) {
@@ -956,17 +969,19 @@ class BookingController extends Controller
         return redirect(url('admin/booking/return'))->with('success', 'Phân công trả lại đơn hàng thành công!');
     }
 
-    private function updateNotificationReaded($request) {
+    private function updateNotificationReaded($request)
+    {
         if ($request->has('notification_id') && $request->has('is_readed') && $request->is_readed == 1) {
             $notificationUser = NotificationUser::where('notification_id', $request->notification_id)
-                                    ->where('user_id', Auth::user()->id)
-                                    ->update(array('is_readed' => 1));
+                ->where('user_id', Auth::user()->id)
+                ->update(array('is_readed' => 1));
         }
     }
 
     // chuyển đơn hàng từ chối qua lại đơn hàng chưa giao để tiếp tục giao
     // đồng thời xóa bỏ shipper cũ, phân công lại
-    public function moveToReceive($bookDeliveryId) {
+    public function moveToReceive($bookDeliveryId)
+    {
         DB::beginTransaction();
         try {
             $delivery = BookDelivery::find($bookDeliveryId);
@@ -983,5 +998,18 @@ class BookingController extends Controller
         return redirect()->back();
     }
 
-//end function assgin
+    //end function assgin
+
+    //tạo mã uuid
+    public static function generateBookID()
+    {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $countRecordToday = DB::table('bookings')->whereDate('created_at', date("Y-m-d"))->count();
+        $countRecordToday = (int) $countRecordToday + 1;
+        do {
+            $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);
+            $countRecordToday++;
+        } while (DB::table('bookings')->where('uuid', $id)->first());
+        return $id;
+    }
 }
