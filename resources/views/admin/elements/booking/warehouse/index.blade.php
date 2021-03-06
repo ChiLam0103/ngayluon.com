@@ -70,7 +70,7 @@
                        'icon' => 'fa fa-table',
                        'class' => 'portlet box green',
                ],
-               'url' => url("/ajax/warehouse"),
+               'url' => url("/ajax/warehouse_booking"),
                'columns' => [
                        ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
                        ['data' => 'uuid', 'title' => 'QR Code'],

@@ -106,8 +106,7 @@ class OrderController extends ApiController
                 ]
             ];
             unset($item->send_province_id, $item->send_district_id, $item->send_ward_id, $item->send_homenumber, $item->send_full_address, $item->send_name, $item->send_phone, $item->receive_name, $item->receive_phone, $item->receive_province_id, $item->receive_district_id, $item->receive_ward_id, $item->receive_homenumber, $item->receive_full_address, $item->send_lat, $item->send_lng, $item->receive_lat, $item->receive_lng);
-            $bookingTmp = $query->toArray();
-            NotificationJob::logBooking($bookingTmp, ' đã được nhập kho');
+          
         }
         return $this->apiOk($rows);
     }
@@ -128,6 +127,7 @@ class OrderController extends ApiController
         }
 
         $booking = Booking::find($delivery->book_id);
+        // dd($booking);
         if (empty($booking)) {
             return $this->apiError('booking can not found');
         }
@@ -142,21 +142,25 @@ class OrderController extends ApiController
         try {
             switch ($req->status) {
                 case 'input':
-                    if ($booking->status == 'sending' && $booking->sub_status == 'none') {
-                        $booking->status = 'warehouse';
-                        $booking->sub_status = 'none';
-                        DB::table('booking_warehouse')->insert([
-                            'user_id' => $req->user()->id,
-                            'book_id' => $id,
-                            'shipper_id' => $delivery->user_id
-                        ]);
-                    }
+                    DB::table('booking_warehouse')->insert([
+                        'user_id' => $req->user()->id,
+                        'book_id' => $id,
+                        'shipper_id' => $delivery->user_id,
+                        'status' => $booking->status,
+                        'created_at'=>new \DateTime(),
+                        'updated_at'=>new \DateTime(),
+                    ]);
+                    $booking->status = 'warehouse';
+                    $booking->sub_status = 'none';
+
                     break;
                 default:
             }
 
             $booking->save();
             DB::commit();
+            $bookingTmp = $booking->toArray();
+            NotificationJob::logBooking($bookingTmp, ' đã được nhập kho');
             return $this->apiOk('success');
         } catch (\Exception $e) {
             DB::rollBack();

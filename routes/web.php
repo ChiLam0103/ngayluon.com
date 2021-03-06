@@ -241,7 +241,7 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     Route::get('deny_booking', 'BookingController@denyBooking');
     Route::get('change_cod_status/{id}', 'BookingController@changeCODStatus');
     Route::get('remove_booking', 'BookingController@removeBookingByTime');
-    Route::get('warehouse', 'BookingController@warehouseBooking');
+    Route::get('warehouse_booking', 'BookingController@warehouseBooking');
     //end booking route
     //COD
     Route::get('total_COD', 'CODController@totalCOD');
