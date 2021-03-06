@@ -153,7 +153,7 @@
              </li>
          </ul>
      </li>--}}
-    <li class="nav-item @if(isset($active)&& $active == 'received' || $active == 'sent' || $active == 'delay' ||  $active == 'move_booking' ||
+    <li class="nav-item @if(isset($active)&& $active == 'received' || $active == 'sent' || $active == 'delay' ||  $active == 'move_booking' || $active == 'warehouse_booking' ||
     $active == 'cancel' || $active == 'new_booking'|| $active == 'create'|| $active == 'deny') active @endif">
         <a href="javascript:;" class="nav-link nav-toggle">
             <i class="fa fa-home"></i>

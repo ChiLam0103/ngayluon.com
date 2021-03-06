@@ -29,17 +29,17 @@
                'columns' => [
                        ['data' => 'name', 'title' => 'Tên'],
                        ['data' => 'uuid', 'title' => 'Mã quản lý kho'],
-                       ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
-                       ['data' => 'email', 'title' => 'Email'],
-                       ['data' => 'phone_number', 'title' => 'Số điện thoại'],
-                       ['data' => 'role', 'title' => 'Vai trò'],
-                       ['data' => 'status', 'title' => 'Trạng thái'],
-                    // ['data' => 'agency', 'title' => 'Đại lý'],
-                       ['data' => 'revenue_price', 'title' => 'Tổng giá cước đã thu'],
-                       ['data' => 'revenue_cod', 'title' => 'Tổng COD đã thu'],
-                       ['data' => 'created_at', 'title' => 'Ngày tạo'],
-                       ['data' => 'updated_at', 'title' => 'Ngày cập nhật'],
-                       ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
+                    //    ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
+                    //    ['data' => 'email', 'title' => 'Email'],
+                    //    ['data' => 'phone_number', 'title' => 'Số điện thoại'],
+                    //    ['data' => 'role', 'title' => 'Vai trò'],
+                    //    ['data' => 'status', 'title' => 'Trạng thái'],
+                    // // ['data' => 'agency', 'title' => 'Đại lý'],
+                    // //    ['data' => 'revenue_price', 'title' => 'Tổng giá cước đã thu'],
+                    // //    ['data' => 'revenue_cod', 'title' => 'Tổng COD đã thu'],
+                    //    ['data' => 'created_at', 'title' => 'Ngày tạo'],
+                    //    ['data' => 'updated_at', 'title' => 'Ngày cập nhật'],
+                    //    ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                    ]
                ])
         </div>
@@ -161,7 +161,7 @@
     <script>
         $(document).ready(function(){
             var shipperOnline = $('#shipper-online').html();
-            console.log(JSON.parse(shipperOnline));
+            // console.log(JSON.parse(shipperOnline));
         });
 
         function exportBooking(id) {

@@ -72,8 +72,8 @@
                ],
                'url' => url("/ajax/warehouse"),
                'columns' => [
-                    ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
-                    ['data' => 'uuid', 'title' => 'QR Code'],
+                       ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
+                       ['data' => 'uuid', 'title' => 'QR Code'],
                        ['data' => 'created_at', 'title' => 'Ngày tạo'],
                        ['data' => 'name', 'title' => 'Tên đơn hàng'],
                        ['data' => 'send_name', 'title' => 'Người gửi'],

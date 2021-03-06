@@ -1,6 +1,6 @@
 @extends('auth.app')
 @section('main')
-    <form class="login-form" action="{!!  url('loginPage') !!}" method="post">
+    <form class="login-form" id="login" action="{!!  url('loginPage') !!}" method="post">
         {{ csrf_field() }}
         <h3 class="form-title font-green">Sign In</h3>
         @if (\Session::has('err'))
@@ -35,7 +35,7 @@
             </div>
         @endif
         <div class="form-actions">
-            <button type="submit" class="btn green uppercase">Login</button>
+            <button type="submit" id="submit" class="btn green uppercase">Login</button>
             <label class="rememberme check mt-checkbox mt-checkbox-outline">
                 <input type="checkbox" name="remember" value="1" />Remember
                 <span></span>
@@ -57,3 +57,13 @@
         </div> --}}
     </form>
 @endsection
+<script>
+  document.onkeydown=function(evt){
+        var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
+        if(keyCode == 13)
+        {
+            jQuery(this).blur();
+            jQuery('#submit').focus().click();
+        }
+    }
+</script>

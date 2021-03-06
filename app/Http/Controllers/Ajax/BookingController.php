@@ -925,22 +925,22 @@ class BookingController extends Controller
             // ->editColumn('uuid', function ($b) {
             //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
             // })
-            // ->editColumn('status', function ($b) {
-            //     $status = '';
-            //     $user_id = Auth::user()->id;
-            //     $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
-            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'move')->first();
-            //     if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
-            //         $status = 'Đang chuyển đến';
-            //     } else if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'completed') {
-            //         $status = 'Đã chuyển đến';
-            //     } else if (in_array($bookDelivery->current_agency, $scope) && $bookDelivery->status == 'processing') {
-            //         $status = 'Đang chuyển đi';
-            //     } else {
-            //         $status = 'Đã chuyển đi';
-            //     }
-            //     return $status;
-            // })
+            ->editColumn('status', function ($b) {
+                $status = '';
+                $user_id = Auth::user()->id;
+                $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
+                $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'move')->first();
+                if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
+                    $status = 'Đang chuyển đến';
+                } else if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'completed') {
+                    $status = 'Đã chuyển đến';
+                } else if (in_array($bookDelivery->current_agency, $scope) && $bookDelivery->status == 'processing') {
+                    $status = 'Đang chuyển đi';
+                } else {
+                    $status = 'Đã chuyển đi';
+                }
+                return $status;
+            })
             // ->editColumn('current_agency', function ($b) {
             //     $current_agency = '';
             //     if ($b->current_agency) {
