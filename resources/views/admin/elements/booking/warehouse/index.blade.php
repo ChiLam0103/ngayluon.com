@@ -73,7 +73,8 @@
                'url' => url("/ajax/warehouse_booking"),
                'columns' => [
                        ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
-                       ['data' => 'uuid', 'title' => 'QR Code'],
+                       ['data' => 'uuid', 'title' => 'UUID'],
+                       ['data' => 'status', 'title' => 'Trạng thái'],
                        ['data' => 'created_at', 'title' => 'Ngày tạo'],
                        ['data' => 'name', 'title' => 'Tên đơn hàng'],
                        ['data' => 'send_name', 'title' => 'Người gửi'],
@@ -88,11 +89,10 @@
                        ['data' => 'incurred', 'title' => 'Chi phí phát sinh'],
                        ['data' => 'paid', 'title' => 'Số tiền đã thanh toán'],
                        ['data' => 'COD', 'title' => 'Thu hộ'],
-                    //    ['data' => 'current_agency', 'title' => 'Đại lý chuyển'],
-                    //    ['data' => 'last_agency', 'title' => 'Đại lý nhận'],
-                       ['data' => 'status', 'title' => 'Trạng thái'],
+                    // //    ['data' => 'current_agency', 'title' => 'Đại lý chuyển'],
+                    // //    ['data' => 'last_agency', 'title' => 'Đại lý nhận'],
                        ['data' => 'payment_type', 'title' => 'Ghi chú'],
-                       ['data' => 'other_note', 'title' => 'Ghi chú khác'],
+                    //    ['data' => 'other_note', 'title' => 'Ghi chú khác'],
                     //    ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                    ]
                ])

@@ -150,9 +150,8 @@ class OrderController extends ApiController
                         'created_at'=>new \DateTime(),
                         'updated_at'=>new \DateTime(),
                     ]);
+                    // $booking->sub_status = $booking->status;
                     $booking->status = 'warehouse';
-                    $booking->sub_status = 'none';
-
                     break;
                 default:
             }
