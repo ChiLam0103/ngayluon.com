@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
