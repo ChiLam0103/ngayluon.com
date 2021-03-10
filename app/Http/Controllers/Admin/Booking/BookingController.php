@@ -192,6 +192,16 @@ class BookingController extends Controller
             //tạo uuid
             $id = $this->generateBookID();
             $booking->uuid = $id;
+             //tạo image
+             if ($req->hasFile('image_order')) {
+                $file = $req->image_order;
+                // $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
+                $filename =  $id . '_booking.png';
+                $filePath = 'img/order/';
+                $movePath = public_path($filePath);
+                $file->move($movePath, $filename);
+                $booking->image_order = $filePath . $filename;
+            }
             $booking->save();
             // $qrcode = new QRCode();
             // $qrcode->name = str_random(5) . $booking->id;

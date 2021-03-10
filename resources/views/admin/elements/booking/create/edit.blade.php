@@ -273,6 +273,15 @@
                                 <input class="form-control spinner" value="{{ old('note', @$booking->note) }}"
                                     name="note" type="text">
                             </div>
+                            <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Ảnh đơn hàng</label>
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                      <input type='file' id="imgInp" value="{{ old( 'image_order') }}" name="image_order"/>
+                                      <img id="blah" alt="" width="300px" src="{{ asset('public/' . $booking->image_order)}}"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -320,7 +329,19 @@
                     }
                 }
         */
-
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#blah').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+        $("#imgInp").change(function() {
+            readURL(this);
+        });
         function loadDistrictFrom(callback) {
             var province_fr = $('#province_fr').val();
             $.ajax({

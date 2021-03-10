@@ -111,7 +111,8 @@ class BookingController extends Controller
                 return $image;
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
                 // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -333,7 +334,9 @@ class BookingController extends Controller
                 return $data;
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             ->editColumn('uuid', function ($b) {
                 return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -442,7 +445,9 @@ class BookingController extends Controller
                 return $b->sender->name . ' ' . $b->sender->phone_number;
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             ->editColumn('uuid', function ($b) {
                 return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -550,7 +555,9 @@ class BookingController extends Controller
                 return $b->sender->name . ' ' . $b->sender->phone_number;
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             ->editColumn('uuid', function ($b) {
                 return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -641,7 +648,9 @@ class BookingController extends Controller
                 return $b->user_id != 0 ? @BookDelivery::where('id', $b->id)->where('category', 'return')->first()->shipper_name : '';
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             ->editColumn('uuid', function ($b) {
                 return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -792,7 +801,9 @@ class BookingController extends Controller
                 return implode(' ', $action);
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             ->editColumn('uuid', function ($b) {
                 return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
@@ -920,7 +931,9 @@ class BookingController extends Controller
             //     return implode(' ', $action);
             // })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+
             })
             // ->editColumn('uuid', function ($b) {
             //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;

@@ -240,12 +240,21 @@
                                 <label class="control-label" for="inputError">Giá đơn hàng</label>
                                 <input class="form-control spinner"
                                        value="{{ old( 'price') }}"
-                                       name="price" type="text">
+                                       name="price" type="text" >
                                 @if ($errors->has('price'))
                                     @foreach ($errors->get('price') as $error)
                                         <span style="color: red" class="help-block">{!! $error !!}</span>
                                     @endforeach
                                 @endif
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Ảnh đơn hàng</label>
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                      <input type='file' id="imgInp" value="{{ old( 'image_order') }}" name="image_order"/>
+                                      <img id="blah" src="#" alt="" width="300px" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -270,7 +279,19 @@
                 $('#cod').attr("readonly", "readonly");
             }
         }*/
-
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                $('#blah').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+        $("#imgInp").change(function() {
+            readURL(this);
+        });
         function loadDistrictFrom() {
             var province_fr = $('#province_fr').val();
             $("#district_fr option[value!='-1']").remove();
