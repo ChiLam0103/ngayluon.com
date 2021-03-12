@@ -1,7 +1,7 @@
 @extends('admin.app')
 
 @section('title')
-    Đại lý
+    Đại lý (kho)
 @endsection
 
 @section('sub-title')

@@ -15,7 +15,7 @@ class Agency extends Model
     protected $appends = ['collaborator_name', 'total_revenue', 'agency_discount', 'turnover_paid', 'discount_paid'];
 
     protected $fillable = [
-        'name',
+        // 'name',
         'full_address',
         'province_id',
         'district_id',
@@ -86,12 +86,12 @@ class Agency extends Model
     {
         $data = [];
         $coll = Collaborator::where('agency_id', $this->id)->get();
-        if (isset($coll)){
-            foreach ($coll as $c){
-                $name = User::where('id', $c->user_id)->first()->name;
-                $data[] = $name;
-            }
-        }
+        // if (isset($coll)){
+        //     foreach ($coll as $c){
+        //         $name = User::where('id', $c->user_id)->first()->name;
+        //         $data[] = $name;
+        //     }
+        // }
         return !empty($data) ? implode(', ', $data) : '';
     }
 

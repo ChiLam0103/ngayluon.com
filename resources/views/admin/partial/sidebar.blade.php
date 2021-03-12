@@ -85,11 +85,11 @@
         </a>
         <ul class="sub-menu">
             @if(\Auth::user()->role == 'admin')
-                {{-- <li class="nav-item start @if(isset($active)&& $active == 'agency') active @endif">
+                <li class="nav-item start @if(isset($active)&& $active == 'agency') active @endif">
                     <a href="{{ url('/admin/agencies') }}" class="nav-link">
-                        <span class="title">Quản lý đại lý</span>
+                        <span class="title">Quản lý đại lý (kho)</span>
                     </a>
-                </li> --}}
+                </li>
                 <li class="nav-item   @if($active == 'collaborators') active @endif">
                     <a href="{{ url('/admin/collaborators') }}" class="nav-link">
                         {{--<i class="fa fa-user" aria-hidden="true"></i>--}}

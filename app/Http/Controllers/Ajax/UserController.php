@@ -439,6 +439,7 @@ class UserController extends Controller
             ->editColumn('phone', function ($a) {
                 return $a->phone != null ? $a->phone : '';
             })
+            ->rawColumns(['scope', 'action', 'phone'])
             ->make(true);
     }
 

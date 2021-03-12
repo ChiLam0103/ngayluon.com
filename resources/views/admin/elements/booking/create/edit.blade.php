@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-9">
             <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
@@ -293,7 +293,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-3">
             <div class="portlet light bordered">
                 <div class="portlet-title">
                     <div class="caption font-red-sunglo">
