@@ -33,15 +33,15 @@
                             <span style="color: red;" id="login_err_password_code" class="help-block"></span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="col-md-12">
                             <i style="font-size: 15px;">Nhập 3 ký tự bất kì dạng chữ hoặc số nếu bạn chưa có mật khẩu
                             <br><strong>Lưu ý:</strong> bạn phải nhớ để đăng nhập những lần tiếp theo</i>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="button" class="btn btn-default" id="btn-login">Thực hiện</button>
+                        <div class="col-sm-offset-5 col-sm-10">
+                            <button type="submit" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Xác nhận</button>&nbsp;
                         </div>
                     </div>
                 </form>

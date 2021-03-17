@@ -7,10 +7,10 @@
 </style>
 <div class="container header">
     <div class="row">
-        <div class="col-md-3 logo">
+        <div class="col-md-2 logo">
             <a href="{!! url('/') !!}"><img alt="Logo" src="{!! asset('public/landing_page/images/Logo.png') !!}" ></a>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <ul class="menu">
                 @if(Auth::check())
                     <li class="dropdown" style="margin-top: -5px">
@@ -44,6 +44,7 @@
                         </ul>
                     </li>
                 @else
+                    <li><a href="front-ent/register" ><i class="fas fa-user-plus"></i> Đăng ký</a></li>
                     <li><a href="#" data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i> Đăng nhập</a></li>
                 @endif
                 <li>Hotline: <b>0396.504.701</b></li>

@@ -65,7 +65,7 @@ p {
     margin-top: 20px;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     width: 90%;
     border-radius: 5px;
     border: 1px solid #dddddd;
@@ -482,7 +482,7 @@ section {
     margin-top: 12px;
 }
 
-.order-form input[type="text"] {
+.order-form input[type="text"],.order-form input[type="password"] {
     float: left;
     width: 70%;
 }
@@ -640,6 +640,9 @@ section {
         margin: 25px 0;
     }
     input[type="text"]{
+        width: 100%;
+    }
+    input[type="password"]{
         width: 100%;
     }
     .contact-form textarea{

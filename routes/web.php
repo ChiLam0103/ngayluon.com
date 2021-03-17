@@ -36,6 +36,8 @@ Route::group(['prefix' => 'front-ent', 'namespace' => 'UI'], function () {
     Route::get('/COD/pending', 'CODController@pendingCOD');
     Route::get('/COD/finish', 'CODController@finishCOD');
     Route::any('/profile', 'UserController@profile');
+    Route::get('/register', 'UserController@register');
+    Route::post('/register', 'UserController@postRegister');
     Route::get('booking/print/{id}', 'BookingController@printBooking');
     Route::get('print/book-new-talking', 'BookingController@printBookNewTalking');
     Route::get('create-book-by-import', 'BookingController@getCreateByImport');
