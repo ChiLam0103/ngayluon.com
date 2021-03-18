@@ -52,7 +52,6 @@ class UserController extends Controller
                 $check = 0;
             }
         }
-
         if ($check == 1) {
             if (empty($user)) {
                 $user = User::create([
@@ -129,8 +128,6 @@ class UserController extends Controller
                 'email' => 'Email không đúng',
                 'unique' => 'Dữ liệu đã tồn tại',
                 'phone_number.numeric' => 'Số điện thoại không đúng',
-                // 'phone_number.min' => 'Phải nhập ít nhất 10 kí tự',
-                // 'phone_number.max' => 'Dữ liệu tối đa 13 kí tự',
             ];
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
@@ -143,22 +140,18 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return redirect('front-ent/register')->withErrors($validator)->withInput();
             }
-            dd(1);
-            // $user = User::find(Auth::user()->id);
-            // $user->name = $request->input('name');
-            // $user->email = $request->input('email');
-            // $user->phone_number = $request->input('phone_number');
-            // $user->bank_account = $request->input('bank_account');
-            // $user->bank_account_number = $request->input('bank_account_number');
-            // $user->bank_name = $request->input('bank_name');
-            // $user->bank_branch = $request->input('bank_branch');
-            // $user->province_id = $request->input('province_id');
-            // $user->district_id = $request->input('district_id');
-            // $user->ward_id = $request->input('ward_id');
-            // $user->home_number = $request->input('home_number');
-            // if ($user->save()) {
-            //     return redirect()->back();
-            // }
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->phone_number = $request->input('phone_number');
+            $user->bank_account = $request->input('bank_account');
+            $user->bank_account_number = $request->input('bank_account_number');
+            $user->bank_name = $request->input('bank_name');
+            $user->bank_branch = $request->input('bank_branch');
+            $user->role = 'customer';
+            if ($user->save()) {
+                return redirect()->back();
+            }
         }
         return view('front-ent.element.profile.register');
     }

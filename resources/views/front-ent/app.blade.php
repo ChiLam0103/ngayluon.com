@@ -41,7 +41,7 @@
                     </div> --}}
                     <div class="form-group">
                         <div class="col-sm-offset-5 col-sm-10">
-                            <button type="submit" class="btn btn-primary" ><i class="fas fa-sign-in-alt"></i> Xác nhận</button>&nbsp;
+                            <button type="button" class="btn btn-primary" id="btn-login"><i class="fas fa-sign-in-alt"></i> Xác nhận</button>&nbsp;
                         </div>
                     </div>
                 </form>
