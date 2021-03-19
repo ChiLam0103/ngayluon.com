@@ -184,31 +184,40 @@
         </div>
         </div>
     </div>
-</div>
-<!-- Modal detail booking -->
-<div class="modal fade" id="detailBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="myModalLabel">Chi tiết đơn hàng <span id="uuid_booking"></span></span></h4>
-        </div>
-        <div class="modal-body">
-            <h3 style="color: blue; font-weight:bold">Thông tin khách hàng</h3>
-            <div class="info-send col-md-6">
-                <h4><b>Người gửi</b></h4>
+    <!-- Modal detail booking -->
+    <div class="modal fade" id="detailBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Chi tiết đơn hàng <span id="uuid_booking"></span></span></h4>
+                </div>
+                <div class="modal-body">
+                    <h3 style="color: blue;"><b>Thông tin khách hàng</b></h3>
+                    <div class="info-send col-md-6">
+                        <h4><b>Người gửi</b></h4>
+                        <div class="content"></div>
+                    </div>
+                    <div class="info-receive col-md-6">
+                        <h4><b>Người nhận</b></h4>
+                        <div class="content"></div>
+                    </div>
+                    <h3 style="color: blue;"><b>Thông tin cơ bản</b></h3>
+                    <div class="info-booking col-md-6">
+                        <h4><b>Đơn hàng</b></h4>
+                        <div class="content"></div>
+                    </div>
+                    <div class="info-log col-md-6">
+                        <h4><b>Log đơn hàng</b></h4>
+                        <div class="content"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top:none">
+                </div>
             </div>
-            <div class="info-receive col-md-6">
-                <h4><b>Người nhận</b></h4>
-            </div>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
         </div>
     </div>
-    </div>
-</div>
-</div>
+{{-- </div> --}}
 
 @endsection
 @push('script')
@@ -371,17 +380,20 @@
         //show detail booking
         $(document).on('click','.uuid',function(){
             var id=  $(this).attr("name");
+            var empty='';
+            ('.content').append(empty);
             $.ajax({
                 type: "GET",
                 url: '{{url('/ajax/detail_booking/')}}/' + id
             }).done(function (msg) {
                 console.log(msg.booking);
-                var souce="<p>UUID : "+ msg.booking.uuid+"</p> ";
+                var content_send="<p>Họ tên: "+ msg.booking.send_name+"</p> <p>Số điện thoại: "+ msg.booking.send_phone+"</p> <p>Địa chỉ: "+ msg.booking.send_full_address+"</p>";
+                var content_receive="<p>Họ tên: "+ msg.booking.receive_name+"</p> <p>Số điện thoại: "+ msg.booking.receive_phone+"</p> <p>Địa chỉ: "+ msg.booking.receive_full_address+"</p>";
+
                 $('#uuid_booking').text(msg.booking.uuid);
-                $('#detailBooking .modal-body').append(souce);
+                $('#detailBooking .modal-body .info-send .content').append(content_send);
+                $('#detailBooking .modal-body .info-receive .content').append(content_receive);
             });
-            // $('#imagepreview').attr('src', $(this).find('img').attr('src'));
-            // $('#alt_uuid_booking').text($(this).find('img').attr("alt"));
             $('#detailBooking').modal('show');   
         });
     </script>
