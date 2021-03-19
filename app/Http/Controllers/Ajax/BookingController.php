@@ -38,7 +38,11 @@ class BookingController extends Controller
         $ward = ManagementWardScope::whereIn('agency_id', $scope)->pluck('ward_id');
         return $ward;
     }
-
+    public function detailBooking($id){
+        $booking = Booking::where('id', $id)->first();
+        $log = DB::table('notifications')->where('booking_id', $id)->get();
+        return response()->json(['booking'=>$booking, 'log'=>$log]);
+    }
     public function newBooking()
     {
         if (Auth::user()->role == 'collaborators') {
@@ -116,7 +120,7 @@ class BookingController extends Controller
             })
             ->editColumn('uuid', function ($b) {
                 // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-                return $b->uuid;
+                return '<a href="javascript:void(0);" name="'.$b->id.'" class="uuid">'.$b->uuid.'</a>';
             })
             ->editColumn('status', function ($b) {
                 return $b->status == 'new' ? 'Mới' : 'Đang lấy';

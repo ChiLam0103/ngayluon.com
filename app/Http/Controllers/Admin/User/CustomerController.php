@@ -344,7 +344,7 @@ class CustomerController extends Controller
                 if ($b->payment_type == 1) {
                     $data['payment_type'] = 'Người gửi trả cước';
                 } else if ($b->payment_type == 2) {
-                    $data['payment_type'] = 'Người nhận trả getAdcước';
+                    $data['payment_type'] = 'Người nhận trả cước';
                 }
                 $data['other_note'] = $b->other_note;
                 $data['COD_status'] = $b->COD > 0 ? $b->COD_status : '';
