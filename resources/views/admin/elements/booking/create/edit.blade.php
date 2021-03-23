@@ -162,51 +162,6 @@
                     <div class="row" style="margin-bottom: 15px">
                         <div class="form-group">
                             <div class="col-lg-3">
-                                <label>Phương thức nhận hàng</label>
-                                <select onchange="searchPrice()" name="receive_type" class="form-control">
-                                    <option {{ @$booking->receive_type == 1 ? 'selected' : '' }} value="1">Nhận hàng tại nhà
-                                    </option>
-                                    <option {{ @$booking->receive_type == 2 ? 'selected' : '' }} value="2">Nhận hàng tại
-                                        bưu cục</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-3">
-                                <label>Ghi chú bắt buộc</label>
-                                <select name="payment_type" class="form-control">
-                                    <option {{ @$booking->payment_type == 1 ? 'selected' : '' }} value="1">Người gửi trả
-                                        cước</option>
-                                    <option {{ @$booking->payment_type == 2 ? 'selected' : '' }} value="2">Người nhận trả
-                                        cước</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-3">
-                                <label>Phương thức vận chuyển</label>
-                                <select onchange="searchPrice()" name="transport_type" class="form-control">
-                                    <option {{ @$booking->transport_type == 2 ? 'selected' : '' }} value="2">Giao tiết kiệm
-                                    </option>
-                                    <option {{ @$booking->transport_type == 1 ? 'selected' : '' }} value="1">Giao chuẩn
-                                    </option>
-                                    <option {{ @$booking->transport_type == 3 ? 'selected' : '' }} value="3">Giao siêu tốc
-                                    </option>
-                                    {{-- <option {{@$booking->transport_type == 4 ? 'selected' : ''}} value="4">Giao thu COD</option> --}}
-                                </select>
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="control-label" for="inputError">Tiền thu hộ</label>
-                                <input id="cod" name="cod" value="{{ old('cod', @$booking->COD) }}"
-                                    onchange="searchPrice()" class="form-control spinner" type="number" min="0">
-                                @if ($errors->has('cod'))
-                                    @foreach ($errors->get('cod') as $error)
-                                        <span style="color: red" class="help-block">{!! $error !!}</span>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="row" style="margin-bottom: 15px">
-                        <div class="form-group">
-                            <div class="col-lg-3">
                                 <label class="control-label" for="inputError">Tên đơn hàng</label>
                                 <input name="name" value="{{ old('name', @$booking->name) }}"
                                     class="form-control spinner" type="text" placeholder="Nhập tên đơn hàng">
@@ -216,13 +171,42 @@
                                     @endforeach
                                 @endif
                             </div>
+                            {{-- <div class="col-lg-3">
+                                <label>Phương thức nhận hàng</label>
+                                <select onchange="searchPrice()" name="receive_type" class="form-control">
+                                    <option {{ @$booking->receive_type == 1 ? 'selected' : '' }} value="1">Nhận hàng tại nhà
+                                    </option>
+                                    <option {{ @$booking->receive_type == 2 ? 'selected' : '' }} value="2">Nhận hàng tại
+                                        bưu cục</option>
+                                </select>
+                            </div> --}}
                             <div class="col-lg-3">
-                                <label class="control-label" for="inputError">Khối lượng (gram)</label>
-                                <input name="weight" value="{{ old('weight', @$booking->weight) }}"
-                                    class="form-control spinner" type="text" onchange="searchPrice()"
-                                    placeholder="Nhập khối lượng">
-                                @if ($errors->has('weight'))
-                                    @foreach ($errors->get('weight') as $error)
+                                <label>Ghi chú bắt buộc</label>
+                                <select name="payment_type" class="form-control">
+                                    <option {{ @$booking->payment_type == 1 ? 'selected' : '' }} value="1">Người gửi trả
+                                        cước</option>
+                                    <option {{ @$booking->payment_type == 2 ? 'selected' : '' }} value="2">Người nhận trả
+                                        cước</option>
+                                </select>
+                            </div>
+                            {{-- <div class="col-lg-3">
+                                <label>Phương thức vận chuyển</label>
+                                <select onchange="searchPrice()" name="transport_type" class="form-control">
+                                    <option {{ @$booking->transport_type == 2 ? 'selected' : '' }} value="2">Giao tiết kiệm
+                                    </option>
+                                    <option {{ @$booking->transport_type == 1 ? 'selected' : '' }} value="1">Giao chuẩn
+                                    </option>
+                                    <option {{ @$booking->transport_type == 3 ? 'selected' : '' }} value="3">Giao siêu tốc
+                                    </option>
+                                    <option {{@$booking->transport_type == 4 ? 'selected' : ''}} value="4">Giao thu COD</option>
+                                </select>
+                            </div> --}}
+                            <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Tiền thu hộ</label>
+                                <input id="cod" name="cod" value="{{ old('cod', @$booking->COD) }}"
+                                    onchange="searchPrice()" class="form-control spinner" type="number" min="0">
+                                @if ($errors->has('cod'))
+                                    @foreach ($errors->get('cod') as $error)
                                         <span style="color: red" class="help-block">{!! $error !!}</span>
                                     @endforeach
                                 @endif
@@ -237,6 +221,23 @@
                                     @endforeach
                                 @endif
                             </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px">
+                        <div class="form-group">
+                           
+                            <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Khối lượng (gram)</label>
+                                <input name="weight" value="{{ old('weight', @$booking->weight) }}"
+                                    class="form-control spinner" type="text" onchange="searchPrice()"
+                                    placeholder="Nhập khối lượng">
+                                @if ($errors->has('weight'))
+                                    @foreach ($errors->get('weight') as $error)
+                                        <span style="color: red" class="help-block">{!! $error !!}</span>
+                                    @endforeach
+                                @endif
+                            </div>
+                           
                             <div class="col-lg-3">
                                 <label class="control-label" for="inputError">Chi phí phát sinh</label>
                                 <input name="incurred" value="{{ old('incurred', @$booking->incurred) }}"
@@ -247,11 +248,6 @@
                                     @endforeach
                                 @endif
                             </div>
-                        </div>
-
-                    </div>
-                    <div class="row" style="margin-bottom: 15px">
-                        <div class="form-group">
                             <div class="col-lg-3">
                                 <label class="control-label" for="inputError">Số tiền đã thanh toán</label>
                                 <input class="form-control spinner" value="{{ old('paid', @$booking->paid) }}"
@@ -262,13 +258,17 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <div class="col-lg-5">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px">
+                        <div class="form-group">
+                            <div class="col-lg-6">
                                 <label class="control-label" for="inputError">Ghi chú khách hàng</label>
                                 <input class="form-control spinner"
                                     value="{{ old('other_note', @$booking->other_note) }}" name="other_note"
                                     type="text">
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <label class="control-label" for="inputError">Ghi chú của hệ thống</label>
                                 <input class="form-control spinner" value="{{ old('note', @$booking->note) }}"
                                     name="note" type="text">

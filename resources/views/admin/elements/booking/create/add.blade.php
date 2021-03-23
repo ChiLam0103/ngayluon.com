@@ -171,12 +171,23 @@
                     <div class="row" style="margin-bottom: 15px">
                         <div class="form-group">
                             <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Tên đơn hàng</label>
+                                <input name="name" value="{{ old('name') }}"
+                                       class="form-control spinner" type="text"
+                                       placeholder="Nhập tên đơn hàng">
+                                @if ($errors->has('name'))
+                                    @foreach ($errors->get('name') as $error)
+                                        <span style="color: red" class="help-block">{!! $error !!}</span>
+                                    @endforeach
+                                @endif
+                            </div>
+                            {{-- <div class="col-lg-3">
                                 <label>Phương thức nhận hàng</label>
                                 <select name="receive_type" class="form-control">
                                     <option value="1">Nhận hàng tại nhà</option>
                                     <option value="2">Nhận hàng tại bưu cục</option>
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-3">
                                 <label>Ghi chú bắt buộc</label>
                                 <select name="payment_type" class="form-control">
@@ -184,14 +195,14 @@
                                     <option value="2">Người nhận trả cước</option>
                                 </select>
                             </div>
-                            <div class="col-lg-3">
+                            {{-- <div class="col-lg-3">
                                 <label>Phương thức vận chuyển</label>
                                 <select name="transport_type" class="form-control">
                                     <!-- <option value="2">Giao tiết kiệm</option> -->
                                     <option value="1">Giao chuẩn</option>
                                     <option value="3">Giao siêu tốc</option>
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-3">
                                 <label class="control-label" for="inputError">Tiền thu hộ</label>
                                 <input id="cod" name="cod" value="{{ old('cod') }}"
@@ -203,22 +214,23 @@
                                     @endforeach
                                 @endif
                             </div>
+                            <div class="col-lg-3">
+                                <label class="control-label" for="inputError">Giá đơn hàng</label>
+                                <input class="form-control spinner"
+                                       value="{{ old( 'price') }}"
+                                       name="price" type="text" >
+                                @if ($errors->has('price'))
+                                    @foreach ($errors->get('price') as $error)
+                                        <span style="color: red" class="help-block">{!! $error !!}</span>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
 
                     </div>
                     <div class="row" style="margin-bottom: 15px">
                         <div class="form-group">
-                            <div class="col-lg-3">
-                                <label class="control-label" for="inputError">Tên đơn hàng</label>
-                                <input name="name" value="{{ old('name') }}"
-                                       class="form-control spinner" type="text"
-                                       placeholder="Nhập tên đơn hàng">
-                                @if ($errors->has('name'))
-                                    @foreach ($errors->get('name') as $error)
-                                        <span style="color: red" class="help-block">{!! $error !!}</span>
-                                    @endforeach
-                                @endif
-                            </div>
+                            
                             <div class="col-lg-3">
                                 <label class="control-label" for="inputError">Khối lượng (gram)</label>
                                 <input name="weight" value="{{ old('weight') }}"
@@ -236,18 +248,8 @@
                                        value="{{ old( 'other_note') }}"
                                        name="other_note" type="text">
                             </div>
-                            <div class="col-lg-3">
-                                <label class="control-label" for="inputError">Giá đơn hàng</label>
-                                <input class="form-control spinner"
-                                       value="{{ old( 'price') }}"
-                                       name="price" type="text" >
-                                @if ($errors->has('price'))
-                                    @foreach ($errors->get('price') as $error)
-                                        <span style="color: red" class="help-block">{!! $error !!}</span>
-                                    @endforeach
-                                @endif
-                            </div>
-                            <div class="col-lg-3">
+                           
+                            <div class="col-lg-4">
                                 <label class="control-label" for="inputError">Ảnh đơn hàng</label>
                                 <div class="input-group mb-3">
                                     <div class="custom-file">

@@ -41,7 +41,8 @@ class BookingController extends Controller
     public function detailBooking($id){
         $booking = Booking::where('id', $id)->first();
         $log = DB::table('notifications')->where('booking_id', $id)->get();
-        return response()->json(['booking'=>$booking, 'log'=>$log]);
+        $shipper =  BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
+        return response()->json(['booking'=>$booking, 'log'=>$log, 'shipper'=> $shipper->shipper_name]);
     }
     public function newBooking()
     {
@@ -125,19 +126,19 @@ class BookingController extends Controller
             ->editColumn('status', function ($b) {
                 return $b->status == 'new' ? 'Mới' : 'Đang lấy';
             })
-            ->editColumn('transport_type', function ($b) {
-                $tran = '';
-                if ($b->transport_type == 1) {
-                    $tran = 'Giao chuẩn';
-                } else if ($b->transport_type == 2) {
-                    $tran = 'Giao tiết kiệm';
-                } else if ($b->transport_type == 3) {
-                    $tran = 'Giao siêu tốc';
-                } else {
-                    $tran = 'Giao thu COD';
-                }
-                return $tran;
-            })
+            // ->editColumn('transport_type', function ($b) {
+            //     $tran = '';
+            //     if ($b->transport_type == 1) {
+            //         $tran = 'Giao chuẩn';
+            //     } else if ($b->transport_type == 2) {
+            //         $tran = 'Giao tiết kiệm';
+            //     } else if ($b->transport_type == 3) {
+            //         $tran = 'Giao siêu tốc';
+            //     } else {
+            //         $tran = 'Giao thu COD';
+            //     }
+            //     return $tran;
+            // })
             ->editColumn('payment_type', function ($b) {
                 return $b->payment_type == 1 ? 'Người gửi trả cước' : 'Người nhận trả cước';
             })

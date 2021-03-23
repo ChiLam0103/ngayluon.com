@@ -77,6 +77,7 @@
                 'columns' => [
                         ['data' => 'action', 'title' => 'Hành động', 'orderable' => false],
                         ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
+                        ['data' => 'report_image', 'title' => 'Ảnh báo cáo'],
                         ['data' => 'uuid', 'title' => 'UUID'],
                         ['data' => 'created_at', 'title' => 'Ngày tạo'],
                         ['data' => 'receive_created_at', 'title' => 'Ngày đi lấy', 'orderable' => false, 'searchable' => false],
@@ -89,7 +90,7 @@
                         ['data' => 'receive_phone', 'title' => 'Số điện thoại'],
                         ['data' => 'receive_full_address', 'title' => 'Địa chỉ'],
                         ['data' => 'weight', 'title' => 'Khối lượng(gram)'],
-                        ['data' => 'transport_type', 'title' => 'Phương thức vận chuyển'],
+                        // ['data' => 'transport_type', 'title' => 'Phương thức vận chuyển'],
                         ['data' => 'price', 'title' => 'Giá'],
                         ['data' => 'incurred', 'title' => 'Chi phí phát sinh'],
                         ['data' => 'paid', 'title' => 'Số tiền đã thanh toán'],
@@ -98,7 +99,6 @@
                         ['data' => 'payment_type', 'title' => 'Ghi chú'],
                         ['data' => 'other_note', 'title' => 'Ghi chú khác'],
                         ['data' => 'note', 'title' => 'Ghi chú hệ thống'],
-                        ['data' => 'report_image', 'title' => 'Ảnh báo cáo'],
                         ['data' => 'shipper', 'title' => 'Tên Shipper'],
                 ]
                 ])
@@ -381,18 +381,28 @@
         $(document).on('click','.uuid',function(){
             var id=  $(this).attr("name");
             var empty='';
-            ('.content').append(empty);
+            $('#detailBooking .modal-body .content p').remove();
             $.ajax({
                 type: "GET",
                 url: '{{url('/ajax/detail_booking/')}}/' + id
             }).done(function (msg) {
-                console.log(msg.booking);
+                var payer= msg.booking.payment_type == 1 ? 'người gửi' :'người nhận';
+                var status= msg.booking.status == 'new' ? 'mới' :'đang lấy';
+                var shipper = msg.shipper !=null ? '<p>Shipper lấy đơn: '+msg.shipper +'</p>' :'';
                 var content_send="<p>Họ tên: "+ msg.booking.send_name+"</p> <p>Số điện thoại: "+ msg.booking.send_phone+"</p> <p>Địa chỉ: "+ msg.booking.send_full_address+"</p>";
                 var content_receive="<p>Họ tên: "+ msg.booking.receive_name+"</p> <p>Số điện thoại: "+ msg.booking.receive_phone+"</p> <p>Địa chỉ: "+ msg.booking.receive_full_address+"</p>";
-
+                var content_booking="<p>Tên đơn hàng: "+ msg.booking.name+"</p> <p>Tiền thu hộ: "+ msg.booking.COD +"</p> </p> <p>Giá đơn hàng: "+ msg.booking.price +"</p>  </p> <p>Chi phí phát sinh: "+ msg.booking.incurred +"</p> <p>Số tiền thanh toán: "+ msg.booking.paid +"</p> <p>Khối lượng (gram): "+ msg.booking.weight +"</p>  <p>Ghi chú khách hàng: "+ msg.booking.other_note +"</p> <p>Ghi chú hệ thống: "+ msg.booking.note +"</p> <p>Trả cước: "+payer+"</p><p>Trạng thái: "+status+"</p> "+shipper+""
+                var content_log="";
+                $( msg.log ).each(function( index, value ) {
+                        if(value.type_detail == "book_detail"){
+                            content_log+= "<p>"+ value.title+" - "+value.created_at+"</p> "
+                        }
+                });
                 $('#uuid_booking').text(msg.booking.uuid);
                 $('#detailBooking .modal-body .info-send .content').append(content_send);
                 $('#detailBooking .modal-body .info-receive .content').append(content_receive);
+                $('#detailBooking .modal-body .info-booking .content').append(content_booking);
+                $('#detailBooking .modal-body .info-log .content').append(content_log);
             });
             $('#detailBooking').modal('show');   
         });
