@@ -42,7 +42,7 @@ class BookingController extends Controller
         $booking = Booking::where('id', $id)->first();
         $log = DB::table('notifications')->where('booking_id', $id)->get();
         $shipper =  BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
-        return response()->json(['booking'=>$booking, 'log'=>$log, 'shipper'=> $shipper->shipper_name]);
+        return response()->json(['booking'=>$booking, 'log'=>$log, 'shipper'=> $shipper]);
     }
     public function newBooking()
     {

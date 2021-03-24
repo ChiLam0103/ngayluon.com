@@ -388,10 +388,10 @@
             }).done(function (msg) {
                 var payer= msg.booking.payment_type == 1 ? 'người gửi' :'người nhận';
                 var status= msg.booking.status == 'new' ? 'mới' :'đang lấy';
-                var shipper = msg.shipper !=null ? '<p>Shipper lấy đơn: '+msg.shipper +'</p>' :'';
+                var shipper = msg.shipper != null ? '<p>Shipper lấy đơn: '+msg.shipper.shipper_name +'</p>' :'';
                 var content_send="<p>Họ tên: "+ msg.booking.send_name+"</p> <p>Số điện thoại: "+ msg.booking.send_phone+"</p> <p>Địa chỉ: "+ msg.booking.send_full_address+"</p>";
                 var content_receive="<p>Họ tên: "+ msg.booking.receive_name+"</p> <p>Số điện thoại: "+ msg.booking.receive_phone+"</p> <p>Địa chỉ: "+ msg.booking.receive_full_address+"</p>";
-                var content_booking="<p>Tên đơn hàng: "+ msg.booking.name+"</p> <p>Tiền thu hộ: "+ msg.booking.COD +"</p> </p> <p>Giá đơn hàng: "+ msg.booking.price +"</p>  </p> <p>Chi phí phát sinh: "+ msg.booking.incurred +"</p> <p>Số tiền thanh toán: "+ msg.booking.paid +"</p> <p>Khối lượng (gram): "+ msg.booking.weight +"</p>  <p>Ghi chú khách hàng: "+ msg.booking.other_note +"</p> <p>Ghi chú hệ thống: "+ msg.booking.note +"</p> <p>Trả cước: "+payer+"</p><p>Trạng thái: "+status+"</p> "+shipper+""
+                var content_booking="<p>Tên đơn hàng: "+ msg.booking.name+" -- Ngày tạo: "+msg.booking.created_at+"</p> <p>Tiền thu hộ: "+ msg.booking.COD +"</p> </p> <p>Giá đơn hàng: "+ msg.booking.price +"</p>  </p> <p>Chi phí phát sinh: "+ msg.booking.incurred +"</p> <p>Số tiền thanh toán: "+ msg.booking.paid +"</p> <p>Khối lượng (gram): "+ msg.booking.weight +"</p>  <p>Ghi chú khách hàng: "+ msg.booking.other_note +"</p> <p>Ghi chú hệ thống: "+ msg.booking.note +"</p> <p>Trả cước: "+payer+"</p><p>Trạng thái: "+status+"</p> "+shipper+""
                 var content_log="";
                 $( msg.log ).each(function( index, value ) {
                         if(value.type_detail == "book_detail"){

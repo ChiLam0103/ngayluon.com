@@ -51,6 +51,7 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api'], function () {
 });
 
 Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJWTToken::class], function () {
+    Route::get('filter', 'OrderController@getFilter'); // bộ lọc
     Route::get('listbook', 'Customer\OrderController@getListBook');
     Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType'); // listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');

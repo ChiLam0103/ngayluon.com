@@ -2070,7 +2070,7 @@ class OrderController extends ApiController
 
     }
 
-    //----------------RAYMOND API-----------
+    //----------------RAY API-----------
     public function create(Request $req)
     {
         try {
@@ -2080,6 +2080,126 @@ class OrderController extends ApiController
             } else {
                 return response()->json(['msg' => 'Vui lòng kiểm tra lại địa chỉ cá nhân', 'code' => 201]);
             }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    public function getFilter(Request $req)
+    {
+        try { 
+            // thời gian từ/đến - trạng thái đơn hàng - mã đơn hàng - tên khách hàng - sdt khách hàng
+            date_default_timezone_set('Australia/Melbourne');
+            $date = date('Y-m-d 00:00:00', time()); 
+           
+            //"updated_at": "2020-12-30 13:31:04"
+            $limit = $req->get('limit', 10);
+            $query = Booking::query();
+            $query->where('sender_id', $req->user()->id);
+    
+            if (isset($req->status)) {
+                if ($req->status == 'new') {
+                    $query->where('status', 'new');
+                }
+                if ($req->status == 'taking') {
+                    $query->where('status', 'taking');
+                }
+                if ($req->status == 'sending') {
+                    $query->where('status', 'sending');
+                }
+                if ($req->status == 'move') {
+                    $query->where('status', 'move');
+                }
+                if ($req->status == 'completed') {
+                    $query->where('status', 'completed');
+                }
+                // giao lai  
+                if ($req->status == 're-send') {
+                    $query->where('bookings.status', 're-send');
+                    $query->where('bookings.sub_status', '!=', 'request-return');
+                    $query->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id');
+                    $query->where(function ($query) {
+                        $query->where('book_deliveries.category', '=', 're-send');
+                        $query->whereIn('book_deliveries.status', ['deny']);
+                    });
+                    $rows = $query->select('bookings.*', 'book_deliveries.category as deliveries_category', 'book_deliveries.id as book_deliverie_id', 'book_deliveries.status as delivery_status');
+                }
+                if ($req->status == 'return') {
+    
+                    $query->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id');
+    
+                    $query->where(function ($query) {
+                        $query->where('bookings.status', 'return');
+                        $query->where('book_deliveries.category', '=', 'return');
+                        $query->where(function ($q) {
+                            $q->whereIn('book_deliveries.status', ['delay', 'processing', 'completed']);
+                        });
+                    });
+                    $query->orWhere(function ($q) {
+                        $q->where('bookings.status', 're-send');
+                        $q->where('bookings.sub_status', 'request-return');
+                        $q->where('book_deliveries.status', '=', 'deny');
+                        $q->where('book_deliveries.category', '=', 're-send');
+                    });
+                    $rows = $query->select('bookings.*', 'book_deliveries.category as deliveries_category', 'book_deliveries.id as book_deliverie_id', 'book_deliveries.status as delivery_status');
+                }
+                if ($req->status == 'cancel') {
+                    $query->where('status', 'cancel');
+                }
+            }
+            if (empty($req->status) || $req->status == 'all') {
+                $query->with('returnBookingInfo');
+            }
+            $query = $query->orderBy('bookings.created_at', 'desc');
+            if ($req->status == 'return') {
+                $query->orderBy('book_deliveries.status', 'desc');
+            }
+            if (isset($req->fromdate) && isset($req->todate)) {
+                $query->whereBetween('created_at', [$req->fromdate, $req->todate]);
+            }
+            if (isset($req->uuid)) {
+                $query->where('uuid','like' ,'%'.$req->uuid.'%');
+            }
+            if (isset($req->receive_name)) {
+                $query->where('receive_name','like' ,'%'.$req->receive_name.'%');
+            }
+            if (isset($req->receive_phone)) {
+                $query->where('receive_phone','like' ,'%'.$req->receive_phone.'%');
+            }
+            $rows = $query->paginate($limit);
+            foreach ($rows->items() as $query) {
+    
+                if (!empty($query->reportImages)) {
+                    $reportImage = $query->reportImages;
+                    foreach ($reportImage as $image) {
+                        $image->image = url($image->image);
+                    }
+                }
+    
+                $query->sender_info = [
+                    'name' => $query->send_name,
+                    'phone' => $query->send_phone,
+                    'address' => [
+                        'province_id' => $query->send_province_id,
+                        'district_id' => $query->send_district_id,
+                        'ward_id' => $query->send_ward_id,
+                        'home_number' => $query->send_homenumber,
+                        'full_address' => $query->send_full_address
+                    ]
+                ];
+                $query->receiver_info = [
+                    'name' => $query->receive_name,
+                    'phone' => $query->receive_phone,
+                    'address' => [
+                        'province_id' => $query->receive_province_id,
+                        'district_id' => $query->receive_district_id,
+                        'ward_id' => $query->receive_ward_id,
+                        'home_number' => $query->receive_homenumber,
+                        'full_address' => $query->receive_full_address
+                    ]
+                ];
+                unset($query->send_province_id, $query->send_district_id, $query->send_ward_id, $query->send_homenumber, $query->send_full_address, $query->send_name, $query->send_phone, $query->receive_name, $query->receive_phone, $query->receive_province_id, $query->receive_district_id, $query->receive_ward_id, $query->receive_homenumber, $query->receive_full_address);
+            }
+            return $this->apiOk($rows);
         } catch (\Exception $e) {
             return $e;
         }
