@@ -449,13 +449,13 @@ class BookingController extends Controller
             ->editColumn('user_create', function ($b) {
                 return $b->sender->name . ' ' . $b->sender->phone_number;
             })
-            ->editColumn('image_order', function ($b) {
-                // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+             ->editColumn('image_order', function ($b) {
+                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
                 return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return '<a href="javascript:void(0);" name="'.$b->id.'" class="uuid">'.$b->uuid.'</a>';
             })
             ->rawColumns(['report_image', 'action','image_order','uuid'])
             ->make(true);

@@ -52,7 +52,7 @@
                'url' => url("/ajax/cancel"),
                'columns' => [
                     ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
-                        ['data' => 'uuid', 'title' => 'QR Code'],
+                        ['data' => 'uuid', 'title' => 'UUID'],
                        ['data' => 'created_at', 'title' => 'Ngày tạo'],
                        ['data' => 'user_create', 'title' => 'Người tạo đơn', 'orderable' => false, 'searchable' => false],
                        ['data' => 'name', 'title' => 'Tên đơn hàng'],

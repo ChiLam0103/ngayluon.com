@@ -496,7 +496,7 @@ class OrderController extends ApiController
         })
             ->whereIn('send_ward_id', $this->getShipperScope())
             ->count();
-            // dd(1);
+        // dd(1);
 
         // chờ giao
         $data['send_wait'] = Booking::join('book_deliveries as bd', 'bookings.id', '=', 'bd.book_id')

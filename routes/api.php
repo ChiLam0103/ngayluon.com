@@ -51,7 +51,6 @@ Route::group(['prefix' => 'users', 'namespace' => 'Api'], function () {
 });
 
 Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJWTToken::class], function () {
-    Route::get('filter', 'OrderController@getFilter'); // bộ lọc
     Route::get('listbook', 'Customer\OrderController@getListBook');
     Route::get('listbook/status={status}&type={type}', 'Customer\OrderController@getListBookType'); // listbook lấy danh sách trong ngày -chilam
     Route::get('deliveryaddress', 'OrderController@getBooking');
@@ -72,6 +71,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::get('total-summary', 'WalletController@getTotalSummary');
 
     Route::group(['prefix' => 'customer'], function () {
+        Route::get('filter', 'Customer\OrderController@getFilter'); // bộ lọc
         Route::get('last-book', 'Customer\OrderController@lastedBookSender');
         Route::post('updatebook/{id}/other-note', 'Customer\OrderController@updateNote');
         Route::post('deny/{id}', 'Customer\OrderController@RequestReturn');
@@ -81,7 +81,6 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
     Route::group(['prefix' => 'shipper'], function () {
         Route::get('listbook', 'Shipper\OrderController@getListBook');
         Route::post('listbook-wait', 'Shipper\OrderController@getBookShipperWait');
-
         Route::get('listbook-wait/detail', 'Shipper\OrderController@getBookShipperWaitDetail');
         Route::post('auto-assign', 'OrderController@assignShipperAuto'); // xác nhận lấy/giao/trả của khách hàng
         Route::post('auto-assign-single', 'Shipper\OrderController@assignSingleShipperAuto'); // xác nhận lấy/giao/trả của đơn hàng

@@ -167,56 +167,7 @@
           </div>
         </div>
     </form>
-<!-- Modal image booking -->
-    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="myModalLabel">Ảnh đơn hàng <span id="alt_uuid_booking"></span></span></h4>
-            </div>
-            <div class="modal-body">
-            <img src="" id="imagepreview"  >
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-            </div>
-        </div>
-        </div>
-    </div>
-    <!-- Modal detail booking -->
-    <div class="modal fade" id="detailBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Chi tiết đơn hàng <span id="uuid_booking"></span></span></h4>
-                </div>
-                <div class="modal-body">
-                    <h3 style="color: blue;"><b>Thông tin khách hàng</b></h3>
-                    <div class="info-send col-md-6">
-                        <h4><b>Người gửi</b></h4>
-                        <div class="content"></div>
-                    </div>
-                    <div class="info-receive col-md-6">
-                        <h4><b>Người nhận</b></h4>
-                        <div class="content"></div>
-                    </div>
-                    <h3 style="color: blue;"><b>Thông tin cơ bản</b></h3>
-                    <div class="info-booking col-md-6">
-                        <h4><b>Đơn hàng</b></h4>
-                        <div class="content"></div>
-                    </div>
-                    <div class="info-log col-md-6">
-                        <h4><b>Log đơn hàng</b></h4>
-                        <div class="content"></div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="border-top:none">
-                </div>
-            </div>
-        </div>
-    </div>
+
 {{-- </div> --}}
 
 @endsection
@@ -371,40 +322,6 @@
                 }
             });
         });
-        //show img booking
-        $(document).on('click','.img_booking',function(){
-            $('#imagepreview').attr('src', $(this).find('img').attr('src'));
-            $('#alt_uuid_booking').text($(this).find('img').attr("alt"));
-            $('#imagemodal').modal('show');   
-        });
-        //show detail booking
-        $(document).on('click','.uuid',function(){
-            var id=  $(this).attr("name");
-            var empty='';
-            $('#detailBooking .modal-body .content p').remove();
-            $.ajax({
-                type: "GET",
-                url: '{{url('/ajax/detail_booking/')}}/' + id
-            }).done(function (msg) {
-                var payer= msg.booking.payment_type == 1 ? 'người gửi' :'người nhận';
-                var status= msg.booking.status == 'new' ? 'mới' :'đang lấy';
-                var shipper = msg.shipper != null ? '<p>Shipper lấy đơn: '+msg.shipper.shipper_name +'</p>' :'';
-                var content_send="<p>Họ tên: "+ msg.booking.send_name+"</p> <p>Số điện thoại: "+ msg.booking.send_phone+"</p> <p>Địa chỉ: "+ msg.booking.send_full_address+"</p>";
-                var content_receive="<p>Họ tên: "+ msg.booking.receive_name+"</p> <p>Số điện thoại: "+ msg.booking.receive_phone+"</p> <p>Địa chỉ: "+ msg.booking.receive_full_address+"</p>";
-                var content_booking="<p>Tên đơn hàng: "+ msg.booking.name+" -- Ngày tạo: "+msg.booking.created_at+"</p> <p>Tiền thu hộ: "+ msg.booking.COD +"</p> </p> <p>Giá đơn hàng: "+ msg.booking.price +"</p>  </p> <p>Chi phí phát sinh: "+ msg.booking.incurred +"</p> <p>Số tiền thanh toán: "+ msg.booking.paid +"</p> <p>Khối lượng (gram): "+ msg.booking.weight +"</p>  <p>Ghi chú khách hàng: "+ msg.booking.other_note +"</p> <p>Ghi chú hệ thống: "+ msg.booking.note +"</p> <p>Trả cước: "+payer+"</p><p>Trạng thái: "+status+"</p> "+shipper+""
-                var content_log="";
-                $( msg.log ).each(function( index, value ) {
-                        if(value.type_detail == "book_detail"){
-                            content_log+= "<p>"+ value.title+" - "+value.created_at+"</p> "
-                        }
-                });
-                $('#uuid_booking').text(msg.booking.uuid);
-                $('#detailBooking .modal-body .info-send .content').append(content_send);
-                $('#detailBooking .modal-body .info-receive .content').append(content_receive);
-                $('#detailBooking .modal-body .info-booking .content').append(content_booking);
-                $('#detailBooking .modal-body .info-log .content').append(content_log);
-            });
-            $('#detailBooking').modal('show');   
-        });
+       
     </script>
 @endpush
