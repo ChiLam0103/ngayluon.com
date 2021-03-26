@@ -84,17 +84,13 @@
                        ['data' => 'receive_phone', 'title' => 'Số điện thoại'],
                        ['data' => 'receive_full_address', 'title' => 'Địa chỉ'],
                        ['data' => 'weight', 'title' => 'Khối lượng(gram)'],
-                       ['data' => 'transport_type', 'title' => 'Phương thức vận chuyển'],
                        ['data' => 'price', 'title' => 'Giá'],
                        ['data' => 'incurred', 'title' => 'Chi phí phát sinh'],
                        ['data' => 'paid', 'title' => 'Số tiền đã thanh toán'],
                        ['data' => 'COD', 'title' => 'Thu hộ'],
-                    // //    ['data' => 'current_agency', 'title' => 'Đại lý chuyển'],
-                    // //    ['data' => 'last_agency', 'title' => 'Đại lý nhận'],
                        ['data' => 'payment_type', 'title' => 'Ghi chú'],
-                    //    ['data' => 'other_note', 'title' => 'Ghi chú khác'],
-                    //    ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
-                   ]
+                       ['data' => 'other_note', 'title' => 'Ghi chú khác'],
+                     ]
                ])
         </div>
     </div>

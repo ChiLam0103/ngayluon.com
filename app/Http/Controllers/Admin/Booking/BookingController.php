@@ -192,8 +192,8 @@ class BookingController extends Controller
             //tạo uuid
             $id = $this->generateBookID();
             $booking->uuid = $id;
-             //tạo image
-             if ($req->hasFile('image_order')) {
+            //tạo image
+            if ($req->hasFile('image_order')) {
                 $file = $req->image_order;
                 // $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
                 $filename =  $id . '_booking.png';
@@ -551,6 +551,7 @@ class BookingController extends Controller
     {
         $booking = Booking::find($id);
         $check = BookDelivery::where('book_id', $id)->first();
+        $shipper_name = User::where('id', $req->shipper)->first()->name;
         if ($check == null) {
             DB::beginTransaction();
             try {
@@ -589,7 +590,6 @@ class BookingController extends Controller
                 $booking->status = 'taking';
                 $booking->save();
                 DB::commit();
-
                 $bookingDelivery = BookDelivery::where('book_id', $id)->where('user_id', $req->shipper)->where('sending_active', 1)->first();
                 //gửi thông báo tới shipper khi được phân công
                 $bookingTmp = $booking->toArray();
@@ -599,6 +599,10 @@ class BookingController extends Controller
                 // $notificationHelper = new NotificationHelper();
                 // $notificationHelper->notificationBooking($bookingTmp, 'shipper', ' vừa được phân công cho bạn', 'push_order_assign');
                 dispatch(new NotificationJob($bookingTmp, 'shipper', ' vừa được phân công cho bạn', 'push_order_assign'));
+                NotificationJob::logBooking($bookingTmp, ' được phân công đi lấy cho ' . $shipper_name);
+                if ($req->category == 'r-and-s') {
+                    NotificationJob::logBooking($bookingTmp, ' được phân công đi giao cho ' . $shipper_name);
+                }
             } catch (\Exception $e) {
                 DB::rollBack();
                 return $e;
@@ -634,10 +638,13 @@ class BookingController extends Controller
         }
         return redirect(url('admin/booking/received'));
     }
-
+    //phân công lại
     public function postReAssign($cate, $id, AssignRequest $req)
     {
         DB::beginTransaction();
+        $shipper_name = User::where('id', $req->shipper)->first()->name;
+        $booking = Booking::find($id);
+
         try {
             $check = null;
             if ($cate == 'taking') {
@@ -652,6 +659,11 @@ class BookingController extends Controller
                     $check->save();
                 }
                 $url = 'new';
+                //gửi thông báo tới shipper khi được phân công
+                $bookingTmp = $booking->toArray();
+                $bookingTmp['shipper_id'] = $req->shipper;
+                $bookingTmp['book_delivery_id'] = $check->id;
+                NotificationJob::logBooking($bookingTmp, ' được phân công đi lấy cho ' . $shipper_name);
             }
             if ($cate == 'sending') {
                 $check = BookDelivery::where('book_id', $id)->where('category', 'send')->where('status', 'processing')->first();
@@ -660,6 +672,11 @@ class BookingController extends Controller
                     $check->save();
                 }
                 $url = 'received';
+                 //gửi thông báo tới shipper khi được phân công
+                 $bookingTmp = $booking->toArray();
+                 $bookingTmp['shipper_id'] = $req->shipper;
+                 $bookingTmp['book_delivery_id'] = $check->id;
+                 NotificationJob::logBooking($bookingTmp, ' được phân công đi giao cho ' . $shipper_name);
             }
             if ($cate == 'deny') {
                 $delivery = BookDelivery::find($id);
@@ -669,6 +686,11 @@ class BookingController extends Controller
                     Booking::where('id', $delivery->book_id)->update(['incurred' => $req->incurred]);
                 }
                 $url = 'return';
+                 //gửi thông báo tới shipper khi được phân công
+                 $bookingTmp = $booking->toArray();
+                 $bookingTmp['shipper_id'] = $req->shipper;
+                 $bookingTmp['book_delivery_id'] = $check->id;
+                 NotificationJob::logBooking($bookingTmp, ' được phân công đi trả cho ' . $shipper_name);
             }
             DB::commit();
             return redirect(url('admin/booking/' . $url));

@@ -38,23 +38,24 @@ class BookingController extends Controller
         $ward = ManagementWardScope::whereIn('agency_id', $scope)->pluck('ward_id');
         return $ward;
     }
-    public function detailBooking($id){
+    public function detailBooking($id)
+    {
         $booking = Booking::where('id', $id)->first();
         $log = DB::table('notifications')->where('booking_id', $id)->get();
         $shipper =  BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
-        return response()->json(['booking'=>$booking, 'log'=>$log, 'shipper'=> $shipper]);
+        return response()->json(['booking' => $booking, 'log' => $log, 'shipper' => $shipper]);
     }
     public function newBooking()
     {
         if (Auth::user()->role == 'collaborators') {
             // $booking = Booking::where('status', 'new')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope())
             //     ->orwhere('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
-            $booking = Booking::where(function($q){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) {
+                $q->where(function ($q1) {
                     $q1->where('status', 'new')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
                 });
-                $q->orWhere(function($q2){
-                    $q2->where('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());        
+                $q->orWhere(function ($q2) {
+                    $q2->where('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
                 });
             });
         } else {
@@ -116,12 +117,10 @@ class BookingController extends Controller
                 return $image;
             })
             ->editColumn('image_order', function ($b) {
-                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-                return '<a href="javascript:void(0);" name="'.$b->id.'" class="uuid">'.$b->uuid.'</a>';
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
             ->editColumn('status', function ($b) {
                 return $b->status == 'new' ? 'Mới' : 'Đang lấy';
@@ -152,7 +151,7 @@ class BookingController extends Controller
                 $delivery = BookDelivery::where('book_id', $b->id)->where('category', 'receive')->where('status', 'processing')->where('sending_active', 1)->select('created_at as receive_created_at')->first();
                 return !empty($delivery) ? $delivery->receive_created_at : '';
             })
-            ->rawColumns(['report_image', 'action', 'send_name','image_order','uuid'])
+            ->rawColumns(['report_image', 'action', 'send_name', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -168,13 +167,13 @@ class BookingController extends Controller
             //     ->whereHas('deliveries', function ($query) {
             //         $query->where('category', 'move')->where('status', 'completed')->where('last_move', 1);
             //     });
-            $booking = Booking::where(function($q) use ($agency_scope){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) use ($agency_scope) {
+                $q->where(function ($q1) {
                     $q1->where('status', 'sending')->where('sub_status', 'none')->whereHas('deliveries', function ($query) {
                         $query->where('sending_active', 1);
                     });
                 });
-                $q->orWhere(function($q2) use ($agency_scope){
+                $q->orWhere(function ($q2) use ($agency_scope) {
                     $q2->whereIn('current_agency', $agency_scope)->where('status', 'move')->where('sub_status', 'none')->whereIn('current_agency', $agency_scope)
                         ->whereHas('deliveries', function ($query) {
                             $query->where('category', 'move')->where('status', 'completed')->where('last_move', 1);
@@ -189,39 +188,39 @@ class BookingController extends Controller
             //     $query->where('category', 'move')->where('status', 'completed');
             // });
 
-            $booking = Booking::where(function($q){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) {
+                $q->where(function ($q1) {
                     $q1->where('status', 'sending')->where('sub_status', 'none')->whereHas('deliveries', function ($query) {
                         $query->where('sending_active', 1);
                     });
                 });
-                $q->orWhere(function($q2){
+                $q->orWhere(function ($q2) {
                     $q2->where('status', 'move')->where('sub_status', 'none')->whereHas('deliveries', function ($query) {
                         $query->where('category', 'move')->where('status', 'completed');
                     });
                 });
             });
         }
-        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries','shipperSender', 'shipperRecivcier']);
+        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries', 'shipperSender', 'shipperRecivcier']);
 
         request()->session()->put('search_status', request()->search_status);
         request()->session()->put('search_shipper', request()->search_shipper);
         if (request()->session()->has('search_status') && request()->session()->get('search_status') == 'no_assign') {
-            $booking = $booking->whereHas('deliveries', function($query){
+            $booking = $booking->whereHas('deliveries', function ($query) {
                 $query->where('status', 'completed')->where('category', 'receive')->where('sending_active', 1);
             });
         }
-        if ( request()->session()->has('search_shipper') && !empty(request()->session()->get('search_shipper')) ) {
+        if (request()->session()->has('search_shipper') && !empty(request()->session()->get('search_shipper'))) {
             $shipperIds = User::where('role', 'shipper')
-                            ->where('status', 'active')
-                            ->where('delete_status', 0)
-                            ->where(function($query){
-                                $query->where('name', 'LIKE', '%' . request()->session()->get('search_shipper') . '%')
-                                    ->orWhere('phone_number', 'LIKE', '%' . request()->session()->get('search_shipper') . '%');
-                            })
-                            ->select('id')
-                            ->pluck('id')->toArray();
-            $booking = $booking->whereHas('deliveries', function($query) use ($shipperIds){
+                ->where('status', 'active')
+                ->where('delete_status', 0)
+                ->where(function ($query) {
+                    $query->where('name', 'LIKE', '%' . request()->session()->get('search_shipper') . '%')
+                        ->orWhere('phone_number', 'LIKE', '%' . request()->session()->get('search_shipper') . '%');
+                })
+                ->select('id')
+                ->pluck('id')->toArray();
+            $booking = $booking->whereHas('deliveries', function ($query) use ($shipperIds) {
                 $query->whereIn('user_id', $shipperIds);
             });
         }
@@ -253,11 +252,11 @@ class BookingController extends Controller
                 return implode(' ', $action);
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
-            // ->editColumn('uuid', function ($b) {
-            //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-            // })
+            ->editColumn('uuid', function ($b) {
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
+            })
             ->editColumn('status', function ($b) {
                 return 'Chưa giao';
             })
@@ -306,7 +305,7 @@ class BookingController extends Controller
                 $delivery = BookDelivery::where('book_id', $b->id)->where('category', 'send')->where('status', 'processing')->where('sending_active', 1)->select('created_at as send_created_at')->first();
                 return !empty($delivery) ? $delivery->send_created_at : '';
             })
-            ->rawColumns(['report_image', 'action','image_order'])
+            ->rawColumns(['report_image', 'action', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -340,11 +339,10 @@ class BookingController extends Controller
             })
             ->editColumn('image_order', function ($b) {
                 // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return \QrCode::size(100)->generate($b->uuid) . '<br>' . $b->uuid;
             })
             ->editColumn('status', function ($b) {
                 return 'Tạm hoãn';
@@ -395,7 +393,7 @@ class BookingController extends Controller
             ->editColumn('user_create', function ($b) {
                 return $b->sender->name . ' ' . $b->sender->phone_number;
             })
-            ->rawColumns(['report_image', 'action','image_order','uuid'])
+            ->rawColumns(['report_image', 'action', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -449,15 +447,13 @@ class BookingController extends Controller
             ->editColumn('user_create', function ($b) {
                 return $b->sender->name . ' ' . $b->sender->phone_number;
             })
-             ->editColumn('image_order', function ($b) {
-                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
+            ->editColumn('image_order', function ($b) {
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                // return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-                return '<a href="javascript:void(0);" name="'.$b->id.'" class="uuid">'.$b->uuid.'</a>';
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
-            ->rawColumns(['report_image', 'action','image_order','uuid'])
+            ->rawColumns(['report_image', 'action', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -561,13 +557,12 @@ class BookingController extends Controller
             })
             ->editColumn('image_order', function ($b) {
                 // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return \QrCode::size(100)->generate($b->uuid) . '<br>' . $b->uuid;
             })
-            ->rawColumns(['COD_status', 'report_image','image_order','uuid'])
+            ->rawColumns(['COD_status', 'report_image', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -580,12 +575,12 @@ class BookingController extends Controller
         //     ->where('book_deliveries.category', '=', 'move')
         //     ->where('book_deliveries.status', 'completed')->where('book_deliveries.last_move', 1);
 
-        $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')->where(function($q){
-            $q->where(function($q1){
+        $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')->where(function ($q) {
+            $q->where(function ($q1) {
                 $q1->where('bookings.status', 'return')->where('bookings.sub_status', '!=', 'delay')
                     ->where('book_deliveries.category', '=', 'return');
             });
-            $q->orWhere(function($q2){
+            $q->orWhere(function ($q2) {
                 $q2->where('bookings.status', 'move')->where('bookings.sub_status', 'move_return')
                     ->where('book_deliveries.category', '=', 'move')
                     ->where('book_deliveries.status', 'completed')->where('book_deliveries.last_move', 1);
@@ -601,13 +596,13 @@ class BookingController extends Controller
             //     ->whereIn('bookings.current_agency', $scope)->where('book_deliveries.category', '=', 'move')
             //     ->where('book_deliveries.status', 'completed')->where('book_deliveries.last_move', 1);
 
-            $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')->where(function($q){
-                $q->where(function($q1){
+            $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')->where(function ($q) {
+                $q->where(function ($q1) {
                     $q1->whereIn('bookings.current_agency', $scope)
                         ->where('bookings.status', 'return')->where('bookings.sub_status', '!=', 'delay')
                         ->where('book_deliveries.category', '=', 'return');
                 });
-                $q->where(function($q2){
+                $q->where(function ($q2) {
                     $q2->where('bookings.status', 'move')->where('bookings.sub_status', 'move_return')
                         ->whereIn('bookings.current_agency', $scope)->where('book_deliveries.category', '=', 'move')
                         ->where('book_deliveries.status', 'completed')->where('book_deliveries.last_move', 1);
@@ -621,7 +616,7 @@ class BookingController extends Controller
                 $action = [];
                 if ($b->sub_status == 'none' && $b->status == 'deny' || $b->sub_status == 'move_return' && $b->status == 'move') {
                     $action[] = '<div style="display: inline-flex"><a style="float: left" href="' . url('admin/booking/deny_assign/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-motorcycle"></i> Phân công</a>';
-//                    if($b->current_agency != $b->first_agency){
+                    //                    if($b->current_agency != $b->first_agency){
                     $action[] = '<a style="float: left" href="#" onclick="moveBooking(' . $b->id . ')" class="btn btn-xs btn-warning"><i class="fa fa-share"></i> Chuyển kho</a>';
                     $action[] = '<a style="background: rgba(131,1,7,0.98)" href="' . url('admin/booking/cancel/return/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn hủy đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-remove"></i> Hủy</a></div>';
 
@@ -629,7 +624,7 @@ class BookingController extends Controller
                     $action[] = '<a style="background: rgba(159,158,25,0.81)" href="' . url('admin/booking/update/return/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Sửa</a>';
                     $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/return/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
                     $action[] = '<a style="float: left; margin-top: 5px;" href="' . url('admin/booking/move-to-receive/' . $b->id) . '" class="btn btn-xs btn-default"><i class="fa fa-share"></i> Chuyển qua ĐH chưa giao</a>';
-//                    }
+                    //                    }
                 } else if ($b->sub_status == 'deny') {
                     $action[] = '<a disabled="" href="#" class="btn btn-xs btn-danger"><i class="fa fa-times" aria-hidden="true"></i> Từ chối</a></div>';
                 } else if ($b->status == 'processing') {
@@ -654,11 +649,10 @@ class BookingController extends Controller
             })
             ->editColumn('image_order', function ($b) {
                 // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return \QrCode::size(100)->generate($b->uuid) . '<br>' . $b->uuid;
             })
             ->editColumn('status', function ($b) {
                 $status = '';
@@ -727,7 +721,7 @@ class BookingController extends Controller
             ->editColumn('user_create', function ($b) {
                 return $b->create_name . ' ' . $b->create_phone_number;
             })
-            ->rawColumns(['report_image', 'action','image_order','uuid'])
+            ->rawColumns(['report_image', 'action', 'image_order', 'uuid'])
             ->make(true);
     }
 
@@ -751,19 +745,19 @@ class BookingController extends Controller
             //             ->orWhere('book_deliveries.category', 'move')->whereIn('book_deliveries.last_agency', $scope);
             //     });
             // });
-            $booking = Booking::where(function($q) use ($scope){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) use ($scope) {
+                $q->where(function ($q1) {
                     $q1->where('bookings.status', 'move');
-                    $q1->whereHas('deliveries', function($query){
+                    $q1->whereHas('deliveries', function ($query) {
                         $query->where('category', 'move')->where('status', 'processing');
                     });
                 });
-                $q->orWhere(function($q2) use ($scope){
-                    $q2->whereHas('deliveries', function($query) use ($scope){
+                $q->orWhere(function ($q2) use ($scope) {
+                    $q2->whereHas('deliveries', function ($query) use ($scope) {
                         $query->whereIn('current_agency', $scope);
                     });
-                    $q2->orWhere(function($q) use ($scope){
-                        $q->whereHas('deliveries', function($query) use ($scope){
+                    $q2->orWhere(function ($q) use ($scope) {
+                        $q->whereHas('deliveries', function ($query) use ($scope) {
                             $query->where('category', 'move')->where('status', 'processing');
                             $query->whereIn('last_agency', $scope);
                         });
@@ -774,15 +768,15 @@ class BookingController extends Controller
             // $booking = $booking->where('book_deliveries.status', '=', 'processing');
 
             //$booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
-            $booking = Booking::where(function($q){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) {
+                $q->where(function ($q1) {
                     $q1->where('bookings.status', 'move')
                         // ->where('book_deliveries.category', '=', 'move');
                         ->whereHas('deliveries', function ($query) {
                             $query->where('category', 'move');
                         });
                 });
-                $q->where(function($q2){
+                $q->where(function ($q2) {
                     // $q2->where('book_deliveries.status', '=', 'processing');
                     $q2->whereHas('deliveries', function ($query) {
                         $query->where('status', 'processing');
@@ -807,11 +801,10 @@ class BookingController extends Controller
             })
             ->editColumn('image_order', function ($b) {
                 // return ($b->image_order !=null ? '<img width="150" src="' . asset('/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
             ->editColumn('uuid', function ($b) {
-                return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
+                return \QrCode::size(100)->generate($b->uuid) . '<br>' . $b->uuid;
             })
             ->editColumn('status', function ($b) {
                 $status = '';
@@ -857,137 +850,43 @@ class BookingController extends Controller
                 }
                 return $tran;
             })
-            ->rawColumns(['image_order','uuid'])
+            ->rawColumns(['image_order', 'uuid'])
             ->make(true);
     }
     public function warehouseBooking()
     {
-        // $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
-        //     ->where('bookings.status', 'move')->where('book_deliveries.category', '=', 'move');
-        // if (Auth::user()->role == 'collaborators') {
-        //     $user_id = Auth::user()->id;
-        //     $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
-        //     $booking = $booking->whereIn('book_deliveries.current_agency', $scope)
-        //         ->orWhere('book_deliveries.category', 'move')->whereIn('book_deliveries.last_agency', $scope);
-
-        //     $booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
-        //     ->where(function($q) use ($scope){
-        //         $q->where(function($q1){
-        //             $q1->where('bookings.status', 'move')->where('book_deliveries.category', '=', 'move');
-        //         });
-        //         $q->orWhere(function($q2) use ($scope){
-        //             $q2->whereIn('book_deliveries.current_agency', $scope)
-        //                 ->orWhere('book_deliveries.category', 'move')->whereIn('book_deliveries.last_agency', $scope);
-        //         });
-        //     });
-        //     $booking = Booking::where(function($q) use ($scope){
-        //         $q->where(function($q1){
-        //             $q1->where('bookings.status', 'warehouse');
-        //             // $q1->whereHas('deliveries', function($query){
-        //             //     $query->where('category', 'warehouse')->where('status', 'processing');
-        //             // });
-        //         });
-                // $q->orWhere(function($q2) use ($scope){
-                //     $q2->whereHas('deliveries', function($query) use ($scope){
-                //         $query->whereIn('current_agency', $scope);
-                //     });
-                //     $q2->orWhere(function($q) use ($scope){
-                //         $q->whereHas('deliveries', function($query) use ($scope){
-                //             $query->where('category', 'warehouse')->where('status', 'processing');
-                //             $query->whereIn('last_agency', $scope);
-                //         });
-                //     });
-                // });
-            // });
-        // } else {
-            // $booking = $booking->where('book_deliveries.status', '=', 'processing');
-
-            //$booking = DB::table('bookings')->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id')
-            $booking = Booking::where(function($q){
-                $q->where(function($q1){
-                    $q1->where('bookings.status', 'warehouse');
-                        // ->where('book_deliveries.category', '=', 'move');
-                        // ->whereHas('deliveries', function ($query) {
-                        //     $query->where('category', 'warehouse');
-                        // });
-                });
-                // $q->where(function($q2){
-                //     // $q2->where('book_deliveries.status', '=', 'processing');
-                //     $q2->whereHas('deliveries', function ($query) {
-                //         $query->where('status', 'processing');
-                //     });
-                // });
-            });
-        // }
-        // dd($booking);
+        $booking = Booking::where('bookings.warehouse', 1);
         return datatables()->of($booking)
-            // ->addColumn('action', function ($b) {
-            //     $action = [];
-            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'warehouse')->first();
-            //     if (Auth::user()->role == 'collaborators') {
-            //         $user_id = Auth::user()->id;
-            //         $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
-            //         if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
-            //             $action[] = '<a style="float: left" href="' . url('admin/booking/moved/' . $bookDelivery->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-check-circle"></i> Đã nhận hàng</a>';
-            //         }
-            //     } else if (Auth::user()->role == 'admin') {
-            //         $action[] = '<a style="float: left" href="' . url('admin/booking/moved/' . $bookDelivery->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-check-circle"></i> Đã nhận hàng</a>';
-            //     }
-            //     return implode(' ', $action);
-            // })
+            
             ->editColumn('image_order', function ($b) {
-                // return ($b->image_order !=null ? '<img width="150" src="' . asset('public/' . $b->image_order) . '">' : "<img src='../../public/img/not-found.png' width='150'/>");
-                return ($b->image_order !=null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
-
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_booking"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
-            // ->editColumn('uuid', function ($b) {
-            //     return \QrCode::size(100)->generate($b->uuid).'<br>'.$b->uuid;
-            // })
-            // ->editColumn('status', function ($b) {
-            //     $status = '';
-            //     $user_id = Auth::user()->id;
-            //     $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id')->toArray();
-            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'move')->first();
-            //     if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'processing') {
-            //         $status = 'Đang chuyển đến';
-            //     } else if (in_array($bookDelivery->last_agency, $scope) && $bookDelivery->status == 'completed') {
-            //         $status = 'Đã chuyển đến';
-            //     } else if (in_array($bookDelivery->current_agency, $scope) && $bookDelivery->status == 'processing') {
-            //         $status = 'Đang chuyển đi';
-            //     } else {
-            //         $status = 'Đã chuyển đi';
-            //     }
-            //     return $status;
-            // })
-            // ->editColumn('current_agency', function ($b) {
-            //     $current_agency = '';
-            //     if ($b->current_agency) {
-            //         $current_agency = Agency::find($b->current_agency)->name;
-            //     }
-            //     return $current_agency;
-            // })
-            // ->editColumn('last_agency', function ($b) {
-            //     $last_agency = '';
-            //     $bookDelivery = BookDelivery::where('book_id', $b->id)->where('category', 'warehouse')->first();
-            //     if ($bookDelivery->last_agency) {
-            //         $last_agency = Agency::find($bookDelivery->last_agency)->name;
-            //     }
-            //     return $last_agency;
-            // })
-            ->editColumn('transport_type', function ($b) {
-                $tran = '';
-                if ($b->transport_type == 1) {
-                    $tran = 'Giao chuẩn';
-                } else if ($b->transport_type == 2) {
-                    $tran = 'Giao tiết kiệm';
-                } else if ($b->transport_type == 3) {
-                    $tran = 'Giao siêu tốc';
-                } else {
-                    $tran = 'Giao thu COD';
+            ->editColumn('uuid', function ($b) {
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
+            })
+            ->editColumn('status', function ($b) {
+                $status = '';
+                switch ($b->status) {
+                    case 'sending':
+                        $status = 'chưa giao';
+                       break;
+                    case 'return':
+                        $status = 'trả lại';
+                        break;
+                    case 'cancel':
+                        $status = 'hủy';
+                        break;
+                    case 'move':
+                        $status = 'chuyển';
+                        break;
+                    default:
+                        // chuỗi câu lệnh
+                        break;
                 }
-                return $tran;
+                return $status;
             })
-            ->rawColumns(['image_order','uuid'])
+            
+            ->rawColumns(['image_order', 'uuid','status'])
             ->make(true);
     }
 
@@ -1053,29 +952,29 @@ class BookingController extends Controller
             $ward_id = $booking->receive_ward_id;
             $current = @$booking->current_agency;
             $data = @ManagementWardScope::where('ward_id', $ward_id)->first()->agency_id;
-
         }
         return ['id' => $id, 'agency' => $data != null ? $data : -1, 'current' => $current != null ? $current : -1];
     }
 
-    public function getQuickAssignReceive() {
-        $booking = Booking::where(function($q){
-            $q->where(function($q1){
+    public function getQuickAssignReceive()
+    {
+        $booking = Booking::where(function ($q) {
+            $q->where(function ($q1) {
                 $q1->where('status', 'sending')->where('sub_status', 'none')->whereHas('deliveries', function ($query) {
                     $query->where('sending_active', 1);
                 });
             });
-            $q->orWhere(function($q2){
+            $q->orWhere(function ($q2) {
                 $q2->where('status', 'move')->where('sub_status', 'none')->whereHas('deliveries', function ($query) {
                     $query->where('category', 'move')->where('status', 'completed');
                 });
             });
         });
-        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries','shipperSender']);
+        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries', 'shipperSender']);
 
         // đơn hàng chưa phân công
         if (request()->type_assign == 'no_assign') {
-            $booking = $booking->whereHas('deliveries', function($query){
+            $booking = $booking->whereHas('deliveries', function ($query) {
                 $query->where('status', 'completed')->where('category', 'receive')->where('sending_active', 1);
             });
         }
@@ -1095,9 +994,9 @@ class BookingController extends Controller
 
         $booking = $booking->orderBy('created_at', 'DESC')->get();
         $shippers = User::where('role', 'shipper')
-                        ->where('status', 'active')
-                        ->where('delete_status', 0)
-                        ->get();
+            ->where('status', 'active')
+            ->where('delete_status', 0)
+            ->get();
         $data = [
             'province_id' => request()->province_id,
             'district_id' => request()->district_id,
@@ -1110,7 +1009,8 @@ class BookingController extends Controller
         return $data;
     }
 
-    public function postQuickAssignReceive() {
+    public function postQuickAssignReceive()
+    {
         $data['shipper_id'] = '';
         $data['book_ids'] = [];
         foreach (request()->inputs as $key => $value) {
@@ -1124,7 +1024,7 @@ class BookingController extends Controller
         if (empty($data['shipper_id'])) {
             return json_encode(['status' => 'Hãy chọn 1 shipper!']);
         }
-        
+
         if (count($data['book_ids']) > 0) {
             if (request()->type_assign == 'no_assign') {
                 foreach ($data['book_ids'] as $id) {
@@ -1156,8 +1056,8 @@ class BookingController extends Controller
                 DB::beginTransaction();
                 try {
                     BookDelivery::whereIn('book_id', $data['book_ids'])
-                                    ->where('sending_active', 1)
-                                    ->update(['user_id' => $data['shipper_id']]);
+                        ->where('sending_active', 1)
+                        ->update(['user_id' => $data['shipper_id']]);
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();
@@ -1171,16 +1071,17 @@ class BookingController extends Controller
         return json_encode(['status' => 'success']);
     }
 
-    public function getQuickAssignNew() {
+    public function getQuickAssignNew()
+    {
         if (Auth::user()->role == 'collaborators') {
             // $booking = Booking::where('status', 'new')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope())
             //     ->orwhere('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
-            $booking = Booking::where(function($q){
-                $q->where(function($q1){
+            $booking = Booking::where(function ($q) {
+                $q->where(function ($q1) {
                     $q1->where('status', 'new')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
                 });
-                $q->orWhere(function($q2){
-                    $q2->where('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());        
+                $q->orWhere(function ($q2) {
+                    $q2->where('status', 'taking')->where('sub_status', 'none')->whereIn('send_ward_id', $this->getBookingScope());
                 });
             });
         } else {
@@ -1207,13 +1108,13 @@ class BookingController extends Controller
             $booking = $booking->where('send_phone', 'LIKE', '%' . request()->phone . '%');
         }
 
-        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries','shipperRecivcier'])
-                        ->orderBy('created_at', 'DESC')
-                        ->get();
+        $booking = $booking->with(['firstAgencies', 'currentAgencies', 'deliveries', 'shipperRecivcier'])
+            ->orderBy('created_at', 'DESC')
+            ->get();
         $shippers = User::where('role', 'shipper')
-                        ->where('status', 'active')
-                        ->where('delete_status', 0)
-                        ->get();
+            ->where('status', 'active')
+            ->where('delete_status', 0)
+            ->get();
         $data = [
             'province_id' => request()->province_id,
             'district_id' => request()->district_id,
@@ -1226,7 +1127,8 @@ class BookingController extends Controller
         return $data;
     }
 
-    public function postQuickAssignNew() {
+    public function postQuickAssignNew()
+    {
         $data['shipper_id'] = '';
         $data['book_ids'] = [];
         foreach (request()->inputs as $key => $value) {
@@ -1240,7 +1142,7 @@ class BookingController extends Controller
         if (empty($data['shipper_id'])) {
             return json_encode(['status' => 'Hãy chọn 1 shipper!']);
         }
-        
+
         if (count($data['book_ids']) > 0) {
             if (request()->type_assign == 'no_assign') {
                 foreach ($data['book_ids'] as $id) {
@@ -1271,8 +1173,8 @@ class BookingController extends Controller
                 DB::beginTransaction();
                 try {
                     BookDelivery::whereIn('book_id', $data['book_ids'])
-                                    ->where('sending_active', 1)
-                                    ->update(['user_id' => $data['shipper_id']]);
+                        ->where('sending_active', 1)
+                        ->update(['user_id' => $data['shipper_id']]);
                     DB::commit();
                 } catch (\Exception $e) {
                     DB::rollBack();

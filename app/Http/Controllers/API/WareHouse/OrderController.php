@@ -44,13 +44,13 @@ class OrderController extends ApiController
         $limit = $req->get('limit', 10);
         $query = Booking::query()
             ->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id');
-        $query->where('bookings.status', '!=', 'cancel')->where('book_deliveries.user_id', $req->user()->id);
+        // $query->where('bookings.status', '!=', 'cancel')->where('book_deliveries.user_id', $req->user()->id);
         if (isset($req->category)) {
             // $query->where(function ($query) {
             //     $query->where('book_deliveries.category', '=', 'warehouse')->where('book_deliveries.status', 'none');
             // });
-            // $query->where('bookings.sub_status', '!=', 'deny')->where('bookings.status', '!=', 'completed');
-            $query->where('bookings.sub_status', 'none')->where('bookings.status', 'completed');
+            // $query->where('bookings.sub_status', '!=', 'deny')->where('bookings.status', '!=', 'completed'); $booking->warehouse = 1;
+            $query->where('bookings.warehouse', 1);
             if (isset($req->keyword) && !empty($req->keyword)) {
                 $query->where(function ($q) use ($req) {
                     $q->where('send_name', 'LIKE', '%' . $req->keyword . '%');
@@ -151,7 +151,7 @@ class OrderController extends ApiController
                         'updated_at'=>new \DateTime(),
                     ]);
                     // $booking->sub_status = $booking->status;
-                    $booking->status = 'warehouse';
+                    $booking->warehouse = 1;
                     break;
                 default:
             }
