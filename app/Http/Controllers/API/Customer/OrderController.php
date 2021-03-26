@@ -137,15 +137,15 @@ class OrderController extends ApiController
     public function getListBookType($status, $type, Request $req)
     {
         date_default_timezone_set('Australia/Melbourne');
-        $date = date('Y-m-d 00:00:00', time()); 
-       
+        $date = date('Y-m-d 00:00:00', time());
+
         //"updated_at": "2020-12-30 13:31:04"
         $limit = $req->get('limit', 10);
         $query = Booking::query();
         $query->where('sender_id', $req->user()->id);
         if (isset($type)) {
             if ($type == 'today') {
-                $query->where('updated_at','>=' ,$date);
+                $query->where('updated_at', '>=', $date);
             }
         }
 
@@ -375,16 +375,32 @@ class OrderController extends ApiController
     //bộ lọc
     public function getFilter(Request $req)
     {
-        try { 
+        try {
             // thời gian từ/đến - trạng thái đơn hàng - mã đơn hàng - tên khách hàng - sdt khách hàng
             date_default_timezone_set('Australia/Melbourne');
-            $date = date('Y-m-d 00:00:00', time()); 
-           
+            $date = date('Y-m-d 00:00:00', time());
+
             //"updated_at": "2020-12-30 13:31:04"
             $limit = $req->get('limit', 10);
             $query = Booking::query();
             $query->where('sender_id', $req->user()->id);
-    // dd($req->status);
+            $check_date = 0;
+            $check_uuid = 0;
+            $check_receive_name = 0;
+            $check_receive_phone = 0;
+            if (($req->fromdate && $req->todate) == null || ($req->fromdate && $req->todate) == 'null' || ($req->fromdate && $req->todate) == 'undefined') {
+                $check_date = 1;
+            }
+            if ($req->check_uuid == null ||  $req->check_uuid == 'null' ||  $req->check_uuid == 'undefined') {
+                $check_uuid = 1;
+            }
+            if ($req->receive_name == null ||  $req->receive_name == 'null' ||  $req->receive_name == 'undefined') {
+                $check_receive_name = 1;
+            }
+            if ($req->check_receive_phone == null ||  $req->check_receive_phone == 'null' ||  $req->check_receive_phone == 'undefined') {
+                $check_receive_phone = 1;
+            }
+            // dd($req->status);
             if (isset($req->status)) {
                 if ($req->status == 'new') {
                     $query->where('status', 'new');
@@ -416,9 +432,9 @@ class OrderController extends ApiController
                     $rows = $query->select('bookings.*', 'book_deliveries.category as deliveries_category', 'book_deliveries.id as book_deliverie_id', 'book_deliveries.status as delivery_status');
                 }
                 if ($req->status == 'return') {
-    
+
                     $query->join('book_deliveries', 'bookings.id', '=', 'book_deliveries.book_id');
-    
+
                     $query->where(function ($query) {
                         $query->where('bookings.status', 'return');
                         $query->where('book_deliveries.category', '=', 'return');
@@ -445,28 +461,28 @@ class OrderController extends ApiController
             if ($req->status == 'return') {
                 $query->orderBy('book_deliveries.status', 'desc');
             }
-            if (isset($req->fromdate) && isset($req->todate)  || ($req->fromdate && $req->todate) != null || ($req->fromdate && $req->todate) != 'null' || ($req->fromdate && $req->todate) != 'undefined') {
+            if (isset($req->fromdate) && $check_date == 0) {
                 $query->whereBetween('created_at', [date('Y-m-d 00:00:00', strtotime($req->fromdate)), date('Y-m-d 00:00:00', strtotime($req->todate))]);
             }
-            if (isset($req->uuid) || $req->uuid != null ||  $req->uuid != 'null' ||  $req->uuid != 'undefined') {
-                $query->where('uuid','like' ,'%'.$req->uuid.'%');
+            if (isset($req->uuid) && $check_uuid == 0) {
+                $query->where('uuid', 'like', '%' . $req->uuid . '%');
             }
-            if (isset($req->receive_name) || $req->receive_name != null ||  $req->receive_name != 'null' ||  $req->receive_name != 'undefined') {
-                $query->where('receive_name','like' ,'%'.$req->receive_name.'%');
+            if (isset($req->receive_name) && $check_receive_name == 0) {
+                $query->where('receive_name', 'like', '%' . $req->receive_name . '%');
             }
-            if (isset($req->receive_phone) || $req->receive_phone != null ||  $req->receive_phone != 'null' ||  $req->receive_phone != 'undefined') {
-                $query->where('receive_phone','like' ,'%'.$req->receive_phone.'%');
+            if (isset($req->receive_phone) && $check_receive_phone == 0) {
+                $query->where('receive_phone', 'like', '%' . $req->receive_phone . '%');
             }
             $rows = $query->paginate($limit);
             foreach ($rows->items() as $query) {
-    
+
                 if (!empty($query->reportImages)) {
                     $reportImage = $query->reportImages;
                     foreach ($reportImage as $image) {
                         $image->image = url($image->image);
                     }
                 }
-    
+
                 $query->sender_info = [
                     'name' => $query->send_name,
                     'phone' => $query->send_phone,
