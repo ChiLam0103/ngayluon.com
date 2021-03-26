@@ -445,16 +445,16 @@ class OrderController extends ApiController
             if ($req->status == 'return') {
                 $query->orderBy('book_deliveries.status', 'desc');
             }
-            if (isset($req->fromdate) && isset($req->todate)) {
+            if (isset($req->fromdate) && isset($req->todate)  || ($req->fromdate && $req->todate) != null || ($req->fromdate && $req->todate) != 'null' || ($req->fromdate && $req->todate) != 'undefined') {
                 $query->whereBetween('created_at', [date('Y-m-d 00:00:00', strtotime($req->fromdate)), date('Y-m-d 00:00:00', strtotime($req->todate))]);
             }
-            if (isset($req->uuid)) {
+            if (isset($req->uuid) || $req->uuid != null ||  $req->uuid != 'null' ||  $req->uuid != 'undefined') {
                 $query->where('uuid','like' ,'%'.$req->uuid.'%');
             }
-            if (isset($req->receive_name)) {
+            if (isset($req->receive_name) || $req->receive_name != null ||  $req->receive_name != 'null' ||  $req->receive_name != 'undefined') {
                 $query->where('receive_name','like' ,'%'.$req->receive_name.'%');
             }
-            if (isset($req->receive_phone)) {
+            if (isset($req->receive_phone) || $req->receive_phone != null ||  $req->receive_phone != 'null' ||  $req->receive_phone != 'undefined') {
                 $query->where('receive_phone','like' ,'%'.$req->receive_phone.'%');
             }
             $rows = $query->paginate($limit);
