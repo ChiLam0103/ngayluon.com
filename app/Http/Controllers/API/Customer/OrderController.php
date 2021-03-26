@@ -156,6 +156,9 @@ class OrderController extends ApiController
             if ($status == 'taking') {
                 $query->where('status', 'taking');
             }
+            if ($status == 'warehouse') {
+                $query->where('warehouse', 1);
+            }
             if ($status == 'sending') {
                 $query->where('status', 'sending');
             }
@@ -295,10 +298,6 @@ class OrderController extends ApiController
             return $this->apiError($e->getMessage());
         }
     }
-
-
-
-
     public function updateNote($id, Request $req)
     {
         $bookDelivery = BookDelivery::where(['book_deliveries.book_id' => $id])
@@ -392,6 +391,9 @@ class OrderController extends ApiController
                 }
                 if ($req->status == 'taking') {
                     $query->where('status', 'taking');
+                }
+                if ($req->status == 'warehouse') {
+                    $query->where('warehouse', 1);
                 }
                 if ($req->status == 'sending') {
                     $query->where('status', 'sending');

@@ -50,6 +50,9 @@ class OrderController extends ApiController
             case "delay":
                 return 'delay';
                 break;
+            case "warehouse":
+                return 'warehouse';
+                break;
             case "cancel":
                 return 'hủy';
                 break;
@@ -2000,7 +2003,7 @@ class OrderController extends ApiController
                     $data['new']++;
                 } elseif ($item->status == 'taking') {
                     $data['taking']++;
-                } elseif ($item->status == 'warehouse') {
+                } elseif ($item->warehouse == 1) {
                     $data['warehouse']++;
                 } elseif ($item->status == 'sending') {
                     $data['sending']++;
