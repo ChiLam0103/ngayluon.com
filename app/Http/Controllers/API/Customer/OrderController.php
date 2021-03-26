@@ -384,7 +384,7 @@ class OrderController extends ApiController
             $limit = $req->get('limit', 10);
             $query = Booking::query();
             $query->where('sender_id', $req->user()->id);
-    
+    // dd($req->status);
             if (isset($req->status)) {
                 if ($req->status == 'new') {
                     $query->where('status', 'new');
@@ -446,7 +446,7 @@ class OrderController extends ApiController
                 $query->orderBy('book_deliveries.status', 'desc');
             }
             if (isset($req->fromdate) && isset($req->todate)) {
-                $query->whereBetween('created_at', [$req->fromdate, $req->todate]);
+                $query->whereBetween('created_at', [date('Y-m-d 00:00:00', strtotime($req->fromdate)), date('Y-m-d 00:00:00', strtotime($req->todate))]);
             }
             if (isset($req->uuid)) {
                 $query->where('uuid','like' ,'%'.$req->uuid.'%');
