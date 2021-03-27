@@ -400,7 +400,6 @@ class OrderController extends ApiController
             if ($req->check_receive_phone == null ||  $req->check_receive_phone == 'null' ||  $req->check_receive_phone == 'undefined') {
                 $check_receive_phone = 1;
             }
-            // dd($req->status);
             if (isset($req->status)) {
                 if ($req->status == 'new') {
                     $query->where('status', 'new');

@@ -640,7 +640,7 @@ class BookingController extends Controller
     }
     //phân công lại
     public function postReAssign($cate, $id, AssignRequest $req)
-    {
+    { 
         DB::beginTransaction();
         $shipper_name = User::where('id', $req->shipper)->first()->name;
         $booking = Booking::find($id);

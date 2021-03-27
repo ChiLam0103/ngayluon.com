@@ -75,6 +75,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
         Route::get('last-book', 'Customer\OrderController@lastedBookSender');
         Route::post('updatebook/{id}/other-note', 'Customer\OrderController@updateNote');
         Route::post('deny/{id}', 'Customer\OrderController@RequestReturn');
+        Route::post('update-prioritize', 'OrderController@updatePrioritize'); //Cập nhật đơn hàng ưu tiên 
         //Route::get('listbook', 'Customer\OrderController@getBook');
     });
 
