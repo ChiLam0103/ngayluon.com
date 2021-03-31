@@ -18,7 +18,42 @@
        data-target=".navbar-collapse">
         <span></span>
     </a>
+    <nav class="topnav" id="myTopnav">
+        <a href="{{ url('/admin/report') }}" class=" @if(isset($active)&& $active == 'report') active @endif"> 
+            <i class="fa fa-line-chart" aria-hidden="true"></i> Tổng quan
+             @if(isset($active)&& $active == 'report')<span class="selected"></span>
+            @endif</a>
+        <a href="{{ url('/admin/booking/new') }}"  class=" @if(isset($active)&& $active == 'new_booking') active @endif">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
+        <div class="dropdown">
+          <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="{{ url('/admin/admins')}}" class="@if(isset($active)&& $active == 'admins') active @endif"><i class="fa fa-cogs" aria-hidden="true"></i> Admin</a>
+            <a href="{{ url('/admin/customers')}}" class="@if(isset($active)&& $active == 'customer') active @endif"><i class="fa fa-user" aria-hidden="true"></i> Khách hàng</a>
+            <a href="{{ url('/admin/collaborators')}}" class="@if(isset($active)&& $active == 'collaborators') active @endif"><i class="fa fa-user-plus" aria-hidden="true"></i> Nhân viên của KH</a>
+            <a href="{{ url('/admin/warehouse')}}" class="@if(isset($active)&& $active == 'warehouse') active @endif"><i class="fa fa-home" aria-hidden="true"></i> Quản lý Kho</a>
+            <a href="{{ url('/admin/shippers')}}" class="@if(isset($active)&& $active == 'shipper') active @endif"><i class="fa fa-truck" aria-hidden="true"></i> Shipper</a>
+          </div>
+        </div> 
+        <div class="dropdown">
+            <button class="dropbtn"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="{{ url('/admin/district_type')}}" class="@if(isset($active)&& $active == 'district_type') active @endif"><i class="fa fa-map" aria-hidden="true"></i> Quận/Huyện</a>
+              <a href="{{ url('/admin/price')}}" class="@if(isset($active)&& $active == 'price') active @endif"><i class="fa fa-money" aria-hidden="true"></i> Giá cước</a>
+              <a href="{{ url('/admin/notification-handles')}}" class="@if(isset($active)&& $active == 'notification-handle') active @endif"> <i class="icon-bell" aria-hidden="true"></i> Thông báo</a>
+              <a href="{{ url('/admin/promotions')}}" class="@if(isset($active)&& $active == 'promotions') active @endif"> <i class="fa fa-ticket" aria-hidden="true"></i> Chương trình khuyến mãi</a>
+              <a href="{{ url('/admin/feedback')}}" class="@if(isset($active)&& $active == 'feedback') active @endif">  <i class="fa fa-comment-o" aria-hidden="true"></i> Phản hồi</a>
+              <a href="{{ url('/admin/versions')}}" class="@if(isset($active)&& $active == 'version') active @endif"> <i class="fa fa-level-up" aria-hidden="true" ></i> Version</a>
+            </div>
+          </div> 
+        <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+      </nav>
     <div class="top-menu">
+      
         <ul class="nav navbar-nav pull-right">
             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
@@ -332,10 +367,10 @@
                     <i class="fa fa-angle-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-default">
-                  {{--  <li>
+                   <li>
                         <a href="page_user_profile_1.html">
                             <i class="icon-user"></i> Hồ sơ cá nhân </a>
-                    </li>--}}
+                    </li>
                     <li>
                         <a href="{{ url('/logout') }}">
                             <i class="icon-key"></i> Log Out </a>

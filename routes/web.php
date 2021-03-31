@@ -63,6 +63,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     Route::get('/', function () {
         return redirect('/admin/report');
     });
+    Route::resource('admins', 'User\AdminController');
+    
     Route::get('shippers/list_booking', 'User\ShipperController@exportBooking');
     Route::get('shippers/paid', 'User\ShipperController@paidBooking');
     Route::get('shippers/maps', 'User\ShipperController@maps');
@@ -193,7 +195,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     Route::get('wallet/bookings/{walletId}', 'Wallet\WalletController@getBookings');
     Route::get('wallet/export-booking/{walletId}', 'Wallet\WalletController@exportBooking');
     Route::get('wallet/update-status/{walletId}', 'Wallet\WalletController@getUpdateStatus');
-    //raymond
+    //ray
     Route::group(['prefix' => 'qrcode'], function () {
         Route::get('/', 'QRCode\QRCodeController@index');
         Route::post('create', 'QRCode\QRCodeController@postCreate');
@@ -204,6 +206,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
 
 Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //user
+    Route::get('admins', 'UserController@getAdmins');
     Route::get('collaborators', 'UserController@getUser');
     Route::get('shipper', 'UserController@getShipper');
     Route::get('warehouse', 'UserController@getWareHouse');

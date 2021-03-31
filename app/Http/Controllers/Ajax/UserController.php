@@ -268,7 +268,32 @@ class UserController extends Controller
             ->rawColumns(['avatar', 'action'])
             ->make(true);
     }
-
+    public function getAdmins()
+    {
+        $partner = DB::table('users')->where('role','admin')->select('users.*')->get();
+        return datatables()->of($partner)
+            ->addColumn('action', function ($user) {
+                $action = [];
+                $action[] = '<a style="float:left" href="' . url('admin/admins/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
+                $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/admins/' . $user->id]]) .
+                    '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' .
+                    Form::close() . '</div>';
+                return implode(' ', $action);
+            })
+            ->addColumn('full_address', function ($user) {
+                $province_name = Province::find($user->province_id)->name;
+                $district_name = District::find($user->district_id)->name;
+                $ward_name = Ward::find($user->ward_id)->name;;
+                return $user->home_number . ', ' . $ward_name . ', ' . $district_name . '. ' . $province_name;
+            })
+            ->editColumn('avatar', function ($user) {
+                $user->avatar = $user->avatar != null ? url('/' . $user->avatar) : asset('public/img/default-avatar.jpg');
+                $data = '<img src="' . $user->avatar . '" width="30px"></img>';
+                return $data;
+            })
+            ->rawColumns(['avatar', 'action'])
+            ->make(true);
+    }
     public function getShipper()
     {
         $user_id = Auth::user()->id;
