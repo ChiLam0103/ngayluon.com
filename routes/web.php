@@ -207,6 +207,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
 Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //user
     Route::get('admins', 'UserController@getAdmins');
+    Route::post('admins', 'UserController@storeAdmins');
     Route::get('collaborators', 'UserController@getUser');
     Route::get('shipper', 'UserController@getShipper');
     Route::get('warehouse', 'UserController@getWareHouse');

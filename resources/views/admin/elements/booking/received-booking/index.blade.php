@@ -372,7 +372,7 @@
             });
         });
           //show img booking
-          $(document).on('click','.img_booking',function(){
+          $(document).on('click','.img_modal',function(){
             $('#imagepreview').attr('src', $(this).find('img').attr('src'));
             $('#alt_uuid_booking').text($(this).find('img').attr("alt"));
             $('#imagemodal').modal('show');   

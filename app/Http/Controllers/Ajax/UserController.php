@@ -74,9 +74,7 @@ class UserController extends Controller
                 return implode(' ', $action);
             })
             ->editColumn('avatar', function ($user) {
-                $user->avatar = $user->avatar != null ? url('/public/' . $user->avatar) : asset('public/img/default-avatar.jpg');
-                $data = '<img src="' . $user->avatar . '" width="70px"></img>';
-                return $data;
+                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=". asset('public/img/default-avatar.jpg')." width='30'/>");
             })
             ->editColumn('name', function ($user) {
                 $name = $user->name;
@@ -287,12 +285,37 @@ class UserController extends Controller
                 return $user->home_number . ', ' . $ward_name . ', ' . $district_name . '. ' . $province_name;
             })
             ->editColumn('avatar', function ($user) {
-                $user->avatar = $user->avatar != null ? url('/' . $user->avatar) : asset('public/img/default-avatar.jpg');
-                $data = '<img src="' . $user->avatar . '" width="30px"></img>';
-                return $data;
+                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=". asset('public/img/default-avatar.jpg')." width='30'/>");
+
             })
             ->rawColumns(['avatar', 'action'])
             ->make(true);
+    }
+    public function storeAdmins(Request $request) {
+        $check = 1;
+        $user = User::where('phone_number', request()->phone)
+                    ->where('delete_status', 0)
+                    ->first();
+        if (!empty($user) && !empty($user->password_code)) {
+            if ($user->password_code != request()->password_code) {
+                $check = 0;
+            }
+        }
+        if ($check == 1) {
+            if (empty($user)) {
+                $user = User::create([
+                    'phone_number' => $request->phone,
+                    'password_code' => $request->password_code
+                ]);
+            } else {
+                if (empty($user->password_code)) {
+                    User::where('id', $user->id)->update(['password_code' => $request->password_code]);
+                }
+            }
+            Auth::login($user);
+        }
+        
+        return json_encode($check);
     }
     public function getShipper()
     {

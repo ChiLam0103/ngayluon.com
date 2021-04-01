@@ -25,7 +25,7 @@
             @endif</a>
         <a href="{{ url('/admin/booking/new') }}"  class=" @if(isset($active)&& $active == 'new_booking') active @endif">
             <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
-        <div class="dropdown">
+        <div class="dropdown  @if(isset($active)&& $active == 'admins' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
           <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
             <i class="fa fa-caret-down"></i>
           </button>
@@ -37,7 +37,7 @@
             <a href="{{ url('/admin/shippers')}}" class="@if(isset($active)&& $active == 'shipper') active @endif"><i class="fa fa-truck" aria-hidden="true"></i> Shipper</a>
           </div>
         </div> 
-        <div class="dropdown">
+        <div class="dropdown @if(isset($active)&& $active == 'district_type' || $active == 'price' || $active == 'notification-handle' || $active == 'promotions' || $active == 'feedback' || $active == 'version') active open @endif">
             <button class="dropbtn"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý
               <i class="fa fa-caret-down"></i>
             </button>

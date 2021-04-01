@@ -24,12 +24,15 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         $rule = [
+            'uuid' => 'unique',
             'name' => 'required',
             'password' => 'required',
             'cf-password' => 'required|same:password',
             'email' => 'required|email|unique:users,email,'.$this->route('admin'),
+            'birth_day' => 'required',
             'home_number' => 'required',
             'phone_number' => 'required|min:8|max:15|unique:users,phone_number,'.$this->route('admin'),
+            'id_number' => 'required|unique:users,id_number,'.$this->route('admin'),
         ];
         if ($this->method() == 'PUT'){
             unset($rule['password'], $rule['cf-password']);

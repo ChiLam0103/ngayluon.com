@@ -10,16 +10,16 @@
         @include('admin.partial.header')
     </div>
     <div class="clearfix"></div>
-    <div class="page-container">
-        <div class="page-sidebar-wrapper">
+    <div class="page-container ">
+        {{-- <div class="page-sidebar-wrapper">
             <div class="page-sidebar navbar-collapse collapse">
                 @include('admin.partial.sidebar')
             </div>
-        </div>
-        <div class="page-content-wrapper">
-            <div class="page-content">
-                {{--@include('admin.partial.setting')--}}
-                <div class="page-bar">
+        </div> --}}
+        <div class="page-content-wrapper ">
+            <div class="page-content ">
+                {{-- @include('admin.partial.setting') --}}
+                <div class="page-bar ">
                     <ul class="page-breadcrumb">
                         @php( $num = count($breadcrumb))
                         @foreach($breadcrumb as $key => $value)

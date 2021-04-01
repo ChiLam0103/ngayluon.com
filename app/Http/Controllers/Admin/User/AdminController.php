@@ -45,11 +45,13 @@ class AdminController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(AdminRequest $request)
     {
         DB::beginTransaction();
         try {
             $data = new User();
+            $data->uuid = $request->uuid;
             $data->name = $request->name;
             $data->password = Hash::make($request->password);
             $data->email = $request->email;
@@ -58,7 +60,12 @@ class AdminController extends Controller
             $data->province_id = $request->province_id;
             $data->district_id = $request->district_id;
             $data->ward_id = $request->ward_id;
-            $data->home_number = $request->home_number;
+            $data->birth_day = $request->birth_day;
+            $data->id_number = $request->id_number;
+            $data->bank_account = $request->bank_account;
+            $data->bank_account_number = $request->bank_account_number;
+            $data->bank_name = $request->bank_name;
+            $data->bank_branch = $request->bank_branch;
             $data->role = 'admin';
             if ($request->hasFile('avatar')) {
                 $file = $request->avatar;
@@ -69,10 +76,6 @@ class AdminController extends Controller
                 $data->avatar = $filePath . $filename;
             }
             $data->save();
-            // $api = new PartnerAPI();
-            // $api->partner_id = $data->id;
-            // $api->api_content = $request->api_content;
-            // $api->save();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -117,15 +120,21 @@ class AdminController extends Controller
         try {
             $data = User::find($id);
             $data->name = $request->name;
-            $data->email = $request->email;
             if ($request->password != null) {
                 $data->password = Hash::make($request->password);
             }
+            $data->email = $request->email;
+            $data->home_number = $request->home_number;
+            $data->phone_number = $request->phone_number;
             $data->province_id = $request->province_id;
             $data->district_id = $request->district_id;
             $data->ward_id = $request->ward_id;
-            $data->home_number = $request->home_number;
-            $data->phone_number = $request->phone_number;
+            $data->birth_day = $request->birth_day;
+            $data->id_number = $request->id_number;
+            $data->bank_account = $request->bank_account;
+            $data->bank_account_number = $request->bank_account_number;
+            $data->bank_name = $request->bank_name;
+            $data->bank_branch = $request->bank_branch;
             $data->role = 'admin';
             if ($request->hasFile('avatar')) {
                 $file = $request->avatar;
@@ -160,6 +169,6 @@ class AdminController extends Controller
             DB::rollBack();
             return $e;
         }
-        return redirect(url('admin/partners'))->with('delete', 'Xóa đối tác thành công');
+        return redirect(url('admin/admins'))->with('delete', 'Xóa admin thành công');
     }
 }

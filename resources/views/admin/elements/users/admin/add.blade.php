@@ -68,7 +68,7 @@
                         <label style="margin-bottom: 10px" class="control-label">Tải lên ảnh đại
                             diện</label>
                         <input type="file" name="avatar" value="{!! @$user->avatar !!}" id="exampleInputFile">
-                        <input type="hidden" name="old_avatar" value="{!! @$user->avatar !!}" id="oldInputFile">
+                        <input type="hidden" name="old_avatar" value="public/{!! @$user->avatar !!}" id="oldInputFile">
                         <img style="margin-top: 5px" id="blah" src="#" alt="your image" width="100px"/>
                         @if ($errors->has('avatar'))
                             @foreach ($errors->get('avatar') as $error)
