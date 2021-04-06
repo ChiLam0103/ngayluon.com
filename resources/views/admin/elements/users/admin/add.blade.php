@@ -26,6 +26,7 @@
                     @else
                         {{ Form::open(['url' => '/admin/admins', 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
                     @endif
+                    
                     <div class="{{--has-error--}} form-group">
                         <div class="row">
                             <div class="col-lg-12">

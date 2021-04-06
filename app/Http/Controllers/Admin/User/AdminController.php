@@ -48,6 +48,7 @@ class AdminController extends Controller
     
     public function store(AdminRequest $request)
     {
+        
         DB::beginTransaction();
         try {
             $data = new User();

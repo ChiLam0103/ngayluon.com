@@ -17,7 +17,8 @@ use App\Models\ShipperLocation;
 use App\Http\Controllers\Controller;
 use function asset;
 use function dd;
-use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Form, DB;
 use function implode;
@@ -74,7 +75,7 @@ class UserController extends Controller
                 return implode(' ', $action);
             })
             ->editColumn('avatar', function ($user) {
-                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=". asset('public/img/default-avatar.jpg')." width='30'/>");
+                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=" . asset('public/img/default-avatar.jpg') . " width='30'/>");
             })
             ->editColumn('name', function ($user) {
                 $name = $user->name;
@@ -86,7 +87,7 @@ class UserController extends Controller
                 return $name;
             })
             ->editColumn('is_advance_money', function ($user) {
-                $name ='';
+                $name = '';
                 if ($user->is_advance_money == 0) {
                     $name .= '<input type="checkbox" value="0" readonly>';
                 } elseif ($user->is_advance_money == 1) {
@@ -137,7 +138,7 @@ class UserController extends Controller
                 $wallet = round($cod - $data);
                 return number_format($wallet);
             })
-            ->rawColumns(['avatar', 'name', 'owe', 'total_COD', 'wallet','is_advance_money' ,'action'])
+            ->rawColumns(['avatar', 'name', 'owe', 'total_COD', 'wallet', 'is_advance_money', 'action'])
             ->make(true);
     }
     public function getOweDetails($id)
@@ -268,8 +269,8 @@ class UserController extends Controller
     }
     public function getAdmins()
     {
-        $partner = DB::table('users')->where('role','admin')->select('users.*')->get();
-        return datatables()->of($partner)
+        $admin = DB::table('users')->where('role', 'admin')->select('users.*')->get();
+        return datatables()->of($admin)
             ->addColumn('action', function ($user) {
                 $action = [];
                 $action[] = '<a style="float:left" href="' . url('admin/admins/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
@@ -282,40 +283,71 @@ class UserController extends Controller
                 $province_name = Province::find($user->province_id)->name;
                 $district_name = District::find($user->district_id)->name;
                 $ward_name = Ward::find($user->ward_id)->name;;
-                return $user->home_number . ', ' . $ward_name . ', ' . $district_name . '. ' . $province_name;
+                return $user->home_number . ', ' . $ward_name . ', ' . $district_name ;
             })
             ->editColumn('avatar', function ($user) {
-                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=". asset('public/img/default-avatar.jpg')." width='30'/>");
-
+                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=" . asset('public/img/default-avatar.jpg') . " width='30'/>");
             })
             ->rawColumns(['avatar', 'action'])
             ->make(true);
     }
-    public function storeAdmins(Request $request) {
-        $check = 1;
-        $user = User::where('phone_number', request()->phone)
-                    ->where('delete_status', 0)
-                    ->first();
-        if (!empty($user) && !empty($user->password_code)) {
-            if ($user->password_code != request()->password_code) {
-                $check = 0;
-            }
+    public function checkStoreUser(Request $request){
+        $check=array();
+        $email = User::where('email', $request->email)->first();
+        $phone_number = User::where('phone_number', $request->phone_number)->first();
+        $uuid = User::where('uuid', $request->uuid)->first();
+        if ($email) {
+            array_push($check, "email_err");
         }
-        if ($check == 1) {
-            if (empty($user)) {
-                $user = User::create([
-                    'phone_number' => $request->phone,
-                    'password_code' => $request->password_code
-                ]);
-            } else {
-                if (empty($user->password_code)) {
-                    User::where('id', $user->id)->update(['password_code' => $request->password_code]);
-                }
-            }
-            Auth::login($user);
+        if ($phone_number) {
+            array_push($check, "phone_number_err");
         }
-        
+        if ($uuid) {
+            array_push($check, "uuid_err");
+        }
         return json_encode($check);
+    }
+    public static function storeUser($request, $role)
+    {
+        DB::beginTransaction();
+        try {
+            $data = new User();
+            $data->uuid = $request->uuid;
+            $data->name = $request->name;
+            $data->password = Hash::make($request->password);
+            $data->email = $request->email;
+            $data->home_number = $request->home_number;
+            $data->phone_number = $request->phone_number;
+            $data->province_id = $request->province_id;
+            $data->district_id = $request->district_id;
+            $data->ward_id = $request->ward_id;
+            $data->birth_day = $request->birth_day;
+            $data->id_number = $request->id_number;
+            $data->bank_account = $request->bank_account;
+            $data->bank_account_number = $request->bank_account_number;
+            $data->bank_name = $request->bank_name;
+            $data->bank_branch = $request->bank_branch;
+            $data->role = $role;
+            if ($request->hasFile('avatar')) {
+                $file = $request->avatar;
+                $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
+                $filePath = 'img/avatar/';
+                $movePath = public_path($filePath);
+                $file->move($movePath, $filename);
+                $data->avatar = $filePath . $filename;
+            }
+            $data->save();
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return false;
+        }
+    }
+    public function storeAdmin(Request $request)
+    {
+        $data = UserController::storeUser($request, 'admin');
+        return json_encode($data);
     }
     public function getShipper()
     {
