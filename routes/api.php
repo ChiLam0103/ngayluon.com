@@ -64,6 +64,7 @@ Route::group(['prefix' => 'order', 'namespace' => 'API', 'middleware' => VerifyJ
 
     Route::get('total-price', 'WalletController@getTotalPrice');
     Route::get('total-COD', 'WalletController@getTotalCOD');
+    Route::get('total-COD-edit', 'WalletController@getTotalCODEdit');
     Route::get('wallet', 'WalletController@getWallet');
     Route::get('wallet/list-books/{walletId}', 'WalletController@getListBook');
     Route::get('wallet/withdrawal', 'WalletController@withDrawal');

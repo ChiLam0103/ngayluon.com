@@ -40,7 +40,15 @@ class WalletController extends ApiController
         	'count' => $totalCOD
         ]);
     }
-
+    public function getTotalCODEdit() {
+    	$booking = $this->totalCOD()['booking'];
+        $listBookings = $this->totalCOD()['listBookings'];
+        $totalCOD = $booking->sum('COD_edit');
+        return $this->apiOk([
+        	'bookings' => $listBookings,
+        	'count' => $totalCOD
+        ]);
+    }
     public function getWallet() {
     	$bookingTotalPrice = $this->totalPrice()['booking'];
     	$totalPrice = round(($bookingTotalPrice->sum('price') + $bookingTotalPrice->sum('incurred')) - $bookingTotalPrice->sum('paid'));    	

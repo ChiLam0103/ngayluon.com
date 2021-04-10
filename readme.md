@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # WE CARE 24/7 
 
 ## Install Environment
@@ -120,4 +118,3 @@ Chỉnh thông tin Firebase FCM_SERVER_KEY, FCM_SENDER_ID trong .env
 1. Cài Redis trên server:  sudo apt-get install redis-server
 2. Cài NodeJS trên server: npm install express redis socket.io --save
 3. Chỉnh lại URL cho socket.io: /var/www/html/delivery/resources/views/admin/elements/users/shipper/maps.blade.php
->>>>>>> baf79dab9c895bf4515a2a7f084be4bd145a4da1

@@ -76,6 +76,8 @@ input[type="checkbox"][readonly] {
 }
 .page-content-wrapper {background: #fff;}
 .page-content-wrapper .page-content{margin-left: 120px!important; margin-right: 120px!important;}
+#status_booking .sui-treeview-list{padding-left: 0;}
+#status_booking .sui-treeview-list li ul{padding-left: 15px;}
 @media screen and (max-width: 600px) {
   .topnav a:not(:first-child), .dropdown .dropbtn {
     display: none;

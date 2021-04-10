@@ -65,7 +65,39 @@
                 </form>
             </div>
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-2" id="status_booking">
+            <h5><b>Trạng thái đơn hàng</b></h5>
+            <ul id="treeview">
+                <li data-icon-cls="fa fa-square-o" id="all" name="status_all">Tất cả</li>
+                <li data-icon-cls="fa fa-square-o">Chờ xử lý</li>
+                <li data-icon-cls="fa fa-square-o" >Lấy hàng
+                    <ul>
+                        <li>Đang lấy hàng</li>
+                        <li>Chờ lấy hàng</li>
+                        <li>Đã lấy hàng</li>
+                    </ul>
+                </li>
+                <li data-icon-cls="fa fa-square-o" >Giao hàng
+                    <ul>
+                        <li>Đang giao hàng</li>
+                        <li>Chờ  giao lại</li>
+                    </ul>
+                </li>
+                <li data-icon-cls="fa fa-square-o">Giao thành công</li>
+                <li data-icon-cls="fa fa-square-o">Tách hàng</li>
+                <li data-icon-cls="fa fa-square-o" >Chuyển hoàn
+                    <ul>
+                        <li>Chờ chuyển hoàn</li>
+                        <li>Đang chuyển hoàn</li>
+                        <li>Chờ chuyển hoàn lại</li>
+                    </ul>
+                </li>
+                <li data-icon-cls="fa fa-square-o">Đã chuyển hoàn</li>
+                <li data-icon-cls="fa fa-square-o">Đã huỷ</li>
+            </ul>
+           
+        </div>
+        <div class="col-lg-10">
             @include('admin.table_paging', [
                 'id' => 'all_booking',
                 'title' => [
@@ -151,7 +183,6 @@
         </div>
     </form>
 
-{{-- </div> --}}
     <!-- Modal  -->
     @include('admin.partial.modal.detail_img')
     @include('admin.partial.modal.detail_booking')
@@ -309,4 +340,15 @@
         });
        
     </script>
+    <!-- you need to include the ShieldUI CSS and JS assets in order for the TreeView widget to work -->
+    <!-- <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" /> -->
+    <link id="themecss" rel="stylesheet" type="text/css" href="//www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+    <script type="text/javascript" src="//www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#treeview").shieldTreeView();
+       
+    });   
+</script>
 @endpush
