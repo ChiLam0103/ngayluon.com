@@ -15,33 +15,28 @@
         @include('admin.partial.log.success_log',['name' => 'success'])
 
         <div class="well" style="padding-left: 0px">
-            <a href="{!! url('admin/customers/create') !!}" class="btn btn-primary"> <i class="fa fa-plus"
-                                                                                        aria-hidden="true"></i> Thêm mới</a>
+            <button type="button" class="btn btn-success " id="btnAddNew"><i class="fa fa-plus"
+                    aria-hidden="true"></i> Thêm mới</button>
         </div>
         <div class="col-lg-12">
             @include('admin.table_paging', [
                 'id' => 'customer',
-                'title' => [
+                 'title' => [
                     'caption' => 'Dữ liệu khách hàng',
                     'icon' => 'fa fa-table',
                     'class' => 'portlet box green',
                 ],
-                'url' => url("/ajax/customer"),
+                'url' => url("/ajax/get_user/customer"),
                 'columns' => [
-                    ['data' => 'id', 'title' => 'ID'],
+                    ['data' => 'uuid', 'title' => 'ID'],
                     ['data' => 'name', 'title' => 'Tên'],
                     ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
                     ['data' => 'email', 'title' => 'Email'],
+                    ['data' => 'phone_number', 'title' => 'Hotline'],
                     ['data' => 'is_advance_money', 'title' => 'Tạm ứng'],
-                    ['data' => 'password_code', 'title' => 'Mã mật khẩu'],
-                    ['data' => 'phone_number', 'title' => 'Số điện thoại'],
-                    ['data' => 'role', 'title' => 'Vai trò'],
-                    ['data' => 'status', 'title' => 'Trạng thái'],
                     ['data' => 'owe', 'title' => 'Tổng tiền cước'],
                     ['data' => 'total_COD', 'title' => 'Tổng tiền thu hộ COD'],
                     ['data' => 'wallet', 'title' => 'Ví tiền'],
-                    ['data' => 'created_at', 'title' => 'Ngày tạo'],
-                    ['data' => 'updated_at', 'title' => 'Ngày cập nhật'],
                     ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                 ]])
         </div>
@@ -129,6 +124,8 @@
 
       </div>
     </div>
+     <!-- Modal user -->
+   @include('admin.partial.modal.user')
 @endsection
 
 @push('script')
@@ -182,6 +179,14 @@
                     $('#myModal').modal('hide');
                 }
             });
+        })
+        $("#modalUser #btnSave").on("click", function (event) {
+            var id = $("#modalUser .action").attr('id');
+            if( id == "addUser"){
+                actionUser("customer","store");
+            }else{
+                actionUser( "customer", "update");
+            }
         })
     </script>
 @endpush

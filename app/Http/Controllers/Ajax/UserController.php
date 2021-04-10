@@ -28,6 +28,11 @@ use function url;
 
 class UserController extends Controller
 {
+    public function getDetailUser($id)
+    {
+        $user = User::where('id', $id)->first();
+        return response()->json(['user' => $user]);
+    }
     public function getUser()
     {
         $user = User::where('role', 'collaborators')->where('delete_status', 0)->get();
@@ -267,32 +272,173 @@ class UserController extends Controller
             ->rawColumns(['avatar', 'action'])
             ->make(true);
     }
-    public function getAdmins()
+    public function getUserRole($role)
     {
-        $admin = DB::table('users')->where('role', 'admin')->select('users.*')->get();
-        return datatables()->of($admin)
+        $user = User::with('revenues', 'shipper')->where('role', $role)->where('delete_status', 0)->where('status', 'active');
+        return datatables()->of($user)
             ->addColumn('action', function ($user) {
                 $action = [];
-                $action[] = '<a style="float:left" href="' . url('admin/admins/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
-                $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/admins/' . $user->id]]) .
+                //role shipper
+                if ($user->role == "shipper") {
+                    $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
+                    $action[] = '<a style="float:left" href="' . url('admin/shippers/refresh-book/' . $user->id) . '" class="btn btn-xs btn-default" onclick="if(!confirm(\'Bạn chắc chắn muốn làm mới phân công của shipper này không ?\')) return false;"><i class="fa fa-refresh"></i> Làm mới ĐH</a>';
+                    $action[] = '<a style="float:left" href="' . url('admin/shippers/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
+                }
+                //role customer
+                if ($user->role == "customer") {
+                    $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
+                    $action[] = '<button type="button" class="btn btn-info btn-xs" onclick="showModal(' . $user->id . ')"><i class="icon-bell" aria-hidden="true"></i> Thông báo nhanh</button>';
+                    // $action[] = '<a style="float:left" href="' . url('admin/customer/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
+                    // $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/customers/' . $user->id]]) . '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' . Form::close() . '</div>';
+                    $action[] = '<a href="' . url('admin/customers/withdrawal/' . $user->id) . '" class="btn btn-xs btn-default" onclick="return confirm(\'Bạn có chắc chắn muốn rút tiền?\');"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Rút tiền</a>';
+                    $action[] = '<a style="float:left" href="' . url('admin/customers/show_address/' . $user->id) . '" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> Điểm giao/nhận hàng</a>';
+                }
+                $action[] = '<a class="btn btn-xs btn-primary edit_user" href="javascript:void(0);" name="' . $user->id . '" class="uuid"> <i class="glyphicon glyphicon-edit"></i> Sửa </a>';
+                $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/'. $user->role. '/' . $user->id]]) .
                     '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' .
                     Form::close() . '</div>';
+
                 return implode(' ', $action);
             })
             ->addColumn('full_address', function ($user) {
-                $province_name = Province::find($user->province_id)->name;
-                $district_name = District::find($user->district_id)->name;
-                $ward_name = Ward::find($user->ward_id)->name;;
-                return $user->home_number . ', ' . $ward_name . ', ' . $district_name ;
+                $full_address = '';
+                if ($user->district_id != null && $user->ward_id != null) {
+                    $district_name = District::find($user->district_id)->name;
+                    $ward_name = Ward::find($user->ward_id)->name;
+                    $full_address = $user->home_number . ', ' . $ward_name . ', ' . $district_name;
+                }
+                return $full_address;
+            })
+            ->addColumn('revenue_price', function ($user) {
+                if ($user->role == "shipper") {
+                    $data = 0;
+                    if ($user->revenues != null) {
+                        $data = round($user->revenues->total_price - $user->revenues->price_paid);
+                    }
+                    return number_format($data) . '<br/><a style="margin-top: 5px" href="#" onclick="shipperPaid([' . $user->id . ', \'price_paid\', ' . $data . '])" class="btn btn-xs btn-success"> Thanh toán</a>';
+                } else {
+                    return '';
+                }
             })
             ->editColumn('avatar', function ($user) {
-                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset('public/' .  $user->avatar) . '"></a>' : "<img src=" . asset('public/img/default-avatar.jpg') . " width='30'/>");
+                return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset($user->avatar) . '"></a>' : "<img src=" . asset('public/img/default-avatar.jpg') . " width='30'/>");
             })
-            ->rawColumns(['avatar', 'action'])
+            //role shipper
+            ->addColumn('revenue_cod', function ($user) {
+                if ($user->role == "shipper") {
+                    $data = 0;
+                    if ($user->revenues != null) {
+                        $data = round($user->revenues->total_COD - $user->revenues->COD_paid);
+                    }
+                    return number_format($data) . '<br/><a style="margin-top: 5px" href="#" onclick="shipperPaid([' . $user->id . ', \'COD_paid\', ' . $data . '])" class="btn btn-xs btn-success"> Thanh toán</a>';
+                } else {
+                    return '';
+                }
+            })
+           //role customer
+            ->editColumn('is_advance_money', function ($user) {
+                if ($user->role == "customer") {
+                    $name = '';
+                    if ($user->is_advance_money == 0) {
+                        $name .= '<img src="' . asset('public/img/incorect.png') . '" width="30px"></img>' ;
+                    } elseif ($user->is_advance_money == 1) {
+                        $name .= '<img src="' . asset('public/img/corect.png') . '" width="30px"></img>' ;
+                    }
+                    return $name;
+                } else {
+                    return '';
+                }
+            })
+            ->addColumn('owe', function ($user) {
+                if ($user->role == "customer") {
+                    $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
+                        $query->where('status', 'completed');
+                    });
+                    if (Auth::user()->role == 'collaborators') {
+                        $user_id = Auth::user()->id;
+                        $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
+                        $booking = $booking->whereIn('last_agency', $scope);
+                    }
+                    $booking = $booking->select('bookings.*');
+                    $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
+                    return number_format($data) . '<br/><a style="margin-top: 5px" href="' . url('admin/customers/owe/' . $user->id) . '" class="btn btn-xs btn-success"> Chi tiết</a>';
+                } else {
+                    return '';
+                }
+            })
+            ->editColumn('total_COD', function ($user) {
+                if ($user->role == "customer") {
+                    $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
+                    if (Auth::user()->role == 'collaborators') {
+                        $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
+                        $cod = $cod->whereIn('last_agency', $scope);
+                    }
+                    $cod = $cod->sum('COD');
+                    return number_format($cod) . '<br/><a style="margin-top: 5px" href="' . url('admin/COD_details/' . $user->id) . '" class="btn btn-xs btn-success">Chi tiết</a>';
+                } else {
+                    return '';
+                }
+            })
+            ->addColumn('wallet', function ($user) {
+                if ($user->role == "customer") {
+                $wallet = 0;
+                    $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
+                    if (Auth::user()->role == 'collaborators') {
+                        $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
+                        $cod = $cod->whereIn('last_agency', $scope);
+                    }
+                    $cod = $cod->sum('COD');
+                    $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
+                        $query->where('status', 'completed');
+                    });
+                    if (Auth::user()->role == 'collaborators') {
+                        $user_id = Auth::user()->id;
+                        $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
+                        $booking = $booking->whereIn('last_agency', $scope);
+                    }
+                    $booking = $booking->select('bookings.*');
+                    $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
+                    $wallet = round($cod - $data);
+                    return number_format($wallet);
+                } else {
+                    return '';
+                }
+            })
+
+            ->rawColumns(['avatar', 'action', 'revenue_price', 'revenue_cod', 'owe', 'total_COD', 'wallet', 'is_advance_money'])
             ->make(true);
     }
-    public function checkStoreUser(Request $request){
-        $check=array();
+    public static function generateNo($type)
+    {
+        $name = '';
+        switch ($type) {
+            case 'admin':
+                $name = "AD";
+                break;
+            case 'warehouse':
+                $name = "WH";
+                break;
+            case 'shipper':
+                $name = "SP";
+                break;
+            case 4:
+                $name = "NX";
+                break;
+        }
+
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $count = User::where('role', $type)->count();
+        $count = (int) $count + 1;
+
+        do {
+            $no = sprintf($name . "%05d", $count);
+            $count++;
+        } while (User::where('uuid', $no)->first());
+        return $no;
+    }
+    public function checkExistUser(Request $request)
+    {
+        $check = array();
         $email = User::where('email', $request->email)->first();
         $phone_number = User::where('phone_number', $request->phone_number)->first();
         $uuid = User::where('uuid', $request->uuid)->first();
@@ -302,22 +448,27 @@ class UserController extends Controller
         if ($phone_number) {
             array_push($check, "phone_number_err");
         }
-        if ($uuid) {
-            array_push($check, "uuid_err");
-        }
         return json_encode($check);
     }
-    public static function storeUser($request, $role)
+    public function actionUser(Request $request)
     {
         DB::beginTransaction();
         try {
-            $data = new User();
-            $data->uuid = $request->uuid;
+            ($request->action == "store") ? ($data = new User()) : ($data = User::where('id', $request->id)->first());
+
+            if ($request->action == "store") {
+                $uuid = UserController::generateNo($request->role);
+                $data->uuid = $uuid;
+                $data->email = $request->email;
+                $data->phone_number = $request->phone_number;
+                $data->password = Hash::make($request->password);
+            } else {
+                if ($request->password != null) {
+                    $data->password = Hash::make($request->password);
+                }
+            }
             $data->name = $request->name;
-            $data->password = Hash::make($request->password);
-            $data->email = $request->email;
             $data->home_number = $request->home_number;
-            $data->phone_number = $request->phone_number;
             $data->province_id = $request->province_id;
             $data->district_id = $request->district_id;
             $data->ward_id = $request->ward_id;
@@ -327,27 +478,23 @@ class UserController extends Controller
             $data->bank_account_number = $request->bank_account_number;
             $data->bank_name = $request->bank_name;
             $data->bank_branch = $request->bank_branch;
-            $data->role = $role;
+            $data->role = $request->role;
+
             if ($request->hasFile('avatar')) {
-                $file = $request->avatar;
-                $filename = date('Ymd-His-') . $file->getFilename() . '.' . $file->extension();
-                $filePath = 'img/avatar/';
-                $movePath = public_path($filePath);
-                $file->move($movePath, $filename);
-                $data->avatar = $filePath . $filename;
+                $file = $request->file('avatar');
+                $name = $file->getClientOriginalName();
+                $exection = $file->getClientOriginalExtension();
+                $file->move(public_path() . '/img/avatar/', $name);
+                $data->avatar = '/public/img/avatar/' . $name;
             }
+
             $data->save();
             DB::commit();
-            return true;
+            return json_encode(true);
         } catch (\Exception $e) {
             DB::rollBack();
             return false;
         }
-    }
-    public function storeAdmin(Request $request)
-    {
-        $data = UserController::storeUser($request, 'admin');
-        return json_encode($data);
     }
     public function getShipper()
     {

@@ -25,14 +25,14 @@
             @endif</a>
         <a href="{{ url('/admin/booking/new') }}"  class=" @if(isset($active)&& $active == 'new_booking') active @endif">
             <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
-        <div class="dropdown  @if(isset($active)&& $active == 'admins' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
+        <div class="dropdown  @if(isset($active)&& $active == 'admin' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
           <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a href="{{ url('/admin/admins')}}" class="@if(isset($active)&& $active == 'admins') active @endif"><i class="fa fa-cogs" aria-hidden="true"></i> Admin</a>
-            <a href="{{ url('/admin/customers')}}" class="@if(isset($active)&& $active == 'customer') active @endif"><i class="fa fa-user" aria-hidden="true"></i> Khách hàng</a>
-            <a href="{{ url('/admin/collaborators')}}" class="@if(isset($active)&& $active == 'collaborators') active @endif"><i class="fa fa-user-plus" aria-hidden="true"></i> Nhân viên của KH</a>
+            <a href="{{ url('/admin/admin')}}" class="@if(isset($active)&& $active == 'admin') active @endif"><i class="fa fa-cogs" aria-hidden="true"></i> Admin</a>
+            <a href="{{ url('/admin/customer')}}" class="@if(isset($active)&& $active == 'customer') active @endif"><i class="fa fa-user" aria-hidden="true"></i> Khách hàng</a>
+            {{-- <a href="{{ url('/admin/collaborators')}}" class="@if(isset($active)&& $active == 'collaborators') active @endif"><i class="fa fa-user-plus" aria-hidden="true"></i> Nhân viên của KH</a> --}}
             <a href="{{ url('/admin/warehouse')}}" class="@if(isset($active)&& $active == 'warehouse') active @endif"><i class="fa fa-home" aria-hidden="true"></i> Quản lý Kho</a>
             <a href="{{ url('/admin/shippers')}}" class="@if(isset($active)&& $active == 'shipper') active @endif"><i class="fa fa-truck" aria-hidden="true"></i> Shipper</a>
           </div>

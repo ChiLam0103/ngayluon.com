@@ -13,14 +13,14 @@
                 <div class="tools"></div>
             </div>
             <div class="portlet-body">
-                @if(isset($shipperOnline) && isset($shippers))
+                {{-- @if(isset($shipperOnline) && isset($shippers))
                 <div class="row">
                     <div class="col-md-12">
                         <h4 class="text-success">Shipper Online: {{ count($shipperOnline) }}</h4>
                         <h4 class="text-danger">Shipper Offline: {{ count($shippers) - count($shipperOnline) }}</h4>
                     </div>
                 </div>
-                @endif
+                @endif --}}
                 @if(isset($customSearch))
                 <div class="row">
                     <div class="col-md-2">

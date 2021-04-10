@@ -191,18 +191,7 @@ class WareHouseController extends Controller
 
     public function index()
     {
-        $shipperOnline = User::leftJoin('shipper_locations as SL', 'users.id', '=', 'SL.user_id')
-                    ->where('role', 'shipper')
-                    ->where('status', 'active')
-                    ->where('delete_status', 0)
-                    ->where('SL.online', 1)
-                    ->select('SL.user_id', 'SL.online', 'users.name', 'users.username')
-                    ->get();
-        $warehouse = User::where('role', 'warehouse')
-                    ->where('status', 'active')
-                    ->where('delete_status', 0)
-                    ->get();
-        return view('admin.elements.users.warehouse.index', ['active' => 'warehouse', 'breadcrumb' => $this->breadcrumb, 'shipperOnline' => $shipperOnline, 'warehouse' => $warehouse]);
+        return view('admin.elements.users.warehouse.index', ['active' => 'warehouse', 'breadcrumb' => $this->breadcrumb]);
     }
 
     /**

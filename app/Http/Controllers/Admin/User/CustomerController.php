@@ -110,7 +110,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('admin.elements.users.customer.add', ['active' => 'customer', 'breadcrumb' => $this->breadcrumb]);
+        return view('admin.elements.users.customers.add', ['active' => 'customer', 'breadcrumb' => $this->breadcrumb]);
 
     }
 
@@ -194,6 +194,7 @@ class CustomerController extends Controller
         $customer = User::find($id);
         $result = [];
         $delivery = DeliveryAddress::where('user_id', $id)->get();
+
         if (isset($delivery)) {
             foreach ($delivery as $d) {
                 $province_name = Province::find($d->province_id)->name;
@@ -206,6 +207,8 @@ class CustomerController extends Controller
             }
         }
         $selected = DeliveryAddress::where('user_id', $id)->where('default', 1)->first();
+        // dd($customer->id);
+
         return view('admin.elements.users.customer.add', ['customer' => $customer, 'delivery' => $result,
             'selected' => @$selected->id, 'active' => 'customer', 'breadcrumb' => $this->breadcrumb]);
     }
@@ -292,7 +295,7 @@ class CustomerController extends Controller
             DB::rollBack();
             return $e;
         }
-        return redirect(url('admin/customers'))->with('delete', 'Xóa khách hàng thành công');
+        return redirect(url('admin/customer'))->with('delete', 'Xóa khách hàng thành công');
     }
 
     public function exportPrintOwe(Request $req, $id) {

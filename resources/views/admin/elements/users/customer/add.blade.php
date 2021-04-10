@@ -21,11 +21,11 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    @if(isset($customer))
+                    {{-- @if(isset($customer))
                         {{ Form::open(['route' => ['customers.update', $customer->id], 'method' => 'put', 'enctype' => 'multipart/form-data']) }}
                     @else
                         {{ Form::open(['url' => '/admin/customers', 'method' => 'post', 'enctype' => 'multipart/form-data']) }}
-                    @endif
+                    @endif --}}
                     <div class="{{--has-error--}} form-group">
                         <div class="row">
                             <div class="col-lg-12">

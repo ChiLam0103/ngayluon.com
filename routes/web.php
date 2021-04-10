@@ -16,10 +16,12 @@ Route::post('/registerPage', 'Admin\User\CollaboratorController@postRegister');
 Route::get('/logout', 'Admin\User\CollaboratorController@logout');
 
 Auth::routes();
+// Route::get('/', function () {
+//     return view('front-ent.element.index');
+// });
 Route::get('/', function () {
-    return view('front-ent.element.index');
+    return redirect('/admin/report');
 });
-
 Route::group(['prefix' => 'front-ent', 'namespace' => 'UI'], function () {
     Route::post('/login', 'UserController@login');
     Route::get('/logout', 'UserController@logout');
@@ -63,7 +65,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     Route::get('/', function () {
         return redirect('/admin/report');
     });
-    Route::resource('admins', 'User\AdminController');
+    Route::resource('admin', 'User\AdminController');
     
     Route::get('shippers/list_booking', 'User\ShipperController@exportBooking');
     Route::get('shippers/paid', 'User\ShipperController@paidBooking');
@@ -104,8 +106,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     Route::put('price/{type}/{id}', 'Setting\PriceController@update');
     Route::resource('price', 'Setting\PriceController');
     Route::resource('discounts', 'Setting\DiscountController');
-    Route::resource('customers', 'User\CustomerController');
-    Route::resource('customers', 'User\CustomerController');
+    Route::resource('customer', 'User\CustomerController');
+    // Route::resource('customers', 'User\CustomerController');
     Route::resource('partners', 'User\PartnerController');
     Route::resource('district_type', 'District\DistrictTypeController');
     Route::get('feedback', 'Register\ShipperController@getFeedback');
@@ -206,9 +208,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
 
 Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //user
-    Route::get('admins', 'UserController@getAdmins');
-    Route::get('check_store_user', 'UserController@checkStoreUser'); //kiểm tra tồn tại email,phone_number,uuid
-    Route::post('store_admin', 'UserController@storeAdmin');
+    Route::get('detail_user/{id}', 'UserController@getDetailUser');
+    Route::get('get_user/{role}', 'UserController@getUserRole');
+    Route::get('check_exist_user', 'UserController@checkExistUser'); //kiểm tra tồn tại email,phone_number,uuid
+    Route::post('action_user', 'UserController@actionUser');
     Route::get('collaborators', 'UserController@getUser');
     Route::get('shipper', 'UserController@getShipper');
     Route::get('warehouse', 'UserController@getWareHouse');

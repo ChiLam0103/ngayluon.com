@@ -12,12 +12,12 @@
     <div class="row">
         @include('admin.partial.log.err_log',['name' => 'delete'])
         @include('admin.partial.log.success_log',['name' => 'success'])
-        {{--@if(Auth::user()->role == 'collaborators')--}}
-            <div class="well" style="padding-left: 0px">
-                <a href="{!! url('admin/shippers/create') !!}" class="btn btn-primary"> <i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
-                <a href="{!! url('admin/shippers/maps') !!}" class="btn btn-info"> <i class="fa fa-location-arrow" aria-hidden="true"></i> Xem trên bản đồ</a>
-            </div>
-        {{--@endif--}}
+       
+        <div class="well" style="padding-left: 0px">
+            <button type="button" class="btn btn-success " id="btnAddNew"><i class="fa fa-plus"
+                    aria-hidden="true"></i> Thêm mới</button>
+            {{-- <a href="{!! url('admin/shippers/maps') !!}" class="btn btn-info"> <i class="fa fa-location-arrow" aria-hidden="true"></i> Xem trên bản đồ</a>         --}}
+        </div>
         <div class="col-lg-12">
             @include('admin.table_paging', [
                'id' => 'shipper',
@@ -26,21 +26,17 @@
                        'icon' => 'fa fa-table',
                        'class' => 'portlet box green',
                ],
-               'url' => url("/ajax/shipper"),
+               'url' => url("/ajax/get_user/shipper"),
                'columns' => [
-                       ['data' => 'name', 'title' => 'Tên'],
-                       ['data' => 'uuid', 'title' => 'Mã shipper'],
-                       ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
-                       ['data' => 'email', 'title' => 'Email'],
-                       ['data' => 'phone_number', 'title' => 'Số điện thoại'],
-                       ['data' => 'role', 'title' => 'Vai trò'],
-                       ['data' => 'status', 'title' => 'Trạng thái'],
-                       ['data' => 'agency', 'title' => 'Đại lý'],
-                       ['data' => 'revenue_price', 'title' => 'Tổng giá cước đã thu'],
-                       ['data' => 'revenue_cod', 'title' => 'Tổng COD đã thu'],
-                       ['data' => 'created_at', 'title' => 'Ngày tạo'],
-                       ['data' => 'updated_at', 'title' => 'Ngày cập nhật'],
-                       ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
+                    ['data' => 'uuid', 'title' => 'ID'],
+                    ['data' => 'name', 'title' => 'Tên admins'],
+                    ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
+                    ['data' => 'email', 'title' => 'Email'],
+                    ['data' => 'full_address', 'title' => 'Địa chỉ'],
+                    ['data' => 'phone_number', 'title' => 'Hotline'],
+                    ['data' => 'revenue_price', 'title' => 'Tổng giá cước đã thu'],
+                    ['data' => 'revenue_cod', 'title' => 'Tổng COD đã thu'],
+                    ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                    ]
                ])
         </div>
@@ -156,14 +152,16 @@
             </div>
         </div>
     </div>
-    <div id="shipper-online" style="display: none">{{ @$shipperOnline }}</div>
+     <!-- Modal user -->
+   @include('admin.partial.modal.user')
+    {{-- <div id="shipper-online" style="display: none">{{ @$shipperOnline }}</div> --}}
 @endsection
 @push('script')
     <script>
-        $(document).ready(function(){
-            var shipperOnline = $('#shipper-online').html();
-            console.log(JSON.parse(shipperOnline));
-        });
+        // $(document).ready(function(){
+        //     var shipperOnline = $('#shipper-online').html();
+        //     console.log(JSON.parse(shipperOnline));
+        // });
 
         function exportBooking(id) {
             $('#shipper_id').val(id);
@@ -203,6 +201,14 @@
                 $('#statistical').modal('show');
             });
         }
+        $("#modalUser #btnSave").on("click", function (event) {
+            var id = $("#modalUser .action").attr('id');
+            if( id == "addUser"){
+                actionUser("shipper","store");
+            }else{
+                actionUser( "shipper", "update");
+            }
+        })
     </script>
 @endpush
 
