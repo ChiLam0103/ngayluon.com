@@ -14,6 +14,7 @@ use App\Models\District;
 use App\Models\Ward;
 use App\Models\ManagementScope;
 use App\Models\ShipperLocation;
+use App\Models\DeliveryAddress;
 use App\Http\Controllers\Controller;
 use function asset;
 use function dd;
@@ -288,10 +289,7 @@ class UserController extends Controller
                 if ($user->role == "customer") {
                     $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
                     $action[] = '<button type="button" class="btn btn-info btn-xs" onclick="showModal(' . $user->id . ')"><i class="icon-bell" aria-hidden="true"></i> Thông báo nhanh</button>';
-                    // $action[] = '<a style="float:left" href="' . url('admin/customer/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
-                    // $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/customers/' . $user->id]]) . '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' . Form::close() . '</div>';
                     $action[] = '<a href="' . url('admin/customers/withdrawal/' . $user->id) . '" class="btn btn-xs btn-default" onclick="return confirm(\'Bạn có chắc chắn muốn rút tiền?\');"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Rút tiền</a>';
-                    $action[] = '<a style="float:left" href="' . url('admin/customers/show_address/' . $user->id) . '" class="btn btn-xs btn-info"><i class="fa fa-eye"></i> Điểm giao/nhận hàng</a>';
                 }
                 $action[] = '<a class="btn btn-xs btn-primary edit_user" href="javascript:void(0);" name="' . $user->id . '" class="uuid"> <i class="glyphicon glyphicon-edit"></i> Sửa </a>';
                 $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/'. $user->role. '/' . $user->id]]) .
@@ -479,7 +477,10 @@ class UserController extends Controller
             $data->bank_name = $request->bank_name;
             $data->bank_branch = $request->bank_branch;
             $data->role = $request->role;
-
+            if($data->role == "customer") 
+            {
+                $data->is_advance_money = $request->is_advance_money;
+            }
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $name = $file->getClientOriginalName();

@@ -45,7 +45,22 @@ class BookingController extends Controller
      * @return \Illuminate\Http\Response
      */
     protected $breadcrumb = ['Quản lý đơn hàng'];
+    //create booking
+    public function allBooking()
+    {
+        // $this->updateNotificationReaded($request);
 
+        $this->breadcrumb[] = 'tất cả đơn hàng';
+        if (Auth::user()->role == 'collaborators') {
+            $time = Booking::whereIn('send_ward_id', $this->getBookingScope())->where('sub_status', 'none')->whereIn('status', ['new', 'taking'])->min('created_at');
+        } else {
+            $time = Booking::Where('sub_status', 'none')->where(function ($query) {
+                $query->where('status', 'new')->orWhere('status', 'taking');
+            })->min('created_at');
+        }
+        $time_from = $time != null ? date("Y-m-d", strtotime($time)) : Carbon::today()->toDateString();
+        return view('admin.elements.booking.index', ['active' => 'booking', 'breadcrumb' => $this->breadcrumb, 'time_from' => $time_from]);
+    }
     protected function getBookingScope()
     {
         $user_id = Auth::user()->id;

@@ -23,7 +23,7 @@
             <i class="fa fa-line-chart" aria-hidden="true"></i> Tổng quan
              @if(isset($active)&& $active == 'report')<span class="selected"></span>
             @endif</a>
-        <a href="{{ url('/admin/booking/new') }}"  class=" @if(isset($active)&& $active == 'new_booking') active @endif">
+        <a href="{{ url('/admin/booking') }}"  class=" @if(isset($active)&& $active == 'booking') active @endif">
             <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
         <div class="dropdown  @if(isset($active)&& $active == 'admin' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
           <button class="dropbtn"><i class="fa fa-users"></i> Đối tác

@@ -123,6 +123,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     //end report route
 
     Route::group(['prefix' => 'booking', 'namespace' => 'Booking'], function () {
+        Route::get('/', 'BookingController@allBooking');
         Route::get('create', 'BookingController@createBooking');
         Route::post('create-booking', 'BookingController@postCreateBooking');
         Route::get('new', 'BookingController@newBooking');
@@ -243,6 +244,7 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //end load
     //booking
     Route::get('detail_booking/{id}', 'BookingController@detailBooking')->name('detailBooking');
+    Route::get('all_booking', 'BookingController@allBooking');
     Route::get('new_booking', 'BookingController@newBooking');
     Route::get('receive_booking', 'BookingController@receiveBooking');
     Route::get('move', 'BookingController@moveBooking');

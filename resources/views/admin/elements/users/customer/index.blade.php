@@ -174,7 +174,6 @@
                     _token: token
                 }
             }).done(function (response) {
-                console.log(response);
                 if (response.status) {
                     $('#myModal').modal('hide');
                 }

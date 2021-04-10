@@ -285,7 +285,6 @@
             type: "GET",
             url: '{{url('/ajax/detail_booking/')}}/' + id
         }).done(function (msg) {
-            console.log(msg.shipper);
             var payer= msg.booking.payment_type == 1 ? 'người gửi' :'người nhận';
             var shipper = msg.shipper != null ? '<p>Shipper lấy đơn: '+msg.shipper.shipper_name +'</p>' :'';
             var content_send="<p>Họ tên: "+ msg.booking.send_name+"</p> <p>Số điện thoại: "+ msg.booking.send_phone+"</p> <p>Địa chỉ: "+ msg.booking.send_full_address+"</p>";
@@ -354,6 +353,7 @@
                 $("input[name=bank_name]").val(data.user.bank_name);
                 $("input[name=bank_branch]").val(data.user.bank_branch);
                 $('.imgUser').attr('src','{!! url('/') !!}' + data.user.avatar );
+                $('input[name=is_advance_money][value="'+data.user.is_advance_money+'"]').prop( 'checked', 'checked');
                 $('#uuid_err').text('');
                 $('#name_err').text('');
                 $('#email_err').text('');
@@ -388,6 +388,7 @@
         var bank_name =$("input[name=bank_name]").val();
         var bank_branch =$("input[name=bank_branch]").val();
         var avatar =  $("#exampleInputFile")[0].files[0];
+        var is_advance_money = $('input[name=is_advance_money]:checked').val();
         
         var required ="Trường dữ liêu bắt buộc";
         var email_err ="Trường dữ liêu không đúng định dạng email";
@@ -458,6 +459,7 @@
                 formData.append('bank_name', bank_name);
                 formData.append('bank_branch', bank_branch);
                 formData.append('avatar', avatar);
+                formData.append('is_advance_money', is_advance_money);
                 formData.append('role', role);
                 formData.append('action', action);
 
