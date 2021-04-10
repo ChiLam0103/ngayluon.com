@@ -154,6 +154,7 @@
     </div>
      <!-- Modal user -->
    @include('admin.partial.modal.user')
+   @include('admin.partial.modal.detail_img')
     {{-- <div id="shipper-online" style="display: none">{{ @$shipperOnline }}</div> --}}
 @endsection
 @push('script')

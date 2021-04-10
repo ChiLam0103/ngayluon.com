@@ -126,6 +126,7 @@
     </div>
      <!-- Modal user -->
    @include('admin.partial.modal.user')
+   @include('admin.partial.modal.detail_img')
 @endsection
 
 @push('script')

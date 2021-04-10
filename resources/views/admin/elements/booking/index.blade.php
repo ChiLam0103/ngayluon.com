@@ -69,7 +69,7 @@
             @include('admin.table_paging', [
                 'id' => 'all_booking',
                 'title' => [
-                        'caption' => 'Dữ liệu đơn hàng mới',
+                        'caption' => 'Dữ liệu đơn hàng',
                         'icon' => 'fa fa-table',
                         'class' => 'portlet box green',
                 ],
@@ -78,26 +78,11 @@
                         // ['data' => 'action', 'title' => 'Hành động', 'orderable' => false],
                         ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
                         ['data' => 'uuid', 'title' => 'UUID'],
-                        // ['data' => 'created_at', 'title' => 'Ngày tạo'],
-                        // ['data' => 'user_create', 'title' => 'Người tạo đơn', 'orderable' => false, 'searchable' => false],
-                        // ['data' => 'name', 'title' => 'Tên đơn hàng'],
-                        // ['data' => 'send_name', 'title' => 'Người gửi'],
-                        // ['data' => 'send_phone', 'title' => 'Số điện thoại'],
-                        // ['data' => 'send_full_address', 'title' => 'Địa chỉ'],
-                        // ['data' => 'receive_name', 'title' => 'Người nhận'],
-                        // ['data' => 'receive_phone', 'title' => 'Số điện thoại'],
-                        // ['data' => 'receive_full_address', 'title' => 'Địa chỉ'],
-                        // ['data' => 'weight', 'title' => 'Khối lượng(gram)'],
-                        // // ['data' => 'transport_type', 'title' => 'Phương thức vận chuyển'],
-                        // ['data' => 'price', 'title' => 'Giá'],
-                        // ['data' => 'incurred', 'title' => 'Chi phí phát sinh'],
-                        // ['data' => 'paid', 'title' => 'Số tiền đã thanh toán'],
-                        // ['data' => 'COD', 'title' => 'Thu hộ'],
-                        // ['data' => 'status', 'title' => 'Trạng thái'],
-                        // ['data' => 'payment_type', 'title' => 'Ghi chú'],
-                        // ['data' => 'other_note', 'title' => 'Ghi chú khác'],
-                        // ['data' => 'note', 'title' => 'Ghi chú hệ thống'],
-                        // ['data' => 'shipper', 'title' => 'Tên Shipper'],
+                        ['data' => 'send_name', 'title' => 'Người gửi'],
+                        ['data' => 'receive_name', 'title' => 'Người nhận'],
+                        ['data' => 'price', 'title' => 'Giá'],
+                        ['data' => 'status', 'title' => 'Trạng thái'],
+                        ['data' => 'created_at', 'title' => 'Ngày tạo'],
                 ]
                 ])
         </div>
@@ -167,7 +152,9 @@
     </form>
 
 {{-- </div> --}}
-
+    <!-- Modal  -->
+    @include('admin.partial.modal.detail_img')
+    @include('admin.partial.modal.detail_booking')
 @endsection
 @push('script')
     <script>
