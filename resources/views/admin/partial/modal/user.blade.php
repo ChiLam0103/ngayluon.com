@@ -174,9 +174,9 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <label class="control-label" for="inputError" id="is_advance_money">Tạm ứng tiền</label>
-                                        <br><input type="radio" class=""  name="is_advance_money" value="0" checked> Không
-                                        <br><input type="radio" class=""  name="is_advance_money" value="1" > Có
+                                        <label class="control-label" for="inputError" id="is_advance_money">Tạm ứng tiền: </label>
+                                        <label><input type="radio" class="option-input radio"  name="is_advance_money" value="0" checked> Không</label>
+                                        <label><input type="radio" class="option-input radio"  name="is_advance_money" value="1" > Có </label>
                                     </div>
                                 </div>
                             </div>

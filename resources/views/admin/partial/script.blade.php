@@ -474,7 +474,7 @@
                 });
         }
     }   
-
+    
 </script>
 
 @stack('script')

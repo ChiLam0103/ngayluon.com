@@ -419,8 +419,8 @@ class UserController extends Controller
             case 'shipper':
                 $name = "SP";
                 break;
-            case 4:
-                $name = "NX";
+            case 'customer':
+                $name = "CT";
                 break;
         }
 

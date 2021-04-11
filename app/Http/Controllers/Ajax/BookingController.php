@@ -47,9 +47,22 @@ class BookingController extends Controller
     }
     public function allBooking()
     {
-        
         $booking =new Booking;
         $booking = $booking->orderBy('id', 'DESC');
+        return datatables()->of($booking)
+            ->editColumn('uuid', function ($b) {
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
+            })
+            ->editColumn('image_order', function ($b) {
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='30'/>");
+            })
+            ->rawColumns(['uuid','image_order'])
+            ->make(true);
+    }
+    public function getBookingStatus(Request $request)
+    {
+        $booking =new Booking;
+        $booking = $booking->orderBy('id', 'DESC')->where('status',$request->status);
         return datatables()->of($booking)
             ->editColumn('uuid', function ($b) {
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';

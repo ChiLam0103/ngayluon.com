@@ -244,7 +244,8 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //end load
     //booking
     Route::get('detail_booking/{id}', 'BookingController@detailBooking')->name('detailBooking');
-    Route::get('all_booking', 'BookingController@allBooking');
+    Route::get('all_booking', 'BookingController@allBooking'); //load list all booking
+    Route::get('get_booking_status', 'BookingController@getBookingStatus');//load list booking for status
     Route::get('new_booking', 'BookingController@newBooking');
     Route::get('receive_booking', 'BookingController@receiveBooking');
     Route::get('move', 'BookingController@moveBooking');

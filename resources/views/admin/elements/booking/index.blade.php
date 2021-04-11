@@ -1,7 +1,7 @@
 @extends('admin.app')
 
 @section('title')
-    Đơn hàng mới
+    Đơn hàng
 @endsection
 
 @section('sub-title')
@@ -67,37 +67,37 @@
         </div>
         <div class="col-lg-2" id="status_booking">
             <h5><b>Trạng thái đơn hàng</b></h5>
-            <ul id="treeview">
-                <li data-icon-cls="fa fa-square-o" id="all" name="status_all">Tất cả</li>
-                <li data-icon-cls="fa fa-square-o">Chờ xử lý</li>
-                <li data-icon-cls="fa fa-square-o" >Lấy hàng
-                    <ul>
-                        <li>Đang lấy hàng</li>
-                        <li>Chờ lấy hàng</li>
-                        <li>Đã lấy hàng</li>
-                    </ul>
-                </li>
-                <li data-icon-cls="fa fa-square-o" >Giao hàng
-                    <ul>
-                        <li>Đang giao hàng</li>
-                        <li>Chờ  giao lại</li>
-                    </ul>
-                </li>
-                <li data-icon-cls="fa fa-square-o">Giao thành công</li>
-                <li data-icon-cls="fa fa-square-o">Tách hàng</li>
-                <li data-icon-cls="fa fa-square-o" >Chuyển hoàn
-                    <ul>
-                        <li>Chờ chuyển hoàn</li>
-                        <li>Đang chuyển hoàn</li>
-                        <li>Chờ chuyển hoàn lại</li>
-                    </ul>
-                </li>
-                <li data-icon-cls="fa fa-square-o">Đã chuyển hoàn</li>
-                <li data-icon-cls="fa fa-square-o">Đã huỷ</li>
-            </ul>
-           
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="new">Chờ xử lý</label> </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="warehouse">Trong kho</label> </div>
+            <div>
+                <label><input type="radio" class="option-input radio" name="booking_status" value="taking">Lấy hàng</label>
+                <div class=" sub_radio">
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_doing">Đang lấy hàng</label>
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_waiting">Chờ lấy hàng</label>
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_finish">Đã lấy hàng</label>
+                </div>
+            </div>
+            <div >
+                <label><input type="radio" class="option-input radio" name="booking_status" value="sending">Giao hàng</label>
+                <div class=" sub_radio">
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="sending_doing">Đang giao hàng</label>
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="sending_waiting">Chờ giao lại</label>
+                </div>
+            </div>
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="completed">Giao thành công</label></div>
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="split">Tách hàng</label></div>
+            <div >
+                <label><input type="radio" class="option-input radio" name="booking_status" value="refund_transfer">Chuyển hoàn</label>
+                <div class=" sub_radio">
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting">Chờ chuyển hoàn</label>
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_doing">Đang chuyển hoàn</label>
+                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting_again">Chờ chuyển hoàn lại</label>
+                </div>
+            </div>
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="refunded">Đã chuyển hoàn</label></div>
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ</label></div>
         </div>
-        <div class="col-lg-10">
+        <div class="col-lg-10" id="table_booking">
             @include('admin.table_paging', [
                 'id' => 'all_booking',
                 'title' => [
@@ -277,6 +277,41 @@
         }
 
         $(document).ready(function(){
+            $('#status_booking input[name=booking_status]').change(function() {
+                var table = $("#all_booking tbody");
+                table.empty();
+
+                $.ajax({
+                    url: '{!! url('/ajax/get_booking_status') !!}',
+                    method: "GET",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    data: {status: this.value,},  
+                    columns: [
+                    { data: "uuid",title:"ID" },
+                    
+                ]
+                //     success: function (data) {
+                //         $.each(data.data, function (a, b) {
+                //             var class_tr= (a % 2 == 0) ? "odd" : "even";
+                //             // console.log(class_tr);
+                //             var string= "<tr role='row' class='"+class_tr+"'><td class='sorting_1'> "+b.image_order+"</td>" +
+                //                 "<td>"+b.uuid+"</td>"+
+                //                 "<td>" + b.send_name + "</td>" +
+                //                 "<td>" + b.receive_name + "</td>" +
+                //                 "<td>" + b.price + "</td>" +
+                //                 "<td>" + b.status + "</td>" +
+                //                 "<td>" + b.created_at + "</td></tr>";
+                //             // console.log(string);    
+                //             table.append(string);
+                //         });
+            
+                //         $("#all_booking").DataTable();
+                    // }
+                });
+                
+            });
             var province = 50;
             $("#district option[value!='-1']").remove();
             $.ajax({
@@ -340,15 +375,5 @@
         });
        
     </script>
-    <!-- you need to include the ShieldUI CSS and JS assets in order for the TreeView widget to work -->
-    <!-- <link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" /> -->
-    <link id="themecss" rel="stylesheet" type="text/css" href="//www.shieldui.com/shared/components/latest/css/light/all.min.css" />
-    <script type="text/javascript" src="//www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#treeview").shieldTreeView();
-       
-    });   
-</script>
+  
 @endpush
