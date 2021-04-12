@@ -80,7 +80,7 @@
         $(document).ready(function () {
             var filter = $(".dataTables_filter").val();
             var id = '#{{$id}}';
-            console.log(filter);
+            // console.log(filter);
             var oTable = $(id).DataTable({
                 order: [[ 0, "desc" ]],
                 ajax: {
@@ -95,8 +95,13 @@
                     @endif
                 },
                 stateSave: true,
-                // processing: true,
                 serverSide: true,
+                processing: true,
+                serverSide: true,
+                // deferLoading: 1,
+                // bProcessing: true,
+                Paginate:true,
+                // bServerSide: false,
                 @if (isset($columns))
                 columns: <?php echo json_encode($columns); ?>,
                 @endif

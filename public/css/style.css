@@ -79,6 +79,7 @@ input[type="checkbox"][readonly] {
 #status_booking .sui-treeview-list{padding-left: 0;}
 #status_booking .sui-treeview-list li ul{padding-left: 15px;}
 .sub_radio{padding-left: 15px;}
+.sub_radio label{font-style: italic;}
 
 @keyframes click-wave {
   0% {

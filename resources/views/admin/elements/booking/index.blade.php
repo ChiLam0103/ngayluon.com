@@ -69,30 +69,24 @@
             <h5><b>Trạng thái đơn hàng</b></h5>
             <div><label><input type="radio" class="option-input radio" name="booking_status" value="new">Chờ xử lý</label> </div>
             <div><label><input type="radio" class="option-input radio" name="booking_status" value="warehouse">Trong kho</label> </div>
-            <div>
-                <label><input type="radio" class="option-input radio" name="booking_status" value="taking">Lấy hàng</label>
-                <div class=" sub_radio">
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_doing">Đang lấy hàng</label>
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_waiting">Chờ lấy hàng</label>
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="taking_finish">Đã lấy hàng</label>
-                </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="taking">Lấy hàng</label></div>
+            <div class=" sub_radio">
+                <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_doing">Đang lấy hàng</label>  </div>
+                <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_waiting">Chờ lấy hàng</label></div>
+                <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_finish">Đã lấy hàng</label></div>
             </div>
-            <div >
-                <label><input type="radio" class="option-input radio" name="booking_status" value="sending">Giao hàng</label>
-                <div class=" sub_radio">
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="sending_doing">Đang giao hàng</label>
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="sending_waiting">Chờ giao lại</label>
-                </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending">Giao hàng</label> </div>
+            <div class=" sub_radio">
+                <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending_doing">Đang giao hàng</label></div>
+                <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending_waiting">Chờ giao lại</label></div>
             </div>
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="completed">Giao thành công</label></div>
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="split">Tách hàng</label></div>
-            <div >
-                <label><input type="radio" class="option-input radio" name="booking_status" value="refund_transfer">Chuyển hoàn</label>
-                <div class=" sub_radio">
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting">Chờ chuyển hoàn</label>
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_doing">Đang chuyển hoàn</label>
-                    <label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting_again">Chờ chuyển hoàn lại</label>
-                </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_transfer">Chuyển hoàn</label></div>
+            <div class=" sub_radio">
+              <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting">Chờ chuyển hoàn</label></div>
+              <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_doing">Đang chuyển hoàn</label></div>
+              <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting_again">Chờ chuyển hoàn lại</label></div>
             </div>
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="refunded">Đã chuyển hoàn</label></div>
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ</label></div>
@@ -280,37 +274,34 @@
             $('#status_booking input[name=booking_status]').change(function() {
                 var table = $("#all_booking tbody");
                 table.empty();
-
+                // table.clear();
                 $.ajax({
                     url: '{!! url('/ajax/get_booking_status') !!}',
                     method: "GET",
-                    xhrFields: {
-                        withCredentials: true
-                    },
                     data: {status: this.value,},  
-                    columns: [
-                    { data: "uuid",title:"ID" },
-                    
-                ]
-                //     success: function (data) {
-                //         $.each(data.data, function (a, b) {
-                //             var class_tr= (a % 2 == 0) ? "odd" : "even";
-                //             // console.log(class_tr);
-                //             var string= "<tr role='row' class='"+class_tr+"'><td class='sorting_1'> "+b.image_order+"</td>" +
-                //                 "<td>"+b.uuid+"</td>"+
-                //                 "<td>" + b.send_name + "</td>" +
-                //                 "<td>" + b.receive_name + "</td>" +
-                //                 "<td>" + b.price + "</td>" +
-                //                 "<td>" + b.status + "</td>" +
-                //                 "<td>" + b.created_at + "</td></tr>";
-                //             // console.log(string);    
-                //             table.append(string);
-                //         });
-            
-                //         $("#all_booking").DataTable();
-                    // }
+                    success: function (data) {
+                        // table.clear();
+                        $.each(data.data, function (a, b) {
+                            var class_tr= (a % 2 == 0) ? "odd" : "even";
+                            var string= "<tr role='row' class='"+class_tr+"'><td class='sorting_1'> "+b.image_order+"</td>" +
+                                "<td>"+b.uuid+"</td>"+
+                                "<td>" + b.send_name + "</td>" +
+                                "<td>" + b.receive_name + "</td>" +
+                                "<td>" + b.price + "</td>" +
+                                "<td>" + b.status + "</td>" +
+                                "<td>" + b.created_at + "</td></tr>";
+                            $('.table-scrollable').append(string);
+                        });
+                       table.DataTable();
+                      
+                        // table.rows.add($.map(this, function (item) {
+                        //     return {
+                        //         uuid: item.uuid,
+                        //     };
+                        // })).draw();
+                    }
                 });
-                
+              
             });
             var province = 50;
             $("#district option[value!='-1']").remove();
