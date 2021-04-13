@@ -144,29 +144,33 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>về chúng tôi</h2>
+          <h2>chúng tôi là ai?</h2>
         </div>
 
         <div class="row content">
           <div class="col-lg-6">
             <p>
-            Những ưu điểm mà Ngay & Luôn mang lại khi bạn sử dụng dịch vụ.
+                Chúng tôi đem đến những giải pháp vận chuyển.
             </p>
             <ul>
-              <li><i class="ri-check-double-line"></i> PHÍ VẬN CHUYỂN CỰC RẺ</li>
-              <li><i class="ri-check-double-line"></i> TỈ LỆ THÀNH CÔNG 98%</li>
-              <li><i class="ri-check-double-line"></i> ĐỘI NGŨ TÀI XẾ TẬN TÂM</li>
+              <li><i class="ri-check-double-line"></i> Quy trình tối ưu</li>
+              <li><i class="ri-check-double-line"></i> Chi phí tốt nhất</li>
+              <li><i class="ri-check-double-line"></i> Hệ thống toàn diện</li>
+              <li><i class="ri-check-double-line"></i> Dịch vụ hoàn thiện</li>
             </ul>
          
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0">
-            <p>
+            <p>Ngay Luôn bắt đầu hành trình của mình với mục tiêu xây dựng một nền tảng
+                giao hàng công nghệ nhằm tối ưu thời gian giao hàng chỉ còn trong ngày.
+                Ngày qua ngày, chúng tôi càng hoàn thiện dịch vụ của mình và song hành
+                cùng thành công với khách hàng.
             </p>
-            <ul>
-                <li><i class="ri-check-double-line"></i> CẬP NHẬT TRẠNG THÁI TỨC THÌ</li>
-                <li><i class="ri-check-double-line"></i> NỀN TẢNG TÍCH HỢP NGAYLUON API</li>
-                <li><i class="ri-check-double-line"></i> TUỲ CHỌN ĐA DẠNG DỊCH VỤ</li>
-              </ul>
+            {{-- <ul>
+                <li><i class="ri-check-double-line"></i> Luôn luôn thử thách</li>
+                <li><i class="ri-check-double-line"></i>Những tài năng</li>
+                <li><i class="ri-check-double-line"></i>Tăng trưởng liên tục</li>
+              </ul> --}}
           </div>
         </div>
 
@@ -182,37 +186,47 @@
           <div class="col-lg-7 d-flex flex-column justify-content-center align-items-stretch  order-2 order-lg-1">
 
             <div class="content">
-              <h3>Eum ipsam laborum deleniti <strong>velit pariatur architecto aut nihil</strong></h3>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-              </p>
+                <div class="section-title">
+                    <h2>ƯU ĐIỂM DỊCH VỤ NGAY LUÔN</h2>
+                </div>
+                <h4>GIẢI PHÁP VẬN CHUYỂN DÀNH CHO CÁC DOANH NGHIỆP VỪA VÀ NHỎ</h4>
+                <p>
+                    Những ưu điểm mà Ngay Luôn mang lại khi bạn sử dụng dịch vụ
+                </p>
             </div>
 
             <div class="accordion-list">
               <ul>
                 <li>
-                  <a data-bs-toggle="collapse" class="collapse" data-bs-target="#accordion-list-1"><span>01</span> Non consectetur a erat nam at lectus urna duis? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                  <a data-bs-toggle="collapse" class="collapse" data-bs-target="#accordion-list-1"><span>01</span> LUÔN LUÔN THỬ THÁCH <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="accordion-list-1" class="collapse show" data-bs-parent=".accordion-list">
                     <p>
-                      Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.
+                        Ngay Luôn tự đặt ra cho mình mỗi ngày là mỗi thử thách cần phải chinh phục để mang lại những trải nghiệm tốt nhất cho khách hàng.
                     </p>
                   </div>
                 </li>
 
                 <li>
-                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-2" class="collapsed"><span>02</span> Feugiat scelerisque varius morbi enim nunc? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-2" class="collapsed"><span>02</span> NHỮNG TÀI NĂNG TRẺ <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="accordion-list-2" class="collapse" data-bs-parent=".accordion-list">
-                    <p>
-                      Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.
+                    <p>Các thành viên Ngay Luôn là những người trẻ, không ngại khó khăn, luôn luôn sáng tạo, ham học hỏi trong tất cả các lĩnh vực.
                     </p>
                   </div>
                 </li>
 
                 <li>
-                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-3" class="collapsed"><span>03</span> Dolor sit amet consectetur adipiscing elit? <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-3" class="collapsed"><span>03</span> TĂNG TRƯỞNG LIÊN TỤC <i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
                   <div id="accordion-list-3" class="collapse" data-bs-parent=".accordion-list">
                     <p>
-                      Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis
+                        Từng thành viên tại Ngay Luôn luôn đặt ra cho mình những thử thách liên tục, nỗ lực hết sức mình mỗi ngày để tạo nên sự tăng trưởng liên tục.
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <a data-bs-toggle="collapse" data-bs-target="#accordion-list-4" class="collapsed"><span>04</span> NHỮNG CÂU CHUYỆN VUI<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
+                  <div id="accordion-list-4" class="collapse" data-bs-parent=".accordion-list">
+                    <p>
+                        Ở Ngay Luôn,  chúng tôi chia sẻ rất nhiều về niềm vui trong công việc, những thử thách đã vượt qua, nhiều đồ ăn ngon cùng những buổi dã ngoại mang lại cho họ những trải nghiệm và ý tưởng mới
                     </p>
                   </div>
                 </li>
@@ -237,39 +251,39 @@
             <img src="public/front_ent/img/skills.png" class="img-fluid" alt="">
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0 content" data-aos="fade-left" data-aos-delay="100">
-            <h3>Voluptatem dignissimos provident quasi corporis voluptates</h3>
+            <h3>TÀI XẾ ĐĂNG KÝ THAM GIA NGAY LUÔN</h3>
             <p class="fst-italic">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-              magna aliqua.
+                NHẬN THÊM 10.000.000Đ MỖI THÁNG TỪ THỜI GIAN NHÀN RỖI.
+                THU NHẬP LÊN TỚI 15.000.000Đ
             </p>
 
             <div class="skills-content">
 
               <div class="progress">
-                <span class="skill">HTML <i class="val">100%</i></span>
+                <span class="skill">Thưởng khi đăng ký giới thiệu tài xế <i class="val">100%</i></span>
                 <div class="progress-bar-wrap">
                   <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
 
               <div class="progress">
-                <span class="skill">CSS <i class="val">90%</i></span>
+                <span class="skill">Thưởng hoàn thành đơn hàng <i class="val">100%</i></span>
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+
+              <div class="progress">
+                <span class="skill">Thu nhập cực cao <i class="val">100%</i></span>
                 <div class="progress-bar-wrap">
                   <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
 
               <div class="progress">
-                <span class="skill">JavaScript <i class="val">75%</i></span>
+                <span class="skill">Không lo “dính phốt” <i class="val">100%</i></span>
                 <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-
-              <div class="progress">
-                <span class="skill">Photoshop <i class="val">55%</i></span>
-                <div class="progress-bar-wrap">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
 
@@ -286,40 +300,40 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Services</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <h2>Ưu điểm dịch vụ Ngay Luôn</h2>
+          <p>Những ưu điểm mà Ngay Luôn mang lại khi bạn sử dụng dịch vụ</p>
         </div>
 
         <div class="row">
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
             <div class="icon-box">
               <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4><a href="">Lorem Ipsum</a></h4>
-              <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+              <h4><a href="">PHÍ VẬN CHUYỂN CỰC RẺ</a></h4>
+              <p>Phí vận chuyển chỉ từ 20.000 đ, không tăng giá giờ cao điểm</p>
             </div>
           </div>
 
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-file"></i></div>
-              <h4><a href="">Sed ut perspici</a></h4>
-              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+              <h4><a href="">TỈ LỆ THÀNH CÔNG 98%</a></h4>
+              <p>Giao hàng thành công lên đến 98% và không ngừng tối ưu hơn nữa.</p>
             </div>
           </div>
 
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-tachometer"></i></div>
-              <h4><a href="">Magni Dolores</a></h4>
-              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+              <h4><a href="">ĐỘI NGŨ TÀI XẾ TẬN TÂM</a></h4>
+              <p>Tài xế Ngay Luôn được đào tạo theo quy chuẩn mang lại trải nghiệm tốt nhất cho khách hàng của bạn</p>
             </div>
           </div>
 
           <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="400">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-layer"></i></div>
-              <h4><a href="">Nemo Enim</a></h4>
-              <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+              <h4><a href="">CẬP NHẬT TRẠNG THÁI TỨC THÌ</a></h4>
+              <p>Sử dụng ứng dụng mobile app "NgayLuon' để theo dõi trạng thái đơn hàng tức thì.</p>
             </div>
           </div>
 
@@ -329,7 +343,7 @@
     </section><!-- End Services Section -->
 
     <!-- ======= Cta Section ======= -->
-    <section id="cta" class="cta">
+    {{-- <section id="cta" class="cta">
       <div class="container" data-aos="zoom-in">
 
         <div class="row">
@@ -343,10 +357,10 @@
         </div>
 
       </div>
-    </section><!-- End Cta Section -->
+    </section><!-- End Cta Section --> --}}
 
     <!-- ======= Portfolio Section ======= -->
-    <section id="portfolio" class="portfolio">
+    {{-- <section id="portfolio" class="portfolio">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -456,15 +470,15 @@
         </div>
 
       </div>
-    </section><!-- End Portfolio Section -->
+    </section><!-- End Portfolio Section --> --}}
 
     <!-- ======= Team Section ======= -->
     <section id="team" class="team section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Team</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <h2>Đội ngũ</h2>
+          <p>Với kinh nghiệm dày dặn trong lĩnh vực, đội ngũ chúng tôi không ngại khó khăn, luôn luôn sáng tạo</p>
         </div>
 
         <div class="row">
@@ -473,8 +487,8 @@
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
               <div class="pic"><img src="public/front_ent/img/team/team-1.jpg" class="img-fluid" alt=""></div>
               <div class="member-info">
-                <h4>Walter White</h4>
-                <span>Chief Executive Officer</span>
+                <h4>Nhật Nhút Nhát</h4>
+                <span>Quản lý</span>
                 <p>Explicabo voluptatem mollitia et repellat qui dolorum quasi</p>
                 <div class="social">
                   <a href=""><i class="ri-twitter-fill"></i></a>
@@ -490,7 +504,7 @@
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="200">
               <div class="pic"><img src="public/front_ent/img/team/team-2.jpg" class="img-fluid" alt=""></div>
               <div class="member-info">
-                <h4>Sarah Jhonson</h4>
+                <h4>Mỹ Mộng Mơ</h4>
                 <span>Product Manager</span>
                 <p>Aut maiores voluptates amet et quis praesentium qui senda para</p>
                 <div class="social">
@@ -507,7 +521,7 @@
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="300">
               <div class="pic"><img src="public/front_ent/img/team/team-3.jpg" class="img-fluid" alt=""></div>
               <div class="member-info">
-                <h4>William Anderson</h4>
+                <h4>Dũng Dí Dỏm</h4>
                 <span>CTO</span>
                 <p>Quisquam facilis cum velit laborum corrupti fuga rerum quia</p>
                 <div class="social">
@@ -524,7 +538,7 @@
             <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="400">
               <div class="pic"><img src="public/front_ent/img/team/team-4.jpg" class="img-fluid" alt=""></div>
               <div class="member-info">
-                <h4>Amanda Jepson</h4>
+                <h4>Vy Vui Vẻ</h4>
                 <span>Accountant</span>
                 <p>Dolorum tempora officiis odit laborum officiis et et accusamus</p>
                 <div class="social">
@@ -548,53 +562,48 @@
 
         <div class="section-title">
           <h2>Bảng giá</h2>
-          <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+          <p>MIỄN PHÍ hoàn toàn cod thu hộ, hàng hoàn và lưu kho</p>
         </div>
 
         <div class="row">
 
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="box">
-              <h3>Nội thành</h3>
+              <h3>Khu vực 1</h3>
               <h4><sup>VND</sup>20,000<span>đơn hàng</span></h4>
               <ul>
-                <li><i class="bx bx-check"></i> Quam adipiscing vitae proin</li>
-                <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
-                <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li>
-                <li class="na"><i class="bx bx-x"></i> <span>Pharetra massa massa ultricies</span></li>
-                <li class="na"><i class="bx bx-x"></i> <span>Massa ultricies mi quis hendrerit</span></li>
+                <li><i class="bx bx-check"></i>Quận 1, 3, 4, 5, 6, 7, 8, 10, 11</li>
+                <li><i class="bx bx-check"></i>Quận Tân Bình, Tân Phú, Phú Nhuận</li>
+                <li><i class="bx bx-check"></i> Quận Bình Thạnh, Gò Vấp</li>
+                {{-- <li class="na"><i class="bx bx-x"></i> <span>Pharetra massa massa ultricies</span></li> --}}
               </ul>
-              <a href="#" class="buy-btn">Get Started</a>
+              <a href="#" class="buy-btn">Bắt đầu</a>
             </div>
           </div>
 
           <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
             <div class="box featured">
-              <h3>Business Plan</h3>
-              <h4><sup>$</sup>29<span>per month</span></h4>
+              <h3>Khu vực 2</h3>
+              <h4><sup>VND</sup>25,000<span>đơn hàng</span></h4>
               <ul>
-                <li><i class="bx bx-check"></i> Quam adipiscing vitae proin</li>
-                <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
-                <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li>
-                <li><i class="bx bx-check"></i> Pharetra massa massa ultricies</li>
-                <li><i class="bx bx-check"></i> Massa ultricies mi quis hendrerit</li>
+                <li><i class="bx bx-check"></i>Quận 2, 9, 12</li>
+                <li><i class="bx bx-check"></i> Quận Thủ Đức</li>
+                <li><i class="bx bx-check"></i> Quận Bình Tân</li>
               </ul>
-              <a href="#" class="buy-btn">Get Started</a>
+              <a href="#" class="buy-btn">Bắt đầu</a>
             </div>
           </div>
 
           <div class="col-lg-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
             <div class="box">
-              <h3>Developer Plan</h3>
-              <h4><sup>$</sup>49<span>per month</span></h4>
+              <h3>Khu vực 3</h3>
+              <h4><sup>VND</sup>30,000<span>đơn hàng</span></h4>
               <ul>
-                <li><i class="bx bx-check"></i> Quam adipiscing vitae proin</li>
-                <li><i class="bx bx-check"></i> Nec feugiat nisl pretium</li>
-                <li><i class="bx bx-check"></i> Nulla at volutpat diam uteera</li>
-                <li><i class="bx bx-check"></i> Pharetra massa massa ultricies</li>
-                <li><i class="bx bx-check"></i> Massa ultricies mi quis hendrerit</li>
+                <li><i class="bx bx-check"></i> Quận Hóc Môn</li>
+                <li><i class="bx bx-check"></i> Quận Bình Chánh</li>
+                <li><i class="bx bx-check"></i> Quận Nhà Bè</li>
               </ul>
-              <a href="#" class="buy-btn">Get Started</a>
+              <a href="#" class="buy-btn">Bắt đầu</a>
             </div>
           </div>
 
@@ -681,22 +690,22 @@
               <div class="address">
                 <i class="bi bi-geo-alt"></i>
                 <h4>Địa chỉ:</h4>
-                <p>A108 Adam Street, New York, NY 535022</p>
+                <p> 142/9 Ngô Tất Tố, P.22, Q.Bình Thạnh</p>
               </div>
 
               <div class="email">
                 <i class="bi bi-envelope"></i>
                 <h4>Email:</h4>
-                <p>info@example.com</p>
+                <p> caominhnhat2110@gmail.com</p>
               </div>
 
               <div class="phone">
                 <i class="bi bi-phone"></i>
                 <h4>Gọi:</h4>
-                <p>+1 5589 55488 55s</p>
+                <p> 0909.27.99.55 - 036.282.2241</p>
               </div>
 
-              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d291.3022173260152!2d106.71497768803597!3d10.789865612685148!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528ac94c4fce7%3A0x44ca63bfd5427e65!2zQ8O0bmcgVHkgQ-G7lSBQaOG6p24gS2hvYSBI4buNYyBL4bu5IFRodeG6rXQgVMOibSDEkOG7qWM!5e0!3m2!1svi!2s!4v1618303451037!5m2!1svi!2s"  frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen>></iframe>
             </div>
 
           </div>
@@ -713,9 +722,15 @@
                   <input type="email" class="form-control" name="email" id="email" required>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="name">Chủ đề</label>
-                <input type="text" class="form-control" name="subject" id="subject" required>
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="name">Số điện thoại</label>
+                  <input type="tel" name="phone" class="form-control" id="phone" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="name">Chủ đề</label>
+                    <input type="text" class="form-control" name="subject" id="subject" required>
+                  </div>
               </div>
               <div class="form-group">
                 <label for="name">Nội dung</label>
@@ -761,11 +776,9 @@
           <div class="col-lg-3 col-md-6 footer-contact">
             <h3>NGAY & LUÔN</h3>
             <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
+              142/9 Ngô Tất Tố, P.22, Q.Bình Thạnh <br><br>
+              <strong>Phone:</strong> 0909.27.99.55 - 036.282.2241<br>
+              <strong>Email:</strong> caominhnhat2110@gmail.com<br>
             </p>
           </div>
 
@@ -835,6 +848,7 @@
 
   <!-- Template Main JS File -->
   <script src="public/front_ent/js/main.js"></script>
+
 <!-- Load Facebook SDK for JavaScript -->
 <div id="fb-root"></div>
 <script>
@@ -849,7 +863,7 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+  js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
@@ -858,6 +872,7 @@
   attribution="setup_tool"
   page_id="107353267862744">
 </div>
+
 </body>
 
 </html>
