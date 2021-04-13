@@ -42,7 +42,7 @@
   <header id="header" class="fixed-top ">
     <div class="container d-flex align-items-center">
 
-      <h1 class="logo me-auto"><a href="index.html">NGAY & LUÔN</a></h1>
+      <h1 class="logo me-auto"><a href="index.html">NGAY LUÔN</a></h1>
       <!-- Uncomment below if you prefer to use an image logo -->
       <!-- <a href="index.html" class="logo me-auto"><img src="public/front_ent/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -71,7 +71,7 @@
             </ul>
           </li> --}}
           <li><a class="nav-link scrollto" href="#contact">LIÊN HỆ</a></li>
-          <li><a class="getstarted scrollto" href="#about">ĐĂNG KÝ</a></li>
+          {{-- <li><a class="getstarted scrollto" href="#about">ĐĂNG KÝ</a></li> --}}
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -87,8 +87,7 @@
         <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
           <h1>ỨNG DỤNG CÔNG NGHỆ
             GIAO HÀNG TRONG NGÀY</h1>
-          <h2>Là đối tác tin cậy  được tin dùng từ các thương thiệu hàng đầu Lazada, Sendo, 
-            Unilever,... Ngay & Luôn cam kết dịch vụ giao hàng 6h trong ngày với chi phí 
+          <h2>Là đối tác tin cậy  được tin dùng từ các thương thiệu hàng đầu Ngay & Luôn cam kết dịch vụ giao hàng 6h trong ngày với chi phí 
             RẺ NHẤT và tỉ lệ hoàn thành đơn hàng CAO NHẤT đến 98%.</h2>
           <div class="d-flex justify-content-center justify-content-lg-start">
             <a href="#about" class="btn-get-started scrollto">Tìm hiểu thêm</a>
