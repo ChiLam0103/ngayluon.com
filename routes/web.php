@@ -16,12 +16,12 @@ Route::post('/registerPage', 'Admin\User\CollaboratorController@postRegister');
 Route::get('/logout', 'Admin\User\CollaboratorController@logout');
 
 Auth::routes();
-// Route::get('/', function () {
-//     return view('front-ent.element.index');
-// });
 Route::get('/', function () {
-    return redirect('/admin/report');
+    return view('front-ent.element.index2');
 });
+// Route::get('/', function () {
+//     return redirect('/admin/report');
+// });
 Route::group(['prefix' => 'front-ent', 'namespace' => 'UI'], function () {
     Route::post('/login', 'UserController@login');
     Route::get('/logout', 'UserController@logout');
