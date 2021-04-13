@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
   visibility: hidden;
   opacity: 0;
   right: 15px;
-  bottom: 15px;
+  bottom: 100px;
   z-index: 996;
   background: #dc3545;
   width: 40px;
