@@ -158,6 +158,7 @@
     {{-- <div id="shipper-online" style="display: none">{{ @$shipperOnline }}</div> --}}
 @endsection
 @push('script')
+    <script src="{{ asset('public/js/action-user.js') }}"></script>
     <script>
         // $(document).ready(function(){
         //     var shipperOnline = $('#shipper-online').html();

@@ -91,8 +91,22 @@
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="refunded">Đã chuyển hoàn</label></div>
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ</label></div>
         </div>
+       
         <div class="col-lg-10" id="table_booking">
-            @include('admin.table_paging', [
+            <table id="example" class="display boder portlet box green" width="100%">
+                <thead>
+                    <tr>
+                        <th>Ảnh đơn hàng</th>
+                        <th>UUID</th>
+                        <th>Người gửi</th>
+                        <th>Người nhận</th>
+                        <th>Giá</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                </thead>
+            </table>
+            {{-- @include('admin.table_paging', [
                 'id' => 'all_booking',
                 'title' => [
                         'caption' => 'Dữ liệu đơn hàng',
@@ -110,7 +124,7 @@
                         ['data' => 'status', 'title' => 'Trạng thái'],
                         ['data' => 'created_at', 'title' => 'Ngày tạo'],
                 ]
-                ])
+                ]) --}}
         </div>
     </div>
 
@@ -182,46 +196,56 @@
     @include('admin.partial.modal.detail_booking')
 @endsection
 @push('script')
+    <script src="{{ asset('public/js/action-booking.js') }}"></script>
     <script>
-        lightbox.option({
-            'resizeDuration': 200,
-            'wrapAround': true,
-            'showImageNumberLabel': true,
-        });
-        function loadWard(id) {
-            $("#ward option[value!='-1']").remove();
-            $.ajax({
-                type: "GET",
-                url: '{{url('/ajax/get_ward/')}}/' + id
-            }).done(function (msg) {
-                var i;
-                for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@$user->ward_id}}' || msg[i]['id'] == '{{old('ward_id')}}') {
-                        $('select[name="ward_id"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
-                    } else {
-                        $('select[name="ward_id"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
-                    }
-                }
-            });
+    //     var t = $('#example').DataTable();
+    // var counter = 1;
 
-        }
-        setTimeout(function(){ $('[data-toggle="popover"]').popover(); }, 1000);
+    // $('#addRow').on( 'click', function () {
+    //     $("#all_booking").DataTable().row.add( [
+    //         counter +'.1',
+    //         counter +'.2',
+    //         counter +'.3',
+    //         counter +'.4',
+    //         counter +'.5'
+    //     ] ).draw( false );
 
+    //     counter++;
+    // } );
+    
+    // Automatically add a first row of data
 
-        function changeUrl(data) {
-            var href = $('#owe_submit').attr('href');
-            if ($('#owe').is(':checked')){
-                if (href.indexOf('?owe=0') > -1){
-                    $('#owe_submit').attr("href", href.replace('?owe=0', '?owe=1'));
-                }else{
-                    $('#owe_submit').attr("href", href+'?owe=1');
-                }
-            }else {
-                $('#owe_submit').attr("href",  href.replace('?owe=1', '?owe=0'));
-            }
-        }
+    // function loadWard(id) {
+    //         $("#ward option[value!='-1']").remove();
+    //         $.ajax({
+    //             type: "GET",
+    //             url: '{{url('/ajax/get_ward/')}}/' + id
+    //         }).done(function (msg) {
+    //             var i;
+    //             for (i = 0; i < msg.length; i++) {
+    //                 if (msg[i]['id'] == '{{@$user->ward_id}}' || msg[i]['id'] == '{{old('ward_id')}}') {
+    //                     $('select[name="ward_id"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+    //                 } else {
+    //                     $('select[name="ward_id"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+    //                 }
+    //             }
+    //         });
 
-        function loadListBoook(type_assign) {
+    // }
+
+    // function changeUrl(data) {
+    //         var href = $('#owe_submit').attr('href');
+    //         if ($('#owe').is(':checked')){
+    //             if (href.indexOf('?owe=0') > -1){
+    //                 $('#owe_submit').attr("href", href.replace('?owe=0', '?owe=1'));
+    //             }else{
+    //                 $('#owe_submit').attr("href", href+'?owe=1');
+    //             }
+    //         }else {
+    //             $('#owe_submit').attr("href",  href.replace('?owe=1', '?owe=0'));
+    //         }
+    // }
+    function loadListBoook(type_assign) {
             $.ajax({
                 type: "GET",
                 url: "{{ route('get_quick_assign_new') }}",
@@ -268,102 +292,34 @@
                 }
                 $('#quickAssignModal').modal('show');
             });
-        }
+    }
+    $(document).ready(function(){
+            
+            // var province = 50;
+            // $("#district option[value!='-1']").remove();
+            // $.ajax({
+            //     type: "GET",
+            //     url: "{{url('/ajax/get_district/')}}/" + province
+            // }).done(function (msg) {
+            //     var i;
+            //     for (i = 0; i < msg.length; i++) {
+            //         if (msg[i]['id'] == '{{@$user->district_id}}' || msg[i]['id'] == '{{old('district_id')}}') {
+            //             $('select[name="district_id"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+            //         } else {
+            //             $('select[name="district_id"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+            //         }
+            //     }
+            //     if (typeof $('select[name=district_id]').val() !== 'undefined') {
+            //         loadWard($('select[name=district_id]').val());
+            //     } else if ("{{old('district_id')}}") {
+            //         loadWard('{{old('district_id')}}');
+            //     } else {
+            //         loadWard(msg[0]['id']);
 
-        $(document).ready(function(){
-            $('#status_booking input[name=booking_status]').change(function() {
-                var table = $("#all_booking tbody");
-                table.empty();
-                // table.clear();
-                $.ajax({
-                    url: '{!! url('/ajax/get_booking_status') !!}',
-                    method: "GET",
-                    data: {status: this.value,},  
-                    success: function (data) {
-                        // table.clear();
-                        $.each(data.data, function (a, b) {
-                            var class_tr= (a % 2 == 0) ? "odd" : "even";
-                            var string= "<tr role='row' class='"+class_tr+"'><td class='sorting_1'> "+b.image_order+"</td>" +
-                                "<td>"+b.uuid+"</td>"+
-                                "<td>" + b.send_name + "</td>" +
-                                "<td>" + b.receive_name + "</td>" +
-                                "<td>" + b.price + "</td>" +
-                                "<td>" + b.status + "</td>" +
-                                "<td>" + b.created_at + "</td></tr>";
-                            $('.table-scrollable').append(string);
-                        });
-                       table.DataTable();
-                      
-                        // table.rows.add($.map(this, function (item) {
-                        //     return {
-                        //         uuid: item.uuid,
-                        //     };
-                        // })).draw();
-                    }
-                });
-              
-            });
-            var province = 50;
-            $("#district option[value!='-1']").remove();
-            $.ajax({
-                type: "GET",
-                url: "{{url('/ajax/get_district/')}}/" + province
-            }).done(function (msg) {
-                var i;
-                for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@$user->district_id}}' || msg[i]['id'] == '{{old('district_id')}}') {
-                        $('select[name="district_id"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
-                    } else {
-                        $('select[name="district_id"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
-                    }
-                }
-                if (typeof $('select[name=district_id]').val() !== 'undefined') {
-                    loadWard($('select[name=district_id]').val());
-                } else if ("{{old('district_id')}}") {
-                    loadWard('{{old('district_id')}}');
-                } else {
-                    loadWard(msg[0]['id']);
-
-                }
-            });
-            $("#quick-assign").click(function(){
-                $("#type-assign").val('no_assign');
-                loadListBoook('no_assign');
-            });
-
-            $( "#type-assign" ).change(function() {
-                loadListBoook($(this).val());
-            });
-
-            $('#save-quick-assign').click(function(e){
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('post_quick_assign_new') }}",
-                    data: {
-                        inputs: $('#form-quick-assign').serializeArray(),
-                        _token: $("input[name='_token']").val(),
-                        type_assign: $('#type-assign').val()
-                    },
-                    dataType: "JSON"
-                }).done(function (msg) {
-                    if (msg.status == 'success') {
-                        $('#quickAssignModal').modal('hide');
-                        location.reload();
-                    } else {
-                        $('#msg-error').html(msg.status);
-                    }
-                });
-            })
-
-            $('#check-all').change(function(){
-                var checkboxes = $(this).closest('form').find(':checkbox');
-                if($(this).prop('checked')) {
-                  checkboxes.prop('checked', true);
-                } else {
-                  checkboxes.prop('checked', false);
-                }
-            });
-        });
+            //     }
+            // });
+            
+    });
        
     </script>
   

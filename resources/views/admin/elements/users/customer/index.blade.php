@@ -130,6 +130,7 @@
 @endsection
 
 @push('script')
+    <script src="{{ asset('public/js/action-user.js') }}"></script>
     <script>
         let user_id = 0;
         let title = '';

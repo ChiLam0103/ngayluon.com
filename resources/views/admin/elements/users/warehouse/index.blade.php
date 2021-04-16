@@ -43,6 +43,7 @@
    @include('admin.partial.modal.detail_img')
 @endsection
 @push('script')
+    <script src="{{ asset('public/js/action-user.js') }}"></script>
     <script>
         $("#modalUser #btnSave").on("click", function (event) {
             var id = $("#modalUser .action").attr('id');
