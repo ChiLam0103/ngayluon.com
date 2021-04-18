@@ -36,7 +36,6 @@ $(document).ready(function () {
       checkboxes.prop("checked", false);
     }
   });
-
 });
 lightbox.option({
   resizeDuration: 200,
@@ -117,12 +116,18 @@ $(document).on("click", ".uuid", function () {
   });
   $("#detailBooking").modal("show");
 });
+//modal add new booking
+$(document).on('click', '#btnAddNewBooking', function () {
+  $('.modal-title').text('Thêm thông tin đơn hàng');
+  $('#modalBooking .action').attr('id', 'addBooking');
+  $('#modalBooking').modal('show');
+});
 setTimeout(function () {
   $('[data-toggle="popover"]').popover();
 }, 1000);
 
 //actions table booking
-var table = $("#example").DataTable({
+var table = $("#list_booking").DataTable({
   order: [[0, "desc"]],
   ajax: {
     url: "../ajax/get_booking_status?status=all",
@@ -131,21 +136,22 @@ var table = $("#example").DataTable({
   serverSide: true,
   processing: true,
   columns: [
-    { data: "image_order" ,title: "Ảnh đơn hàng"},
-    { data: "uuid",title:"ID" },
-    { data: "send_name",title:"Người gửi" },
-    { data: "receive_name",title:"Người nhận" },
-    { data: "price",title:"Giá" },
-    { data: "status",title:"Trạng thái" },
-    { data: "created_at",title:"Ngày tạo" },
+    { data: "action", title: "Hành động" },
+    { data: "image_order", title: "Ảnh đơn hàng" },
+    { data: "uuid", title: "ID" },
+    { data: "send_name", title: "Người gửi" },
+    { data: "receive_name", title: "Người nhận" },
+    { data: "price", title: "Giá" },
+    { data: "status", title: "Trạng thái" },
+    { data: "created_at", title: "Ngày tạo" },
   ],
 });
 $("#status_booking input[name=booking_status]").change(function () {
-  table = $("#example").DataTable();
+  table = $("#list_booking").DataTable();
   table.destroy();
-  $("#example").empty();
+  $("#list_booking").empty();
 
-  $("#example").DataTable({
+  $("#list_booking").DataTable({
     order: [[0, "desc"]],
     ajax: {
       url: "../ajax/get_booking_status?status=" + this.value,
@@ -154,6 +160,7 @@ $("#status_booking input[name=booking_status]").change(function () {
     serverSide: true,
     processing: true,
     columns: [
+      { data: "action", title: "Hành động" },
       { data: "image_order", title: "Ảnh đơn hàng" },
       { data: "uuid", title: "ID" },
       { data: "send_name", title: "Người gửi" },

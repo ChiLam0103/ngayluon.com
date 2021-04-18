@@ -59,6 +59,8 @@
                                 <button type="button" id="quick-assign" class="btn btn-circle btn-primary">
                                     Phân công hàng loạt
                                 </button>
+                                <button type="button" class="btn btn-success " id="btnAddNewBooking"><i class="fa fa-plus"
+                                    aria-hidden="true"></i> Thêm mới</button>
                             </div>
                         </div>
                     </div>
@@ -93,38 +95,8 @@
         </div>
        
         <div class="col-lg-10" id="table_booking">
-            <table id="example" class="display boder portlet box green" width="100%">
-                <thead>
-                    <tr>
-                        <th>Ảnh đơn hàng</th>
-                        <th>ID</th>
-                        <th>Người gửi</th>
-                        <th>Người nhận</th>
-                        <th>Giá</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                    </tr>
-                </thead>
+            <table id="list_booking" class="display boder portlet box green" width="100%">
             </table>
-            {{-- @include('admin.table_paging', [
-                'id' => 'all_booking',
-                'title' => [
-                        'caption' => 'Dữ liệu đơn hàng',
-                        'icon' => 'fa fa-table',
-                        'class' => 'portlet box green',
-                ],
-                'url' => url("/ajax/all_booking"),
-                'columns' => [
-                        // ['data' => 'action', 'title' => 'Hành động', 'orderable' => false],
-                        ['data' => 'image_order', 'title' => 'Ảnh đơn hàng'],
-                        ['data' => 'uuid', 'title' => 'UUID'],
-                        ['data' => 'send_name', 'title' => 'Người gửi'],
-                        ['data' => 'receive_name', 'title' => 'Người nhận'],
-                        ['data' => 'price', 'title' => 'Giá'],
-                        ['data' => 'status', 'title' => 'Trạng thái'],
-                        ['data' => 'created_at', 'title' => 'Ngày tạo'],
-                ]
-                ]) --}}
         </div>
     </div>
 
@@ -194,6 +166,7 @@
     <!-- Modal  -->
     @include('admin.partial.modal.detail_img')
     @include('admin.partial.modal.detail_booking')
+    @include('admin.partial.modal.booking')
 @endsection
 @push('script')
     <script src="{{ asset('public/js/action-booking.js') }}"></script>
