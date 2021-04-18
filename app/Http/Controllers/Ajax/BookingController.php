@@ -62,7 +62,11 @@ class BookingController extends Controller
     public function getBookingStatus(Request $request)
     {
         $booking =new Booking;
-        $booking = $booking->orderBy('id', 'DESC')->where('status',$request->status);
+        if($request->status == "all"){
+            $booking = $booking->orderBy('id', 'DESC');
+        }else{
+            $booking = $booking->orderBy('id', 'DESC')->where('status',$request->status);
+        }
         return datatables()->of($booking)
             ->editColumn('uuid', function ($b) {
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';

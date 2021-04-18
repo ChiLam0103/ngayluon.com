@@ -97,7 +97,7 @@
                 <thead>
                     <tr>
                         <th>Ảnh đơn hàng</th>
-                        <th>UUID</th>
+                        <th>ID</th>
                         <th>Người gửi</th>
                         <th>Người nhận</th>
                         <th>Giá</th>
