@@ -44,23 +44,19 @@
                                 <div class="{{--has-error--}} form-group">
                                     <div class="col-lg-6">
                                         <label class="control-label" for="inputError">Họ tên</label>
-                                        <input class="form-control spinner" value="{{ old( 'name_fr') }}"
-                                               name="name_fr" type="text" placeholder="Nhập tên">
-                                        @if ($errors->has('name_fr'))
-                                            @foreach ($errors->get('name_fr') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
+                                        {{ Form::select('name_id_fr', \App\Models\User::getCustomerOption() , old('name_id_fr'),
+                                        ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'name_id_fr', 'onchange'=>'loadCustomerFr()']) }}
+                                       @if (isset($errors) && $errors->has('name_id_fr'))
+                                           @foreach ($errors->get('name_id_to') as $error)
+                                               <span style="color: red" class="help-block">{!! $error !!}</span>
+                                           @endforeach
+                                       @endif
                                     </div>
                                     <div class="col-lg-6">
                                         <label class="control-label" for="inputError">Họ tên</label>
                                         <input class="form-control spinner" value="{{ old( 'name_to') }}"
                                                name="name_to" type="text" placeholder="Nhập tên">
-                                        @if ($errors->has('name_to'))
-                                            @foreach ($errors->get('name_to') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
+                                        <span style="color: red;" id="name_to_err" class="help-block"></span>
                                     </div>
                                 </div>
                             </div>
@@ -68,10 +64,10 @@
                                 <div class="{{--has-error--}} form-group">
                                     <div class="col-lg-6">
                                         <label class="control-label" for="inputError">Số điện thoại</label>
-                                        <input name="phone_number_fr"
+                                        <input name="phone_number_fr" id="phone_number_fr"
                                                value="{{ old( 'phone_number_fr') }}"
                                                class="form-control spinner" type="text"
-                                               placeholder="Nhập số điện thoại">
+                                               placeholder="Nhập số điện thoại" disabled>
                                         @if ($errors->has('phone_number_fr'))
                                             @foreach ($errors->get('phone_number_fr') as $error)
                                                 <span style="color: red" class="help-block">{!! $error !!}</span>
@@ -84,35 +80,25 @@
                                                value="{{ old( 'phone_number_to') }}"
                                                class="form-control spinner" type="text"
                                                placeholder="Nhập số điện thoại">
-                                        @if ($errors->has('phone_number_to'))
-                                            @foreach ($errors->get('phone_number_to') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
+                                        <span style="color: red;" id="phone_number_to_err" class="help-block"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-3">
                                     <label>Tỉnh/Thành phố</label>
-                                    {{ Form::select('province_id_fr', \App\Models\Province::getProvinceOption() , old('province_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'province_fr', 'onchange'=>'loadDistrictFrom()']) }}
+                                    {{ Form::select('province_id_fr', \App\Models\Province::getProvinceOption() , old('province_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'province_fr', 'onchange'=>'loadDistrictFrom()', 'disabled'=>'disabled']) }}
                                     @if (isset($errors) && $errors->has('province_id_fr'))
                                         @foreach ($errors->get('province_id_fr') as $error)
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
-                                    {{--<select onchange="loadDistrictFrom()" id="province_fr" name="province_id_fr"
-                                            class="form-control">
-                                        @foreach($province as $p)
-                                            <option value="{!! $p->id !!}{{ $p->id == old('province_id_fr') ? "selected" : ""  }}">{!! $p->name !!}</option>
-                                        @endforeach
-                                    </select>--}}
                                 </div>
                                 <div class="col-lg-3">
                                     <label>Quận/Huyện</label>
                                     <select id="district_fr" onchange="loadWardFrom(this.value)"
                                             name="district_id_fr"
-                                            class="form-control">
+                                            class="form-control" disabled>
                                     </select>
                                     @if (isset($errors) && $errors->has('district_id_fr'))
                                         @foreach ($errors->get('district_id_fr') as $error)
@@ -146,13 +132,13 @@
                             <div class="row" style="margin-top: 15px">
                                 <div class="col-lg-3">
                                     <label>Xã/Phường</label>
-                                    <select id="ward_fr" name="ward_id_fr" class="form-control">
+                                    <select id="ward_fr" name="ward_id_fr" class="form-control" disabled>
                                     </select>
                                 </div>
                                 <div class="col-lg-3">
                                     <label>Số nhà</label>
-                                    <input name="home_number_fr" class="form-control spinner" type="text"
-                                           value="{{ old('home_number_fr') }}" placeholder="Nhập số nhà">
+                                    <input name="home_number_fr" class="form-control spinner" type="text" id="home_number_fr"
+                                           value="{{ old('home_number_fr') }}" placeholder="Nhập số nhà" disabled>
                                     @if ($errors->has('home_number_fr'))
                                         @foreach ($errors->get('home_number_fr') as $error)
                                             <span style="color: red"
@@ -169,12 +155,7 @@
                                     <label>Số nhà</label>
                                     <input name="home_number_to" class="form-control spinner" type="text" value="{{ old('home_number_to') }}"
                                            placeholder="Nhập số nhà">
-                                    @if ($errors->has('home_number_to'))
-                                        @foreach ($errors->get('home_number_to') as $error)
-                                            <span style="color: red"
-                                                  class="help-block">{!! $error !!}</span>
-                                        @endforeach
-                                    @endif
+                                    <span style="color: red;" id="home_number_to_err" class="help-block"></span>
                                 </div>
                             </div>
                             <legend style="margin-top: 20px">Thông tin cơ bản</legend>
@@ -185,19 +166,9 @@
                                         <input name="name" value="{{ old('name') }}"
                                                class="form-control spinner" type="text"
                                                placeholder="Nhập tên đơn hàng">
-                                        @if ($errors->has('name'))
-                                            @foreach ($errors->get('name') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
+                                        <span style="color: red;" id="name_err" class="help-block"></span>
                                     </div>
-                                    {{-- <div class="col-lg-3">
-                                        <label>Phương thức nhận hàng</label>
-                                        <select name="receive_type" class="form-control">
-                                            <option value="1">Nhận hàng tại nhà</option>
-                                            <option value="2">Nhận hàng tại bưu cục</option>
-                                        </select>
-                                    </div> --}}
+                                  
                                     <div class="col-lg-3">
                                         <label>Ghi chú bắt buộc</label>
                                         <select name="payment_type" class="form-control">
@@ -205,14 +176,7 @@
                                             <option value="2">Người nhận trả cước</option>
                                         </select>
                                     </div>
-                                    {{-- <div class="col-lg-3">
-                                        <label>Phương thức vận chuyển</label>
-                                        <select name="transport_type" class="form-control">
-                                            <!-- <option value="2">Giao tiết kiệm</option> -->
-                                            <option value="1">Giao chuẩn</option>
-                                            <option value="3">Giao siêu tốc</option>
-                                        </select>
-                                    </div> --}}
+                                   
                                     <div class="col-lg-3">
                                         <label class="control-label" for="inputError">Tiền thu hộ</label>
                                         <input id="cod" name="cod" value="{{ old('cod') }}"
@@ -278,8 +242,10 @@
 </div>
 @push('script')
     <script>
+        //load info
         loadDistrictFrom();
         loadDistrictTo();
+        loadCustomerFr();
         function loadDistrictFrom() {
             var province_fr = $('#province_fr').val();
             $("#district_fr option[value!='-1']").remove();
@@ -357,6 +323,18 @@
                         $('select[name="ward_id_to"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
                     }
                 }
+            });
+        }
+        function loadCustomerFr() {
+            var name_id_fr = $('#name_id_fr').val();
+            $.ajax({
+                type: "GET",
+                url: '{{url('/ajax/detail_user')}}/' + name_id_fr
+            }).done(function (msg) {
+                $("#phone_number_fr").val(msg.user.phone_number);
+                $("#home_number_fr").val(msg.user.home_number);
+                $('select[name="district_id_fr"] option[value="'+msg.user.district_id+'"]').prop('selected', true);
+                $('select[name="ward_id_fr"] option[value="'+msg.user.ward_id+'"]').prop('selected', true);
             });
         }
     </script>

@@ -51,7 +51,7 @@
                         {{csrf_field()}}
                         <input type="hidden" id="district_id" name="district">
                         <div class="col-lg-12">
-                            <label>Tỉnh/Thành phố</label>
+                            <label>Khu vực</label>
                             {{ Form::select('district_type', \App\Models\DistrictType::getAllOption() , old('district_type'),
                                  ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'district_type']) }}
                         </div>
@@ -127,8 +127,11 @@
                     if (f == 'district_name') {
                         f = 'Tên huyện';
                     }
-                    if (f == 'district_type_name') {
-                        f = 'Loại';
+                    if (f == 'district_type_area') {
+                        f = 'Khu vực';
+                    }
+                    if (f == 'district_type_price') {
+                        f = 'Mức giá';
                     }
                     $(".district thead tr").append('<th>' + f + '</th>');
                 });
@@ -163,7 +166,8 @@
                     }
                     $("#" + num + "").append('<td>' + data_rep.id + '</td>');
                     $("#" + num + "").append('<td>' + data_rep.district_name + '</td>');
-                    $("#" + num + "").append('<td>' + data_rep.district_type_name + '</td>');
+                    $("#" + num + "").append('<td>' + data_rep.district_type_area + '</td>');
+                    $("#" + num + "").append('<td>' + formatNumber(data_rep.district_type_price,".",",") + '</td>');
                     $("#" + num + "").append('<td>' + btn + '</td>');
                     $("#" + num + "").append('<td> <button onclick="showModal(' + data_rep.id + ')" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> sửa</button> <button onclick="showModalInfo(' + data_rep.id + ')" class="btn btn-xs btn-success"><i class="fa fa-eye"></i> xem</button></td>');
                     num += 1;

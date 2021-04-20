@@ -67,7 +67,7 @@
                 </form>
             </div>
         </div>
-        <div class="col-lg-2" id="status_booking">
+        <div class="col-lg-2 col-md-2" id="status_booking">
             <h5><b>Trạng thái đơn hàng</b></h5>
             <div><label><input type="radio" class="option-input radio" name="booking_status" value="new">Chờ xử lý</label> </div>
             <div><label><input type="radio" class="option-input radio" name="booking_status" value="warehouse">Trong kho</label> </div>
@@ -94,7 +94,7 @@
             <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ</label></div>
         </div>
        
-        <div class="col-lg-10" id="table_booking">
+        <div class="col-lg-10 col-md-10" id="table_booking">
             <table id="list_booking" class="display boder portlet box green" width="100%">
             </table>
         </div>

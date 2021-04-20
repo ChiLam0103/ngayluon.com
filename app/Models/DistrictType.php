@@ -17,7 +17,7 @@ class DistrictType extends Model
         $data = [];
         $province = DistrictType::all();
         foreach ($province as $p) {
-            $data[$p->id] = $p->name;
+            $data[$p->id] = $p->area . ' - ' . number_format($p->price);
         }
         return $data;
     }

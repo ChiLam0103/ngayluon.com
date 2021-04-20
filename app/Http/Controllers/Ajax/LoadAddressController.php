@@ -39,7 +39,7 @@ class LoadAddressController extends Controller
     public function loadDataDistrict($id)
     {
         $district = DB::table('districts')->join('district_types', 'districts.district_type', '=', 'district_types.id')
-            ->where('districts.provinceId', $id)->select('districts.id', 'districts.name as district_name', 'district_types.name as district_type_name', 'districts.allow_booking')->get();
+            ->where('districts.provinceId', $id)->select('districts.id', 'districts.name as district_name',  'district_types.area as district_type_area','district_types.price as district_type_price','districts.allow_booking')->get();
         return $district;
     }
 

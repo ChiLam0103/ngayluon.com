@@ -119,6 +119,83 @@ class BookingController extends Controller
             ->rawColumns(['uuid','image_order','price','status','action'])
             ->make(true);
     }
+    public static function generateNo($type)
+    {
+        $name = '';
+        switch ($type) {
+            case 'admin':
+                $name = "AD";
+                break;
+            case 'warehouse':
+                $name = "WH";
+                break;
+            case 'shipper':
+                $name = "SP";
+                break;
+            case 'customer':
+                $name = "CT";
+                break;
+        }
+
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $count = User::where('role', $type)->count();
+        $count = (int) $count + 1;
+
+        do {
+            $no = sprintf($name . "%05d", $count);
+            $count++;
+        } while (User::where('uuid', $no)->first());
+        return $no;
+    }
+    public function actionBooking(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            ($request->action == "store") ? ($data = new Booking()) : ($data = Booking::where('id', $request->id)->first());
+
+            if ($request->action == "store") {
+                $uuid = UserController::generateNo($request->role);
+                $data->uuid = $uuid;
+                $data->email = $request->email;
+                $data->phone_number = $request->phone_number;
+                $data->password = Hash::make($request->password);
+            } else {
+                if ($request->password != null) {
+                    $data->password = Hash::make($request->password);
+                }
+            }
+            $data->name = $request->name;
+            $data->home_number = $request->home_number;
+            $data->province_id = $request->province_id;
+            $data->district_id = $request->district_id;
+            $data->ward_id = $request->ward_id;
+            $data->birth_day = $request->birth_day;
+            $data->id_number = $request->id_number;
+            $data->bank_account = $request->bank_account;
+            $data->bank_account_number = $request->bank_account_number;
+            $data->bank_name = $request->bank_name;
+            $data->bank_branch = $request->bank_branch;
+            $data->role = $request->role;
+            if($data->role == "customer") 
+            {
+                $data->is_advance_money = $request->is_advance_money;
+            }
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $name = $file->getClientOriginalName();
+                $exection = $file->getClientOriginalExtension();
+                $file->move(public_path() . '/img/avatar/', $name);
+                $data->avatar = '/public/img/avatar/' . $name;
+            }
+
+            $data->save();
+            DB::commit();
+            return json_encode(true);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return false;
+        }
+    }
     public function newBooking()
     {
         if (Auth::user()->role == 'collaborators') {

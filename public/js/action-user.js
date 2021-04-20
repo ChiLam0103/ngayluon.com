@@ -24,6 +24,7 @@ function actionUser(role, action) {
     var email_err = "Trường dữ liêu không đúng định dạng email";
     var phone_err = "Trường dữ liêu không đúng định dạng sdt";
     var unique = "Dữ liệu đã tồn tại";
+    
     var cf_password_err = "Mật khẩu không trùng khớp"; var flag = 0; (name == '') ? ($(' #name_err').text(required)) && (flag = 1) : ($(' #name_err').text(''));
     (email == '') ? ($(' #email_err').text(required)) && (flag = 1) : ($(' #email_err').text(''));
     (phone_number == '') ? ($(' #phone_number_err').text(required)) && (flag = 1) : ($(' #phone_number_err').text(''));
