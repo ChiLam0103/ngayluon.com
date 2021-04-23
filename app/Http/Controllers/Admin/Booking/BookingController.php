@@ -146,9 +146,9 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             $sender_id = null;
-            $receiver_id = null;
+            // $receiver_id = null;
             $sender_check = User::where('phone_number', $req->phone_number_fr)->where('role', 'customer')->where('delete_status', 0)->first();
-            $receiver_check = User::where('phone_number', $req->phone_number_to)->where('role', 'customer')->where('delete_status', 0)->first();
+            // $receiver_check = User::where('phone_number', $req->phone_number_to)->where('role', 'customer')->where('delete_status', 0)->first();
             if (!empty($sender_check)) {
                 $sender_id = $sender_check->id;
             } else {
@@ -164,17 +164,17 @@ class BookingController extends Controller
                     $sender_id = $user->id;
                 }
             }
-            if (!empty($receiver_check)) {
-                $receiver_id = $receiver_check->id;
-            } else {
-                $user = new User();
-                $user->phone_number = $req->phone_number_to;
-                $user->save();
-                $receiver_id = $user->id;
-            }
+            // if (!empty($receiver_check)) {
+            //     $receiver_id = $receiver_check->id;
+            // } else {
+            //     $user = new User();
+            //     $user->phone_number = $req->phone_number_to;
+            //     $user->save();
+            //     $receiver_id = $user->id;
+            // }
             $booking = new Booking();
             $booking->sender_id = $sender_id;
-            $booking->receiver_id = $receiver_id;
+            // $booking->receiver_id = $receiver_id;
             $booking->name = $req->name;
             $booking->send_name = $req->name_fr;
             $booking->send_phone = $req->phone_number_fr;

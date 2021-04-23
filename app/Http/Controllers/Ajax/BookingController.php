@@ -150,44 +150,36 @@ class BookingController extends Controller
 
             if ($request->action == "store") {
                 $uuid = $this->generateBookID();
-                $receiver_id = null;
-                $receiver_check = User::where('phone_number', $request->phone_number_to)->where('role', 'customer')->where('delete_status', 0)->first();
                 $sender = User::where('sender_id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
-                if (!empty($receiver_check)) {
-                    $receiver_id = $receiver_check->id;
-                } else {
-                    $user = new User();
-                    $user->phone_number = $request->phone_number_to;
-                    $user->save();
-                    $receiver_id = $user->id;
-                }
+
+                $data->uuid = $uuid;
+                $data->sender_id = $sender->id;
+                $data->send_province_id = $sender->send_province_id;
+                $data->send_district_id = $sender->send_district_id;
+                $data->send_homenumber = $sender->send_homenumber;
+                $data->send_full_address = $this->getAddress($sender->province_id_fr, $sender->district_id_fr, $sender->ward_id_fr, $sender->home_number_fr);
+                $data->send_name = $sender->send_name;
+                $data->send_phone = $sender->send_phone;
+                $data->status = 'new';
+             
             } else {
-              
+
             }
-            $data->sender_id = $sender->id;
-            $data->send_province_id = $sender->send_province_id;
-            $data->send_district_id = $sender->send_district_id;
-            $data->send_homenumber = $sender->send_homenumber;
-            $data->send_full_address = $this->getAddress($sender->province_id_fr, $sender->district_id_fr, $sender->ward_id_fr, $sender->home_number_fr);
-            $data->send_name = $sender->send_name;
-            $data->send_phone = $sender->send_phone;
+            $data->receive_name = $request->name_to;
+            $data->receive_phone = $request->phone_number_to;
+            $data->receive_province_id = $request->province_id_to;
+            $data->receive_district_id = $request->district_id_to;
+            $data->receive_ward_id = $request->ward_id_to;
+            $data->receive_homenumber = $request->home_number_to;
+            $data->receive_full_address = $this->getAddress($request->province_id_to, $request->district_id_to, $request->ward_id_to, $request->home_number_to);
 
-
-
-
-            $data->home_number = $request->name_to;
-            $data->district_id = $request->phone_number_to;
-            $data->ward_id = $request->province_id_to;
-            $data->ward_id = $request->district_id_to;
-            $data->ward_id = $request->ward_id_to;
-            $data->ward_id = $request->home_number_to;
-            $data->ward_id = $request->name;
-            $data->ward_id = $request->payment_type;
-            $data->ward_id = $request->cod;
-            $data->ward_id = $request->price;
-            $data->ward_id = $request->weight;
-            $data->ward_id = $request->other_note;
-          
+            $data->name = $request->name;
+            $data->payment_type = $request->payment_type;
+            $data->COD = $request->cod;
+            $data->price = $request->price;
+            $data->weight = $request->weight;
+            $data->other_note = $request->other_note;
+           
             if($data->role == "customer") 
             {
                 $data->is_advance_money = $request->is_advance_money;
