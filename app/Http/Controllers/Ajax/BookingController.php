@@ -13,6 +13,9 @@ use App\Models\Collaborator;
 use App\Models\ManagementScope;
 use App\Models\ManagementWardScope;
 use App\Models\User;
+use App\Models\District;
+use App\Models\Province;
+use App\Models\Ward;
 use Carbon\Carbon;
 use function dd;
 use App\Http\Controllers\Controller;
@@ -119,34 +122,26 @@ class BookingController extends Controller
             ->rawColumns(['uuid','image_order','price','status','action'])
             ->make(true);
     }
-    public static function generateNo($type)
+    public static function generateBookID()
     {
-        $name = '';
-        switch ($type) {
-            case 'admin':
-                $name = "AD";
-                break;
-            case 'warehouse':
-                $name = "WH";
-                break;
-            case 'shipper':
-                $name = "SP";
-                break;
-            case 'customer':
-                $name = "CT";
-                break;
-        }
-
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $count = User::where('role', $type)->count();
-        $count = (int) $count + 1;
-
+        $countRecordToday = DB::table('bookings')->whereDate('created_at', date("Y-m-d"))->count();
+        $countRecordToday = (int) $countRecordToday + 1;
         do {
-            $no = sprintf($name . "%05d", $count);
-            $count++;
-        } while (User::where('uuid', $no)->first());
-        return $no;
+            $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);
+            $countRecordToday++;
+        } while (DB::table('bookings')->where('uuid', $id)->first());
+        return $id;
     }
+    
+    protected function getAddress($province, $district, $ward, $home_number)
+    {
+        $province_name = Province::find($province)->name;
+        $district_name = District::find($district)->name;
+        $ward_name = Ward::find($ward)->name;;
+        return $home_number . ', ' . $ward_name . ', ' . $district_name . '. ' . $province_name;
+    }
+
     public function actionBooking(Request $request)
     {
         DB::beginTransaction();
@@ -154,28 +149,45 @@ class BookingController extends Controller
             ($request->action == "store") ? ($data = new Booking()) : ($data = Booking::where('id', $request->id)->first());
 
             if ($request->action == "store") {
-                $uuid = UserController::generateNo($request->role);
-                $data->uuid = $uuid;
-                $data->email = $request->email;
-                $data->phone_number = $request->phone_number;
-                $data->password = Hash::make($request->password);
-            } else {
-                if ($request->password != null) {
-                    $data->password = Hash::make($request->password);
+                $uuid = $this->generateBookID();
+                $receiver_id = null;
+                $receiver_check = User::where('phone_number', $request->phone_number_to)->where('role', 'customer')->where('delete_status', 0)->first();
+                $sender = User::where('sender_id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
+                if (!empty($receiver_check)) {
+                    $receiver_id = $receiver_check->id;
+                } else {
+                    $user = new User();
+                    $user->phone_number = $request->phone_number_to;
+                    $user->save();
+                    $receiver_id = $user->id;
                 }
+            } else {
+              
             }
-            $data->name = $request->name;
-            $data->home_number = $request->home_number;
-            $data->province_id = $request->province_id;
-            $data->district_id = $request->district_id;
-            $data->ward_id = $request->ward_id;
-            $data->birth_day = $request->birth_day;
-            $data->id_number = $request->id_number;
-            $data->bank_account = $request->bank_account;
-            $data->bank_account_number = $request->bank_account_number;
-            $data->bank_name = $request->bank_name;
-            $data->bank_branch = $request->bank_branch;
-            $data->role = $request->role;
+            $data->sender_id = $sender->id;
+            $data->send_province_id = $sender->send_province_id;
+            $data->send_district_id = $sender->send_district_id;
+            $data->send_homenumber = $sender->send_homenumber;
+            $data->send_full_address = $this->getAddress($sender->province_id_fr, $sender->district_id_fr, $sender->ward_id_fr, $sender->home_number_fr);
+            $data->send_name = $sender->send_name;
+            $data->send_phone = $sender->send_phone;
+
+
+
+
+            $data->home_number = $request->name_to;
+            $data->district_id = $request->phone_number_to;
+            $data->ward_id = $request->province_id_to;
+            $data->ward_id = $request->district_id_to;
+            $data->ward_id = $request->ward_id_to;
+            $data->ward_id = $request->home_number_to;
+            $data->ward_id = $request->name;
+            $data->ward_id = $request->payment_type;
+            $data->ward_id = $request->cod;
+            $data->ward_id = $request->price;
+            $data->ward_id = $request->weight;
+            $data->ward_id = $request->other_note;
+          
             if($data->role == "customer") 
             {
                 $data->is_advance_money = $request->is_advance_money;
