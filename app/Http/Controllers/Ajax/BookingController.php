@@ -76,9 +76,9 @@ class BookingController extends Controller
             $action = [];
             $check = BookDelivery::where('book_id', $b->id)->where('category', 'receive')->where('status', 'processing')->first();
             if (empty($check)) {
-                $action[] = '<div style="display: inline-flex"><a href="' . url('admin/booking/assign/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-motorcycle"></i> Phân công</a>';
+                $action[] = '<div style="display: inline-flex"><a href="#"  name="' . $b->id . '"  class="btn btn-xs btn-primary btnAssign"><i class="fa fa-motorcycle"></i> Phân công</a>';
             } else {
-                $action[] = '<div style="display: inline-flex"><a href="' . url('admin/booking/reassign/taking/' . $b->id) . '" class="btn btn-xs btn-success"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
+                $action[] = '<div style="display: inline-flex"><a href="#" name="' . $b->id . '" class="btn btn-xs btn-success btnReassign"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
                 if ($b->payment_type == 1) {
                     $action[] = '<a data-toggle="popover" data-placement="top" data-html="true" title="<p><b>Đã thanh toán</b></p>" 
                         data-content="<div style=\'display: inline-flex\'><input id=\'owe\' style=\'transform: scale(1.5);\' onclick=\'changeUrl()\' type=\'checkbox\'> 
@@ -92,7 +92,6 @@ class BookingController extends Controller
             $action[] = '<a style="background: rgba(131,1,7,0.98)" href="' . url('admin/booking/cancel/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn hủy đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-remove"></i> Hủy</a></div>';
 
             $action[] = '<div style="margin-top: 5px; display: inline-flex"><a href="' . url('admin/booking/print/new/' . $b->id) . '" class="btn btn-xs btn-info"><i class="fa fa-print" aria-hidden="true"></i> in hóa đơn</a>';
-            // $action[] = '<a style="background: rgba(159,158,25,0.81)" href="' . url('admin/booking/update/new/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Sửa</a>';
             $action[] = '<a style="background: rgba(159,158,25,0.81)" href="#"  name="' . $b->id . '" class="btn btn-xs btn-primary btnEdit"><i class="fa fa-edit"></i> Sửa</a>';
             $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
             return implode(' ', $action);

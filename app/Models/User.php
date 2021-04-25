@@ -79,13 +79,10 @@ class User extends Authenticatable
     //     return $this->hasMany('App\Models\Device', 'user_id')->where('device_type', 'android');
     // }
 
-    static function getCustomerOption($default = false)
+    static function getUserOption($role)
     {
         $data = [];
-        if ($default){
-            $data[-1] = 'Tất cả';
-        }
-        $user = User::orderBy('name', 'asc')->where('role','customer')->get();
+        $user = User::orderBy('name', 'asc')->where('role',$role)->get();
         foreach ($user as $p) {
             $data[$p->id] = $p->name . ' - ' . $p->phone_number;
         }

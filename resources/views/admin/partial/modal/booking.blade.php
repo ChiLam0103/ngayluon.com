@@ -44,7 +44,7 @@
                                 <div class="{{--has-error--}} form-group">
                                     <div class="col-lg-6">
                                         <label class="control-label" for="inputError">Họ tên</label>
-                                        {{ Form::select('name_id_fr', \App\Models\User::getCustomerOption() , old('name_id_fr'),
+                                        {{ Form::select('name_id_fr', \App\Models\User::getUserOption('customer') , old('name_id_fr'),
                                         ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'name_id_fr', 'onchange'=>'loadCustomerFr()']) }}
                                        @if (isset($errors) && $errors->has('name_id_fr'))
                                            @foreach ($errors->get('name_id_to') as $error)

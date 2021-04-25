@@ -205,6 +205,20 @@ $(document).ready(function () {
     });
     $("#detailBooking").modal("show");
   });
+  //modal add assign booking
+  $(document).on('click', '.btnAssign', function () {
+    var id = $(this).attr("name");
+    $('#modalBooking .action').attr('id', 'Assign');
+    $('.modal-title').text('Phân công đơn hàng');
+    $('#modalAssignBooking').modal('show');
+  });
+  //modal add reassign booking
+  $(document).on('click', '.btnReassign', function () {
+    var id = $(this).attr("name");
+    $('#modalBooking .action').attr('id', 'Reassign');
+    $('.modal-title').text('Phân công lại đơn hàng');
+    $('#modalAssignBooking').modal('show');
+  });
 });
 lightbox.option({
   resizeDuration: 200,
