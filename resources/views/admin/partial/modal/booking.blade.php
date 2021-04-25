@@ -171,7 +171,7 @@
                                   
                                     <div class="col-lg-3">
                                         <label>Ghi chú bắt buộc</label>
-                                        <select name="payment_type" class="form-control">
+                                        <select name="payment_type" id="payment_type" class="form-control">
                                             <option value="1">Người gửi trả cước</option>
                                             <option value="2">Người nhận trả cước</option>
                                         </select>

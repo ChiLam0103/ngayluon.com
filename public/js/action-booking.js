@@ -75,6 +75,61 @@ $(document).ready(function () {
     $('.modal-title').text('Thêm thông tin đơn hàng');
     $('#modalBooking .action').attr('id', 'addBooking');
     $('#modalBooking').modal('show');
+    $("#name_id_fr").prop("disabled", false);
+    $("input[name=name_to]").val('');
+    $("input[name=phone_number_to]").val('');
+    $("input[name=home_number_to]").val('');
+    $("input[name=name]").val('');
+    $("input[name=cod]").val('');
+    $("input[name=price]").val('');
+    $("input[name=weight]").val('');
+    $("input[name=other_note]").val('');
+    $('.imgUser').attr('src', '');
+    $(' #name_to_err').text('');
+    $('#phone_number_to_err').text('');
+    $('#home_number_to_err').text('');
+    $('#name_err').text('');
+  });
+  //modal add edit booking
+  $(document).on('click', '.btnEdit', function () {
+    var id = $(this).attr("name");
+    $('.modal-title').text('Chỉnh sửa thông tin đơn hàng');
+    $('#modalBooking .action').attr('id', 'editBooking');
+    $('#modalBooking').modal('show');
+    $("#name_id_fr").prop("disabled", "disabled");
+
+    $.ajax({
+      type: "GET",
+      url: "../ajax/detail_booking/" + id,
+      }).done(function (data) {
+      $("input[name=id]").val(data.booking.id);
+      $('#name_id_fr option[value="' + data.booking.sender_id + '"]').prop('selected', true);
+      $('#province_fr option[value="' + data.booking.send_province_id + '"]').prop('selected', true);
+      $("input[name=phone_number_fr]").val(data.booking.send_phone);
+      $('#province_fr option[value="' + data.booking.send_province_id + '"]').prop('selected', true);
+      $('#district_fr option[value="' + data.booking.send_district_id + '"]').prop('selected', true);
+      $('#ward_fr option[value="' + data.booking.send_ward_id + '"]').prop('selected', true);
+      $("input[name=home_number_fr]").val(data.booking.send_homenumber);
+
+      $("input[name=name_to]").val(data.booking.receive_name);
+      $("input[name=phone_number_to]").val(data.booking.receive_phone);
+      $('#province_to option[value="' + data.booking.receive_province_id + '"]').prop('selected', true);
+      $('#district_to option[value="' + data.booking.receive_district_id + '"]').prop('selected', true);
+      $('#ward_to option[value="' + data.booking.receive_ward_id + '"]').prop('selected', true);
+      $("input[name=home_number_to]").val(data.booking.receive_homenumber);
+
+      $("input[name=name]").val(data.booking.name);
+      $('#payment_type option[value="' + data.booking.payment_type + '"]').prop('selected', true);
+      $("input[name=cod]").val(data.booking.COD);
+      $("input[name=price]").val(data.booking.price);
+      $("input[name=weight]").val(data.booking.weight);
+      $("input[name=other_note]").val(data.booking.other_note);
+      $('.imgUser').attr('src', '../public/' + data.booking.image_order);
+      $(' #name_to_err').text('');
+      $('#phone_number_to_err').text('');
+      $('#home_number_to_err').text('');
+      $('#name_err').text('');
+    });
   });
   // modal show detail booking
   $(document).on("click", ".uuid", function () {
@@ -186,15 +241,15 @@ var table = $("#list_booking").DataTable({
 function actionBooking(action) {
   var id = $("input[name=id]").val();
   var avatar = $("#exampleInputFile")[0].files[0];
-  var name_id_fr = $("input[name=name_id_fr]").val();
+  var name_id_fr = $("#name_id_fr option:selected").val();
   var name_to = $("input[name=name_to]").val();
   var phone_number_to = $("input[name=phone_number_to]").val();
-  var province_id_to = $("input[name=province_id_to]").val();
-  var district_id_to = $("input[name=district_id_to]").val();
-  var ward_id_to = $("input[name=ward_id_to]").val();
+  var province_id_to = $("#province_to option:selected").val();
+  var district_id_to = $("#district_to option:selected").val();
+  var ward_id_to = $("#ward_fr option:selected").val();
   var home_number_to = $("input[name=home_number_to]").val();
   var name = $("input[name=name]").val();
-  var payment_type = $("input[name=payment_type]").val();
+  var payment_type = $("#payment_type option:selected").val();
   var cod = $("input[name=cod]").val();
   var price = $("input[name=price]").val();
   var weight = $("input[name=weight]").val();
@@ -212,6 +267,7 @@ function actionBooking(action) {
   if (flag == 1) {
     return false;
   } else {
+    $("#modalBooking #btnSave").prop('disabled', true);
     var formData = new FormData()
     formData.append('_token', $(' [name=_token]').val());
     formData.append('id', id);
@@ -228,7 +284,9 @@ function actionBooking(action) {
     formData.append('price', price);
     formData.append('weight', weight);
     formData.append('other_note', other_note);
+    formData.append('avatar', avatar);
     formData.append('action', action);
+    
     $.ajax({
       type: "post",
       url: "../ajax/action_booking",
@@ -236,6 +294,7 @@ function actionBooking(action) {
       contentType: false,
       data: formData
     }).done(function (res) {
+      $("#modalBooking #btnSave").prop('disabled', true);
       location.reload();
     });
   }

@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\District;
 use App\Models\Province;
 use App\Models\Ward;
+use App\Jobs\NotificationJob;
 use Carbon\Carbon;
 use function dd;
 use App\Http\Controllers\Controller;
@@ -57,7 +58,7 @@ class BookingController extends Controller
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='30'/>");
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../public/img/not-found.png' width='30'/>");
             })
             ->rawColumns(['uuid','image_order'])
             ->make(true);
@@ -91,7 +92,8 @@ class BookingController extends Controller
             $action[] = '<a style="background: rgba(131,1,7,0.98)" href="' . url('admin/booking/cancel/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn hủy đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-remove"></i> Hủy</a></div>';
 
             $action[] = '<div style="margin-top: 5px; display: inline-flex"><a href="' . url('admin/booking/print/new/' . $b->id) . '" class="btn btn-xs btn-info"><i class="fa fa-print" aria-hidden="true"></i> in hóa đơn</a>';
-            $action[] = '<a style="background: rgba(159,158,25,0.81)" href="' . url('admin/booking/update/new/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Sửa</a>';
+            // $action[] = '<a style="background: rgba(159,158,25,0.81)" href="' . url('admin/booking/update/new/' . $b->id) . '" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i> Sửa</a>';
+            $action[] = '<a style="background: rgba(159,158,25,0.81)" href="#"  name="' . $b->id . '" class="btn btn-xs btn-primary btnEdit"><i class="fa fa-edit"></i> Sửa</a>';
             $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
             return implode(' ', $action);
         })
@@ -99,7 +101,7 @@ class BookingController extends Controller
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
             ->editColumn('image_order', function ($b) {
-                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='30'/>");
+                return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../public/img/not-found.png' width='30'/>");
             })
             ->editColumn('price', function ($b) {
                 return number_format($b->price);
@@ -125,12 +127,12 @@ class BookingController extends Controller
     public static function generateBookID()
     {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $countRecordToday = DB::table('bookings')->whereDate('created_at', date("Y-m-d"))->count();
+        $countRecordToday = Booking::whereDate('created_at', date("Y-m-d"))->count();
         $countRecordToday = (int) $countRecordToday + 1;
         do {
             $id = sprintf("DH%s%'.03d", date('ymd') . '-', $countRecordToday);
             $countRecordToday++;
-        } while (DB::table('bookings')->where('uuid', $id)->first());
+        } while (Booking::where('uuid', $id)->first());
         return $id;
     }
     
@@ -147,23 +149,24 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             ($request->action == "store") ? ($data = new Booking()) : ($data = Booking::where('id', $request->id)->first());
-
+            $title='';
             if ($request->action == "store") {
                 $uuid = $this->generateBookID();
-                $sender = User::where('sender_id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
+                $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
 
                 $data->uuid = $uuid;
                 $data->sender_id = $sender->id;
-                $data->send_province_id = $sender->send_province_id;
-                $data->send_district_id = $sender->send_district_id;
-                $data->send_homenumber = $sender->send_homenumber;
-                $data->send_full_address = $this->getAddress($sender->province_id_fr, $sender->district_id_fr, $sender->ward_id_fr, $sender->home_number_fr);
-                $data->send_name = $sender->send_name;
-                $data->send_phone = $sender->send_phone;
+                $data->send_province_id = $sender->province_id;
+                $data->send_district_id = $sender->district_id;
+                $data->send_ward_id = $sender->ward_id;
+                $data->send_homenumber = $sender->home_number;
+                $data->send_full_address = $this->getAddress($sender->province_id, $sender->district_id, $sender->ward_id, $sender->home_number);
+                $data->send_name = $sender->name;
+                $data->send_phone = $sender->phone_number;
                 $data->status = 'new';
-             
+                $title=' vừa được tạo';
             } else {
-
+                $title=' vừa được chỉnh sửa';
             }
             $data->receive_name = $request->name_to;
             $data->receive_phone = $request->phone_number_to;
@@ -179,21 +182,23 @@ class BookingController extends Controller
             $data->price = $request->price;
             $data->weight = $request->weight;
             $data->other_note = $request->other_note;
-           
-            if($data->role == "customer") 
-            {
-                $data->is_advance_money = $request->is_advance_money;
-            }
+          
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
-                $name = $file->getClientOriginalName();
+                $name =  $uuid . '_booking.png';
                 $exection = $file->getClientOriginalExtension();
-                $file->move(public_path() . '/img/avatar/', $name);
-                $data->avatar = '/public/img/avatar/' . $name;
+                $file->move(public_path() . '/img/order/', $name);
+                $data->image_order = '/img/order/' . $name;
             }
 
             $data->save();
             DB::commit();
+            // Thông báo tới admin có đơn hàng mới
+            $bookingTmp = $data->toArray();
+            $bookingTmp['uuid'] = $data->uuid;
+            dispatch(new NotificationJob($bookingTmp, 'admin', $title, 'push_order'));
+            NotificationJob::logBooking($bookingTmp, $title);
+
             return json_encode(true);
         } catch (\Exception $e) {
             DB::rollBack();
