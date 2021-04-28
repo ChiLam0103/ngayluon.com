@@ -1,4 +1,12 @@
 $(document).ready(function () {
+  lightbox.option({
+    resizeDuration: 200,
+    wrapAround: true,
+    showImageNumberLabel: true,
+  });
+  setTimeout(function () {
+    $('[data-toggle="popover"]').popover();
+  }, 1000);
   $("#quick-assign").click(function () {
     $("#type-assign").val("no_assign");
     loadListBoook("no_assign");
@@ -43,6 +51,15 @@ $(document).ready(function () {
       actionBooking("store");
     } else {
       actionBooking("update");
+    }
+  });
+  //action click btn click of modal assign Booking
+  $("#modalAssignBooking #btnSave").on("click", function (event) {
+    var id = $("#modalAssignBooking .action").attr('id');
+    if (id == "Assign") {
+      actionBooking("assign");
+    } else {
+      actionBooking("reassign");
     }
   });
   //change status menu left -> show list booking
@@ -101,7 +118,7 @@ $(document).ready(function () {
     $.ajax({
       type: "GET",
       url: "../ajax/detail_booking/" + id,
-      }).done(function (data) {
+    }).done(function (data) {
       $("input[name=id]").val(data.booking.id);
       $('#name_id_fr option[value="' + data.booking.sender_id + '"]').prop('selected', true);
       $('#province_fr option[value="' + data.booking.send_province_id + '"]').prop('selected', true);
@@ -140,6 +157,19 @@ $(document).ready(function () {
       type: "GET",
       url: "../ajax/detail_booking/" + id,
     }).done(function (msg) {
+      var status_name = '';
+      switch (msg.booking.status) {
+        case 'new':
+          status_name = 'chờ xử lý';
+          break;
+        case 'taking':
+          status_name = "Lấy hàng";
+          break;
+        case 'return':
+          status_name = "Chuyển hoàn";
+          break;
+
+      }
       var payer = msg.booking.payment_type == 1 ? "người gửi" : "người nhận";
       var shipper =
         msg.shipper != null
@@ -183,7 +213,7 @@ $(document).ready(function () {
         "</p> <p>Trả cước: " +
         payer +
         "</p><p>Trạng thái: " +
-        msg.booking.status +
+        status_name +
         "</p> " +
         shipper +
         "";
@@ -220,16 +250,7 @@ $(document).ready(function () {
     $('#modalAssignBooking').modal('show');
   });
 });
-lightbox.option({
-  resizeDuration: 200,
-  wrapAround: true,
-  showImageNumberLabel: true,
-});
 
-
-setTimeout(function () {
-  $('[data-toggle="popover"]').popover();
-}, 1000);
 
 //when load page will show list booking
 var table = $("#list_booking").DataTable({
@@ -269,7 +290,7 @@ function actionBooking(action) {
   var weight = $("input[name=weight]").val();
   var other_note = $("input[name=other_note]").val();
 
-  var flag=0;
+  var flag = 0;
   var required = "Trường dữ liêu bắt buộc";
   var phone_err = "Trường dữ liêu không đúng định dạng sdt";
   (name_to == '') ? ($(' #name_to_err').text(required)) && (flag = 1) : ($(' #name_to_err').text(''));
@@ -300,7 +321,7 @@ function actionBooking(action) {
     formData.append('other_note', other_note);
     formData.append('avatar', avatar);
     formData.append('action', action);
-    
+
     $.ajax({
       type: "post",
       url: "../ajax/action_booking",

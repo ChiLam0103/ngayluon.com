@@ -26,10 +26,12 @@
                         </div>
                         <div class="col-lg-6">
                             <label>Chọn hình thức vận chuyển</label>
-                            <select class="form-control">
-                                <option value="1">Lấy hàng</option>
-                                <option value="2">Giao hàng</option>
-                                <option value="3">Vừa lấy vừa giao hàng</option>
+                            <select class="form-control" name="">
+                                <option value="receive">Lấy hàng</option>
+                                <option value="send">Giao hàng</option>
+                                <option value="receive-and-send">Vừa lấy vừa giao hàng</option>
+                                <option value="return">Trả hàng</option>
+                                <option value="move">Chuyển hoàn</option>
                             </select>
                         </div>
                     </div>

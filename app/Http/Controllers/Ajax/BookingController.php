@@ -51,7 +51,7 @@ class BookingController extends Controller
     }
     public function allBooking()
     {
-        $booking =new Booking;
+        $booking = new Booking;
         $booking = $booking->orderBy('id', 'DESC');
         return datatables()->of($booking)
             ->editColumn('uuid', function ($b) {
@@ -60,42 +60,42 @@ class BookingController extends Controller
             ->editColumn('image_order', function ($b) {
                 return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../public/img/not-found.png' width='30'/>");
             })
-            ->rawColumns(['uuid','image_order'])
+            ->rawColumns(['uuid', 'image_order'])
             ->make(true);
     }
     public function getBookingStatus(Request $request)
     {
-        $booking =new Booking;
-        if($request->status == "all"){
+        $booking = new Booking;
+        if ($request->status == "all") {
             $booking = $booking->orderBy('id', 'DESC');
-        }else{
-            $booking = $booking->orderBy('id', 'DESC')->where('status',$request->status);
+        } else {
+            $booking = $booking->orderBy('id', 'DESC')->where('status', $request->status);
         }
         return datatables()->of($booking)
-        ->addColumn('action', function ($b) {
-            $action = [];
-            $check = BookDelivery::where('book_id', $b->id)->where('category', 'receive')->where('status', 'processing')->first();
-            if (empty($check)) {
-                $action[] = '<div style="display: inline-flex"><a href="#"  name="' . $b->id . '"  class="btn btn-xs btn-primary btnAssign"><i class="fa fa-motorcycle"></i> Phân công</a>';
-            } else {
-                $action[] = '<div style="display: inline-flex"><a href="#" name="' . $b->id . '" class="btn btn-xs btn-success btnReassign"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
-                if ($b->payment_type == 1) {
-                    $action[] = '<a data-toggle="popover" data-placement="top" data-html="true" title="<p><b>Đã thanh toán</b></p>" 
+            ->addColumn('action', function ($b) {
+                $action = [];
+                $check = BookDelivery::where('book_id', $b->id)->where('category', 'receive')->where('status', 'processing')->first();
+                if (empty($check)) {
+                    $action[] = '<div style="display: inline-flex"><a href="#"  name="' . $b->id . '"  class="btn btn-xs btn-primary btnAssign"><i class="fa fa-motorcycle"></i> Phân công</a>';
+                } else {
+                    $action[] = '<div style="display: inline-flex"><a href="#" name="' . $b->id . '" class="btn btn-xs btn-success btnReassign"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
+                    if ($b->payment_type == 1) {
+                        $action[] = '<a data-toggle="popover" data-placement="top" data-html="true" title="<p><b>Đã thanh toán</b></p>" 
                         data-content="<div style=\'display: inline-flex\'><input id=\'owe\' style=\'transform: scale(1.5);\' onclick=\'changeUrl()\' type=\'checkbox\'> 
                         <a id=\'owe_submit\' href=' . url('admin/booking/completed/receive/' . $b->id) . ' class=\'btn btn-xs btn-success\' style=\'background: green; margin-left: 10px\'>
                         <i class=\'fa fa-check\'></i> Thực hiện</a></div>" class="btn btn-xs btn-success" style="background: green">Đã lấy</a>';
-                } else {
-                    $action[] = '<a href="' . url('admin/booking/completed/receive/' . $b->id) . '" class="btn btn-xs btn-success" style="background: green" ><i class="fa fa-check"></i> Đã lấy</a>';
+                    } else {
+                        $action[] = '<a href="' . url('admin/booking/completed/receive/' . $b->id) . '" class="btn btn-xs btn-success" style="background: green" ><i class="fa fa-check"></i> Đã lấy</a>';
+                    }
+                    $action[] = '<a style="background: pink" href="' . url('admin/booking/delay/receive/' . $b->id) . '" class="btn btn-xs btn-warning"><i class="fa fa-clock-o" aria-hidden="true"></i> Delay</a>';
                 }
-                $action[] = '<a style="background: pink" href="' . url('admin/booking/delay/receive/' . $b->id) . '" class="btn btn-xs btn-warning"><i class="fa fa-clock-o" aria-hidden="true"></i> Delay</a>';
-            }
-            $action[] = '<a style="background: rgba(131,1,7,0.98)" href="' . url('admin/booking/cancel/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn hủy đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-remove"></i> Hủy</a></div>';
+                $action[] = '<a style="background: rgba(131,1,7,0.98)" href="' . url('admin/booking/cancel/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn hủy đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-remove"></i> Hủy</a></div>';
 
-            $action[] = '<div style="margin-top: 5px; display: inline-flex"><a href="' . url('admin/booking/print/new/' . $b->id) . '" class="btn btn-xs btn-info"><i class="fa fa-print" aria-hidden="true"></i> in hóa đơn</a>';
-            $action[] = '<a style="background: rgba(159,158,25,0.81)" href="#"  name="' . $b->id . '" class="btn btn-xs btn-primary btnEdit"><i class="fa fa-edit"></i> Sửa</a>';
-            $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
-            return implode(' ', $action);
-        })
+                $action[] = '<div style="margin-top: 5px; display: inline-flex"><a href="' . url('admin/booking/print/new/' . $b->id) . '" class="btn btn-xs btn-info"><i class="fa fa-print" aria-hidden="true"></i> in hóa đơn</a>';
+                $action[] = '<a style="background: rgba(159,158,25,0.81)" href="#"  name="' . $b->id . '" class="btn btn-xs btn-primary btnEdit"><i class="fa fa-edit"></i> Sửa</a>';
+                $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
+                return implode(' ', $action);
+            })
             ->editColumn('uuid', function ($b) {
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
@@ -106,21 +106,21 @@ class BookingController extends Controller
                 return number_format($b->price);
             })
             ->editColumn('status', function ($b) {
-                $title= '';
-                switch($b->status){
+                $title = '';
+                switch ($b->status) {
                     case 'new':
-                    $title ="Chờ xử lý";
-                    break;
+                        $title = "Chờ xử lý";
+                        break;
                     case 'taking':
-                        $title ="Lấy hàng";
-                    break;
+                        $title = "Lấy hàng";
+                        break;
                     case 'return':
-                        $title ="Chuyển hoàn";
+                        $title = "Chuyển hoàn";
                         break;
                 }
                 return $title;
             })
-            ->rawColumns(['uuid','image_order','price','status','action'])
+            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action'])
             ->make(true);
     }
     public static function generateBookID()
@@ -134,7 +134,7 @@ class BookingController extends Controller
         } while (Booking::where('uuid', $id)->first());
         return $id;
     }
-    
+
     protected function getAddress($province, $district, $ward, $home_number)
     {
         $province_name = Province::find($province)->name;
@@ -148,7 +148,7 @@ class BookingController extends Controller
         DB::beginTransaction();
         try {
             ($request->action == "store") ? ($data = new Booking()) : ($data = Booking::where('id', $request->id)->first());
-            $title='';
+            $title = '';
             if ($request->action == "store") {
                 $uuid = $this->generateBookID();
                 $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
@@ -163,9 +163,9 @@ class BookingController extends Controller
                 $data->send_name = $sender->name;
                 $data->send_phone = $sender->phone_number;
                 $data->status = 'new';
-                $title=' vừa được tạo';
+                $title = ' vừa được tạo';
             } else {
-                $title=' vừa được chỉnh sửa';
+                $title = ' vừa được chỉnh sửa';
             }
             $data->receive_name = $request->name_to;
             $data->receive_phone = $request->phone_number_to;
@@ -181,7 +181,7 @@ class BookingController extends Controller
             $data->price = $request->price;
             $data->weight = $request->weight;
             $data->other_note = $request->other_note;
-          
+
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $name =  $uuid . '_booking.png';
@@ -1016,7 +1016,7 @@ class BookingController extends Controller
     {
         $booking = Booking::where('bookings.warehouse', 1);
         return datatables()->of($booking)
-            
+
             ->editColumn('image_order', function ($b) {
                 return ($b->image_order != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="50" alt="' . $b->uuid . '" src="' . asset('public/' . $b->image_order) . '"></a>' : "<img src='../../public/img/not-found.png' width='50'/>");
             })
@@ -1028,7 +1028,7 @@ class BookingController extends Controller
                 switch ($b->status) {
                     case 'sending':
                         $status = 'chưa giao';
-                       break;
+                        break;
                     case 'return':
                         $status = 'trả lại';
                         break;
@@ -1044,8 +1044,8 @@ class BookingController extends Controller
                 }
                 return $status;
             })
-            
-            ->rawColumns(['image_order', 'uuid','status'])
+
+            ->rawColumns(['image_order', 'uuid', 'status'])
             ->make(true);
     }
 
