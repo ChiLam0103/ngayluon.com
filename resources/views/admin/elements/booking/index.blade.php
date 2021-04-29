@@ -167,7 +167,6 @@
     @include('admin.partial.modal.detail_img')
     @include('admin.partial.modal.detail_booking')
     @include('admin.partial.modal.booking')
-    @include('admin.partial.modal.assign_booking')
 @endsection
 @push('script')
     <script src="{{ asset('public/js/action-booking.js') }}"></script>

@@ -76,9 +76,9 @@ class BookingController extends Controller
                 $action = [];
                 $check = BookDelivery::where('book_id', $b->id)->where('category', 'receive')->where('status', 'processing')->first();
                 if (empty($check)) {
-                    $action[] = '<div style="display: inline-flex"><a href="#"  name="' . $b->id . '"  class="btn btn-xs btn-primary btnAssign"><i class="fa fa-motorcycle"></i> Phân công</a>';
+                    // $action[] = '<div style="display: inline-flex"><a href="#"  name="' . $b->id . '"  class="btn btn-xs btn-primary btnAssign"><i class="fa fa-motorcycle"></i> Phân công</a>';
                 } else {
-                    $action[] = '<div style="display: inline-flex"><a href="#" name="' . $b->id . '" class="btn btn-xs btn-success btnReassign"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
+                    // $action[] = '<div style="display: inline-flex"><a href="#" name="' . $b->id . '" class="btn btn-xs btn-success btnReassign"><i class="fa fa-motorcycle"></i> Phân công lại</a>';
                     if ($b->payment_type == 1) {
                         $action[] = '<a data-toggle="popover" data-placement="top" data-html="true" title="<p><b>Đã thanh toán</b></p>" 
                         data-content="<div style=\'display: inline-flex\'><input id=\'owe\' style=\'transform: scale(1.5);\' onclick=\'changeUrl()\' type=\'checkbox\'> 
@@ -204,6 +204,7 @@ class BookingController extends Controller
             return false;
         }
     }
+
     public function newBooking()
     {
         if (Auth::user()->role == 'collaborators') {

@@ -53,15 +53,7 @@ $(document).ready(function () {
       actionBooking("update");
     }
   });
-  //action click btn click of modal assign Booking
-  $("#modalAssignBooking #btnSave").on("click", function (event) {
-    var id = $("#modalAssignBooking .action").attr('id');
-    if (id == "Assign") {
-      actionBooking("assign");
-    } else {
-      actionBooking("reassign");
-    }
-  });
+
   //change status menu left -> show list booking
   $("#status_booking input[name=booking_status]").change(function () {
     table = $("#list_booking").DataTable();
@@ -235,22 +227,7 @@ $(document).ready(function () {
     });
     $("#detailBooking").modal("show");
   });
-  //modal add assign booking
-  $(document).on('click', '.btnAssign', function () {
-    var id = $(this).attr("name");
-    $('#modalBooking .action').attr('id', 'Assign');
-    $('.modal-title').text('Phân công đơn hàng');
-    $('#modalAssignBooking').modal('show');
-  });
-  //modal add reassign booking
-  $(document).on('click', '.btnReassign', function () {
-    var id = $(this).attr("name");
-    $('#modalBooking .action').attr('id', 'Reassign');
-    $('.modal-title').text('Phân công lại đơn hàng');
-    $('#modalAssignBooking').modal('show');
-  });
 });
-
 
 //when load page will show list booking
 var table = $("#list_booking").DataTable({
@@ -272,7 +249,7 @@ var table = $("#list_booking").DataTable({
     { data: "created_at", title: "Ngày tạo" },
   ],
 });
-
+//action store create & update
 function actionBooking(action) {
   var id = $("input[name=id]").val();
   var avatar = $("#exampleInputFile")[0].files[0];
@@ -334,3 +311,4 @@ function actionBooking(action) {
     });
   }
 }
+
