@@ -1,5 +1,5 @@
 <!-- Modal Phân công hàng loạt-->
-<form action="" method="POST" id="form-quick-assign">
+{{-- <form action="" method="POST" id="form-quick-assign"> --}}
     {!! csrf_field() !!}
     <div class="modal fade" id="quickAssignModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -22,15 +22,15 @@
                             <select class="form-control" name="customer" id="customer"> </select>
                         </div>
                         <div class="col-lg-3">
-                            <select class="form-control">
+                            <select class="form-control" id="choose_status">
                                 <option>Chọn trạng thái---</option>
-                                <option>Chờ xử lý</option>
-                                <option>Chờ lấy hàng</option>
-                                <option>Chờ giao hàng</option>
-                                <option>Chờ chuyển hoàn</option>
+                                <option value="new">Chờ xử lý</option>
+                                <option value="take">Chờ lấy hàng</option>
+                                <option value="send">Chờ giao hàng</option>
+                                <option value="remove">Chờ chuyển hoàn</option>
                             </select>
                         </div>
-                        <div class="col-lg-3"><button class="btn btn-primary"><i class="fa fa-eye"
+                        <div class="col-lg-3" ><button class="btn btn-primary" onclick="viewList()"><i class="fa fa-eye"
                                     aria-hidden="true"></i> Xem danh sách</button></div>
                     </div>
                     <legend style="font-size:15px">Danh sách</legend>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-</form>
+{{-- </form> --}}
 <script>
       function loadCustomer(id) {
             $("#customer option[value!='-1']").remove();
@@ -72,17 +72,20 @@
                 type: "GET",
                 url: '{{url('/ajax/get_customer_district/')}}/' + id
             }).done(function (msg) {
-                // console.log(msg.customer);
                 var i;
                 for (i = 0; i < msg.customer.length; i++) {
-                    // console.log(msg.customer[i]['id'] );
                     if (msg.customer[i]['id'] == '{{@old('ward_id_fr')}}') {
                         $('select[name="customer"]').append('<option value="' + msg.customer[i]['id'] + '" selected>' + msg.customer[i]['name'] + '</option>')
                     } else {
-                        $('select[name="customer"]').append('<option value="' + msg.customer[i]['id'] + '">' + msg.customer[i]['name'] + '</option>')
+                        $('select[name="customer"]').append('<option value="' + msg.customer[i]['id'] + '">' + msg.customer[i]['name'] +' - '+ msg.customer[i]['phone_number'] + '</option>')
                     }
                 }
             });
         }
-
+        function viewList(){
+            var district_id = $("#district_fr option:selected").val();
+            var customer_id = $("#customer option:selected").val();
+            var choose_status = $("#choose_status option:selected").val();
+            console.log(district_id,customer_id,choose_status);
+        }
 </script>
