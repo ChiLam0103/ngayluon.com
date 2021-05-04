@@ -56,7 +56,7 @@
                                             aria-hidden="true"></i>
                                     Xuất dữ liệu
                                 </button>
-                                <button type="button" id="quick-assign" class="btn btn-circle btn-primary">
+                                <button type="button" id="quick-assign" class="btn btn-primary">
                                     Phân công hàng loạt
                                 </button>
                                 <button type="button" class="btn btn-success " id="btnAddNewBooking"><i class="fa fa-plus"
@@ -100,73 +100,13 @@
         </div>
     </div>
 
-    <!-- Modal Phân công hàng loạt-->
-    <form action="" method="POST" id="form-quick-assign">
-        {!! csrf_field() !!}
-        <div class="modal fade" id="quickAssignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Phân công hàng loạt</h4>
-              </div>
-              <div class="modal-body" style="max-height: 450px; overflow-y: scroll;" >
-                <div style="font-size: 12px;">
-                    - Chức năng này có nhiệm vụ phân công hàng loạt các đơn hàng được chọn, không ảnh hưởng đến các thuộc tính khác của đơn hàng.
-                    <br>- Nếu bạn phân công nhầm, có thể chọn "Đã phân công" -> và phân công lại.
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <h4>Danh sách shipper</h4>
-                        <table id="ul-shipper" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Tên shipper</th>
-                                </tr>
-                            </thead>
-                            <tbody style="max-height: 400px; overflow-y: scroll;"></tbody>
-                        </table>
-                    </div>
-                    <div class="col-md-8">
-                        <div>
-                            <h4 style="display: inline-block;">Danh sách đơn hàng</h4>
-                            <select name="" id="type-assign" class="form-control" style="display: inline-block; width: 200px;">
-                                <option value="no_assign" selected="">Chưa phân công</option>
-                                <option value="assigned">Đã phân công</option>
-                            </select>
-                        </div>
-                        <table id="ul-book" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" id="check-all"></th>
-                                    <th>Mã ĐH</th>
-                                    <th>Tên ĐH</th>
-                                    <th>Người gửi</th>
-                                    <th>Số ĐT người gửi</th>
-                                    <th>Địa chỉ người gửi</th>
-                                    <th>Shipper đã phân công</th>
-                                </tr>
-                            </thead>
-                            <tbody style="max-height: 400px; overflow-y: scroll;"></tbody>
-                        </table>
-                    </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <span id="msg-error" style="color: red"></span>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Thoát</button>
-                <button type="button" class="btn btn-primary" id="save-quick-assign">Đồng ý</button>
-              </div>
-            </div>
-          </div>
-        </div>
-    </form>
+    
 
     <!-- Modal  -->
     @include('admin.partial.modal.detail_img')
     @include('admin.partial.modal.detail_booking')
     @include('admin.partial.modal.booking')
+    @include('admin.partial.modal.assign_booking')
 @endsection
 @push('script')
     <script src="{{ asset('public/js/action-booking.js') }}"></script>
@@ -218,54 +158,54 @@
     //             $('#owe_submit').attr("href",  href.replace('?owe=1', '?owe=0'));
     //         }
     // }
-    function loadListBoook(type_assign) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('get_quick_assign_new') }}",
-                data: {
-                    province_id: $('#province').val(),
-                    district_id: $('#district').val(),
-                    phone: $('#phone').val(),
-                    ward_id: $('#ward').val(),
-                    type_assign: type_assign
-                },
-                dataType: "JSON"
-            }).done(function (msg) {
-                console.log(msg);
-                $('#quickAssignModal #ul-shipper tbody').html('');
-                if (msg.shippers.length > 0) {
-                    $( msg.shippers ).each(function( index, value ) {
-                        var shipperLi = '';
-                        shipperLi += '<tr>';
-                        if (index == 0) {
-                            shipperLi += '<td><input type="radio" value="' + value.id + '" name="shipper" checked></td>';
-                        } else {
-                            shipperLi += '<td><input type="radio" value="' + value.id + '" name="shipper"></td>';    
-                        }
-                        shipperLi += '<td>' + value.name + '</td>';
-                        shipperLi += '</tr>';
-                        $('#quickAssignModal #ul-shipper tbody').append(shipperLi);
-                    });
-                }
-                $('#quickAssignModal #ul-book tbody').html('');
-                if (msg.books.length > 0) {
-                    $( msg.books ).each(function( index, value ) {
-                        var bookLi = '';
-                        bookLi += '<tr>';
-                        bookLi += '<td><input type="checkbox" value="' + value.id + '" name="books"></td>';
-                        bookLi += '<td>' + value.uuid + '</td>';
-                        bookLi += '<td>' + value.name + '</td>';
-                        bookLi += '<td>' + value.send_name + '</td>';
-                        bookLi += '<td>' + value.send_phone + '</td>';
-                        bookLi += '<td>' + value.send_full_address + '</td>';
-                        bookLi += '<td>' + value.shipper_name + '</td>';
-                        bookLi += '</tr>';
-                        $('#quickAssignModal #ul-book tbody').append(bookLi);
-                    });
-                }
-                $('#quickAssignModal').modal('show');
-            });
-    }
+    // function loadListBoook(type_assign) {
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "{{ route('get_quick_assign_new') }}",
+    //             data: {
+    //                 province_id: $('#province').val(),
+    //                 district_id: $('#district').val(),
+    //                 phone: $('#phone').val(),
+    //                 ward_id: $('#ward').val(),
+    //                 type_assign: type_assign
+    //             },
+    //             dataType: "JSON"
+    //         }).done(function (msg) {
+    //             console.log(msg);
+    //             $('#quickAssignModal #ul-shipper tbody').html('');
+    //             if (msg.shippers.length > 0) {
+    //                 $( msg.shippers ).each(function( index, value ) {
+    //                     var shipperLi = '';
+    //                     shipperLi += '<tr>';
+    //                     if (index == 0) {
+    //                         shipperLi += '<td><input type="radio" value="' + value.id + '" name="shipper" checked></td>';
+    //                     } else {
+    //                         shipperLi += '<td><input type="radio" value="' + value.id + '" name="shipper"></td>';    
+    //                     }
+    //                     shipperLi += '<td>' + value.name + '</td>';
+    //                     shipperLi += '</tr>';
+    //                     $('#quickAssignModal #ul-shipper tbody').append(shipperLi);
+    //                 });
+    //             }
+    //             $('#quickAssignModal #ul-book tbody').html('');
+    //             if (msg.books.length > 0) {
+    //                 $( msg.books ).each(function( index, value ) {
+    //                     var bookLi = '';
+    //                     bookLi += '<tr>';
+    //                     bookLi += '<td><input type="checkbox" value="' + value.id + '" name="books"></td>';
+    //                     bookLi += '<td>' + value.uuid + '</td>';
+    //                     bookLi += '<td>' + value.name + '</td>';
+    //                     bookLi += '<td>' + value.send_name + '</td>';
+    //                     bookLi += '<td>' + value.send_phone + '</td>';
+    //                     bookLi += '<td>' + value.send_full_address + '</td>';
+    //                     bookLi += '<td>' + value.shipper_name + '</td>';
+    //                     bookLi += '</tr>';
+    //                     $('#quickAssignModal #ul-book tbody').append(bookLi);
+    //                 });
+    //             }
+    //             $('#quickAssignModal').modal('show');
+    //         });
+    // }
     $(document).ready(function(){
             
             // var province = 50;

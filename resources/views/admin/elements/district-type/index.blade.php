@@ -122,7 +122,7 @@
                 $(".district thead tr").append('<th> STT </th>');
                 $.each(msg[0], function (f, title) {
                     if (f == 'allow_booking') {
-                        f = 'Trạng thái áp dụng';
+                        f = 'Trạng thái áp dụng'; 
                     }
                     if (f == 'district_name') {
                         f = 'Tên huyện';
@@ -137,7 +137,7 @@
                 });
                 $(".district thead tr").append('<th> Hành động </th>');
                 var num = 1;
-                $.each(msg, function (f, data_rep) {
+                $.each(msg, function (f, data_rep) { 
                     $(".district tbody").append("<tr id='" + num + "'></tr>");
                     $("#" + num + "").append('<th>' + num + '</th>');
                     

@@ -8,42 +8,46 @@ $(document).ready(function () {
     $('[data-toggle="popover"]').popover();
   }, 1000);
   $("#quick-assign").click(function () {
-    $("#type-assign").val("no_assign");
-    loadListBoook("no_assign");
+    $('#quickAssignModal').modal('show');
+    // $("#type-assign").val("no_assign");
+    // loadListBoook("no_assign");
   });
 
-  $("#type-assign").change(function () {
-    loadListBoook($(this).val());
-  });
+  // $("#type-assign").change(function () {
+  //   loadListBoook($(this).val());
+  // });
 
-  $("#save-quick-assign").click(function (e) {
-    $.ajax({
-      type: "POST",
-      url: "../ajax/quick-assign-new",
-      data: {
-        inputs: $("#form-quick-assign").serializeArray(),
-        _token: $("input[name='_token']").val(),
-        type_assign: $("#type-assign").val(),
-      },
-      dataType: "JSON",
-    }).done(function (msg) {
-      if (msg.status == "success") {
-        $("#quickAssignModal").modal("hide");
-        location.reload();
-      } else {
-        $("#msg-error").html(msg.status);
-      }
-    });
-  });
+  // $("#save-quick-assign").click(function (e) {
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "../ajax/quick-assign-new",
+  //     data: {
+  //       inputs: $("#form-quick-assign").serializeArray(),
+  //       _token: $("input[name='_token']").val(),
+  //       type_assign: $("#type-assign").val(),
+  //     },
+  //     dataType: "JSON",
+  //   }).done(function (msg) {
+  //     if (msg.status == "success") {
+  //       $("#quickAssignModal").modal("hide");
+  //       location.reload();
+  //     } else {
+  //       $("#msg-error").html(msg.status);
+  //     }
+  //   });
+  // });
 
-  $("#check-all").change(function () {
-    var checkboxes = $(this).closest("form").find(":checkbox");
-    if ($(this).prop("checked")) {
-      checkboxes.prop("checked", true);
-    } else {
-      checkboxes.prop("checked", false);
-    }
-  });
+  // $("#check-all").change(function () {
+  //   var checkboxes = $(this).closest("form").find(":checkbox");
+  //   if ($(this).prop("checked")) {
+  //     checkboxes.prop("checked", true);
+  //   } else {
+  //     checkboxes.prop("checked", false);
+  //   }
+  // });
+
+
+
   //action click btn click of modal Booking
   $("#modalBooking #btnSave").on("click", function (event) {
     var id = $("#modalBooking .action").attr('id');

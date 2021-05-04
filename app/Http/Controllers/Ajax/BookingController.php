@@ -118,7 +118,7 @@ class BookingController extends Controller
                         $title = "Chuyển hoàn";
                         break;
                 }
-                return $title;
+                return "<span style='font-size:10px'>".$title."</span>";
             })
             ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action'])
             ->make(true);
@@ -142,7 +142,11 @@ class BookingController extends Controller
         $ward_name = Ward::find($ward)->name;;
         return $home_number . ', ' . $ward_name . ', ' . $district_name . '. ' . $province_name;
     }
-
+    public function getCustomerDistrict($id)
+    {
+        $customer = User::where('district_id', $id)->where('role','customer')->select('id','name','phone_number')->get();
+        return response()->json(['customer' => $customer]);
+    }
     public function actionBooking(Request $request)
     {
         DB::beginTransaction();
