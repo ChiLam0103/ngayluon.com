@@ -147,6 +147,18 @@ class BookingController extends Controller
         $customer = User::where('district_id', $id)->where('role','customer')->select('id','name','phone_number')->get();
         return response()->json(['customer' => $customer]);
     }
+    public function getListBookingAssign(Request $request)
+    {
+        $booking = DB::table('bookings as b')
+        ->leftJoin('book_deliveries as bd','b.id','bd.book_id')
+        ->leftJoin('users as u','u.id','bd.user_id')
+        ->where('b.sender_id',$request->sender_id)
+        ->where('b.status',$request->status)
+        // ->where('u.role','shipper')
+        ->select('b.id','b.uuid','b.name','b.send_name','b.send_phone','b.send_full_address','u.name as shipper_name')
+        ->get();
+        return response()->json(['booking' => $booking,'req'=>$request->status]);
+    }
     public function actionBooking(Request $request)
     {
         DB::beginTransaction();

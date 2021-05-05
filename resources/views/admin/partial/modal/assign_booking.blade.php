@@ -9,34 +9,43 @@
                 <h4 class="modal-title" id="myModalLabel">Phân công hàng loạt</h4>
             </div>
             <div class="modal-body">
-                <legend style="font-size:15px">Bộ lọc danh sách</legend>
+                <legend style="font-size:20px; color:red">Bộ lọc danh sách</legend>
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <select id="district_fr" onchange="loadCustomer(this.value)" name="district_id_to"
                             class="form-control">
                             <option>---Chọn Quận/Huyện---</option>
                         </select>
                     </div>
-                    <div class="col-lg-3">
-                        <select class="form-control" name="customer" id="customer"> </select>
+                    <div class="col-lg-4">
+                        <select class="form-control" name="customer" id="customer">
+                            <option>---Danh sách khách hàng---</option>
+                        </select>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <select class="form-control" id="choose_status">
                             <option>---Chọn trạng thái---</option>
-                            <option value="new">Chờ xử lý</option>
-                            <option value="take">Chờ lấy hàng</option>
-                            <option value="send">Chờ giao hàng</option>
+                            <option value="new">Chờ lấy hàng</option>
+                            <option value="sending">Chờ giao hàng</option>
                             <option value="remove">Chờ chuyển hoàn</option>
                         </select>
                     </div>
-                    <div class="col-lg-3"><button class="btn btn-primary" onclick="viewList()"><i class="fa fa-eye"
-                                aria-hidden="true"></i> Xem danh sách</button></div>
                 </div>
-                <legend style="font-size:15px">Danh sách</legend>
+                <legend style="font-size:20px; margin-top:3em;color:red">Phân công đơn hàng</legend>
                 <div class="row">
-                    <div class="col-lg-3"><button class="btn btn-primary"><i class="fa fa-eye" aria-hidden="true"></i>
-                            Xem danh sách</button></div>
-                    <div class="col-md-8">
+                    <div class="col-lg-3">
+                        <label>Phân công cho Shipper:</label>
+                        {{ Form::select('shipper', \App\Models\User::getUserOption('shipper'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'shipper', 'onchange' => 'loadCustomerFr()']) }}
+                        <label>Trạng thái:</label>
+                        <select class="form-control" id="choose_status">
+                            <option>---Chọn trạng thái---</option>
+                            <option value="taking">Đi lấy hàng</option>
+                            <option value="sending">Đi giao hàng</option>
+                            <option value="remove">Đi chuyển hoàn</option>
+                            <option value="remove">Lấy & giao hàng</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-9">
                         <table id="ul-book" class="table table-bordered">
                             <thead>
                                 <tr>
@@ -69,33 +78,6 @@
         $.ajax({
             type: "GET",
             url: '{{ url('/ajax/get_customer_district/') }}/' + id
-        }).done(function(msg) {
-            var i;
-            for (i = 0; i < msg.customer.length; i++) {
-                if (msg.customer[i]['id'] == '{{ @old('ward_id_fr') }}') {
-                    $('select[name="customer"]').append('<option value="' + msg.customer[i]['id'] +
-                        '" selected>' + msg.customer[i]['name'] + '</option>')
-                } else {
-                    $('select[name="customer"]').append('<option value="' + msg.customer[i]['id'] + '">' + msg
-                        .customer[i]['name'] + ' - ' + msg.customer[i]['phone_number'] + '</option>')
-                }
-            }
-        });
-    }
-
-    function viewList() {
-        var district_id = $("#district_fr option:selected").val();
-        var customer_id = $("#customer option:selected").val();
-        var choose_status = $("#choose_status option:selected").val();
-        var formData = new FormData()
-        formData.append('_token', $(' [name=_token]').val());
-        formData.append('district_id', district_id);
-        formData.append('customer_id', customer_id);
-        formData.append('choose_status', choose_status);
-        $.ajax({
-            type: "GET",
-            url: '{{ url('/ajax/get_assign_customer') }}',
-            data: formData
         }).done(function(msg) {
             var i;
             for (i = 0; i < msg.customer.length; i++) {

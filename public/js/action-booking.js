@@ -9,44 +9,68 @@ $(document).ready(function () {
   }, 1000);
   $("#quick-assign").click(function () {
     $('#quickAssignModal').modal('show');
-    // $("#type-assign").val("no_assign");
-    // loadListBoook("no_assign");
   });
 
   // $("#type-assign").change(function () {
   //   loadListBoook($(this).val());
   // });
 
-  // $("#save-quick-assign").click(function (e) {
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "../ajax/quick-assign-new",
-  //     data: {
-  //       inputs: $("#form-quick-assign").serializeArray(),
-  //       _token: $("input[name='_token']").val(),
-  //       type_assign: $("#type-assign").val(),
-  //     },
-  //     dataType: "JSON",
-  //   }).done(function (msg) {
-  //     if (msg.status == "success") {
-  //       $("#quickAssignModal").modal("hide");
-  //       location.reload();
-  //     } else {
-  //       $("#msg-error").html(msg.status);
-  //     }
-  //   });
-  // });
+  $("#save-quick-assign").click(function (e) {
+    $.ajax({
+      type: "POST",
+      url: "../ajax/quick-assign-new",
+      data: {
+        inputs: $("#form-quick-assign").serializeArray(),
+        _token: $("input[name='_token']").val(),
+        type_assign: $("#type-assign").val(),
+      },
+      dataType: "JSON",
+    }).done(function (msg) {
+      if (msg.status == "success") {
+        $("#quickAssignModal").modal("hide");
+        location.reload();
+      } else {
+        $("#msg-error").html(msg.status);
+      }
+    });
+  });
 
-  // $("#check-all").change(function () {
-  //   var checkboxes = $(this).closest("form").find(":checkbox");
-  //   if ($(this).prop("checked")) {
-  //     checkboxes.prop("checked", true);
-  //   } else {
-  //     checkboxes.prop("checked", false);
-  //   }
-  // });
+  $("#check-all").change(function () {
+    var checkboxes = $(this).closest("table").find(":checkbox");
 
+    if ($(this).prop("checked")) {
+      checkboxes.prop("checked", true);
+    } else {
+      checkboxes.prop("checked", false);
+    }
+  });
 
+  $('#choose_status').on('change', function() {
+    var customer_id = $("#customer option:selected").val();
+    var choose_status = $("#choose_status option:selected").val();
+    $.ajax({
+        type: "GET",
+        url: '../ajax/get_list_booking_assign?' + 'sender_id=' + customer_id + '&status=' + choose_status,
+
+    }).done(function(msg) {
+        $('#quickAssignModal #ul-book tbody').html('');
+        if (msg.booking.length > 0) {
+            $(msg.booking).each(function(index, value) {
+                var bookLi = '';
+                bookLi += '<tr>';
+                bookLi += '<td><input type="checkbox" value="' + value.id + '" name="books"></td>';
+                bookLi += '<td>' + value.uuid + '</td>';
+                bookLi += '<td>' + value.name + '</td>';
+                bookLi += '<td>' + value.send_name + '</td>';
+                bookLi += '<td>' + value.send_phone + '</td>';
+                bookLi += '<td>' + value.send_full_address + '</td>';
+                bookLi += '<td>' + value.shipper_name + '</td>';
+                bookLi += '</tr>';
+                $('#quickAssignModal #ul-book tbody').append(bookLi);
+            });
+        }
+    });
+});
 
   //action click btn click of modal Booking
   $("#modalBooking #btnSave").on("click", function (event) {
@@ -315,4 +339,5 @@ function actionBooking(action) {
     });
   }
 }
+
 
