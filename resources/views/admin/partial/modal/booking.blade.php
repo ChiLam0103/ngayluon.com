@@ -30,7 +30,6 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="portlet-body form">
-                            <legend>Thông tin khách hàng</legend>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <legend>Người gửi</legend>

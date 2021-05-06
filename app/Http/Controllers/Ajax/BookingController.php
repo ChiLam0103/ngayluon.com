@@ -118,7 +118,7 @@ class BookingController extends Controller
                         $title = "Chuyển hoàn";
                         break;
                 }
-                return "<span style='font-size:10px'>".$title."</span>";
+                return "<span style='font-size:10px'>" . $title . "</span>";
             })
             ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action'])
             ->make(true);
@@ -144,20 +144,34 @@ class BookingController extends Controller
     }
     public function getCustomerDistrict($id)
     {
-        $customer = User::where('district_id', $id)->where('role','customer')->select('id','name','phone_number')->get();
+        $customer = User::where('district_id', $id)->where('role', 'customer')->select('id', 'name', 'phone_number')->get();
         return response()->json(['customer' => $customer]);
     }
     public function getListBookingAssign(Request $request)
     {
         $booking = DB::table('bookings as b')
-        ->leftJoin('book_deliveries as bd','b.id','bd.book_id')
-        ->leftJoin('users as u','u.id','bd.user_id')
-        ->where('b.sender_id',$request->sender_id)
-        ->where('b.status',$request->status)
-        // ->where('u.role','shipper')
-        ->select('b.id','b.uuid','b.name','b.send_name','b.send_phone','b.send_full_address','u.name as shipper_name')
-        ->get();
-        return response()->json(['booking' => $booking,'req'=>$request->status]);
+            ->leftJoin('book_deliveries as bd', 'b.id', 'bd.book_id')
+            ->leftJoin('users as u', 'u.id', 'bd.user_id')
+            ->where('b.sender_id', $request->sender_id)
+            ->where('b.status', $request->status)
+            ->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'b.send_full_address', 'u.name as shipper_name')
+            ->get();
+        return response()->json(['booking' => $booking]);
+    }
+    public function viewQuickAssign()
+    {
+        $booking = DB::table('book_deliveries as bd')
+            ->leftJoin('bookings as b', 'b.id', 'bd.book_id')
+            ->leftJoin('users as u', 'u.id', 'bd.user_id')
+            ->select('b.id','b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
+            ->orderBy('b.id', 'DESC')
+            ->get();
+        return datatables()->of($booking)
+            ->editColumn('uuid', function ($b) {
+                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
+            })
+            ->rawColumns(['uuid'])
+            ->make(true);
     }
     public function actionBooking(Request $request)
     {

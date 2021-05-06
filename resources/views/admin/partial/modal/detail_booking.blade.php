@@ -1,5 +1,5 @@
 <!-- Modal detail booking -->
-<div class="modal fade" id="detailBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailBooking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:99999999999999999999">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

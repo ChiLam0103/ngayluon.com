@@ -10,10 +10,10 @@ $(document).ready(function () {
   $("#quick-assign").click(function () {
     $('#quickAssignModal').modal('show');
   });
-
-  // $("#type-assign").change(function () {
-  //   loadListBoook($(this).val());
-  // });
+  $("#view-quick-assign").click(function () {
+    $('#viewQuickAssignModal').modal('show');
+    viewQuickAssign();
+  });
 
   $("#save-quick-assign").click(function (e) {
     $.ajax({
@@ -45,32 +45,32 @@ $(document).ready(function () {
     }
   });
 
-  $('#choose_status').on('change', function() {
+  $('#choose_status').on('change', function () {
     var customer_id = $("#customer option:selected").val();
     var choose_status = $("#choose_status option:selected").val();
     $.ajax({
-        type: "GET",
-        url: '../ajax/get_list_booking_assign?' + 'sender_id=' + customer_id + '&status=' + choose_status,
+      type: "GET",
+      url: '../ajax/get_list_booking_assign?' + 'sender_id=' + customer_id + '&status=' + choose_status,
 
-    }).done(function(msg) {
-        $('#quickAssignModal #ul-book tbody').html('');
-        if (msg.booking.length > 0) {
-            $(msg.booking).each(function(index, value) {
-                var bookLi = '';
-                bookLi += '<tr>';
-                bookLi += '<td><input type="checkbox" value="' + value.id + '" name="books"></td>';
-                bookLi += '<td>' + value.uuid + '</td>';
-                bookLi += '<td>' + value.name + '</td>';
-                bookLi += '<td>' + value.send_name + '</td>';
-                bookLi += '<td>' + value.send_phone + '</td>';
-                bookLi += '<td>' + value.send_full_address + '</td>';
-                bookLi += '<td>' + value.shipper_name + '</td>';
-                bookLi += '</tr>';
-                $('#quickAssignModal #ul-book tbody').append(bookLi);
-            });
-        }
+    }).done(function (msg) {
+      $('#quickAssignModal #ul-book tbody').html('');
+      if (msg.booking.length > 0) {
+        $(msg.booking).each(function (index, value) {
+          var bookLi = '';
+          bookLi += '<tr>';
+          bookLi += '<td><input type="checkbox" value="' + value.id + '" name="books"></td>';
+          bookLi += '<td>' + value.uuid + '</td>';
+          bookLi += '<td>' + value.name + '</td>';
+          bookLi += '<td>' + value.send_name + '</td>';
+          bookLi += '<td>' + value.send_phone + '</td>';
+          bookLi += '<td>' + value.send_full_address + '</td>';
+          bookLi += '<td>' + value.shipper_name + '</td>';
+          bookLi += '</tr>';
+          $('#quickAssignModal #ul-book tbody').append(bookLi);
+        });
+      }
     });
-});
+  });
 
   //action click btn click of modal Booking
   $("#modalBooking #btnSave").on("click", function (event) {
@@ -339,5 +339,30 @@ function actionBooking(action) {
     });
   }
 }
+// view quick assign
+function viewQuickAssign() {
+// table_assign_booking = $("#list_table_assign_booking").DataTable();
+// table_assign_booking.destroy();
+//   $("#list_table_assign_booking").empty();
+  $("#list_table_assign_booking").DataTable({
+    order: [[0, "desc"]],
+    ajax: {
+      url: "../ajax/view_quick_assign", 
+      type: "GET",
+    },
+    serverSide: true,
+    processing: true,
+    columns: [
+      { data: "uuid", title: "UUID" },
+      { data: "name", title: "Tên đơn hàng" },
+      { data: "send_name", title: "Người gửi" },
+      { data: "send_phone", title: "SDT người gửi" },
+      { data: "send_address", title: "Địa chỉ gửi" },
+      { data: "receive_address", title: "Địa chỉ nhận" },
+      { data: "status", title: "Trạng thái" },
+      { data: "shipper_name", title: "Tên shipper" },
+    ],
+  });
 
+}
 
