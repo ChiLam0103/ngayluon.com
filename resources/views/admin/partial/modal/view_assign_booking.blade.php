@@ -16,13 +16,24 @@
                         {{ Form::select('shipper', \App\Models\User::getUserOption('shipper'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'shipper', 'onchange' => 'loadCustomerFr()']) }}
                     </div>
                     <div class="col-lg-3">
+                        <label>Hành động:</label>
+                        <select class="form-control" id="choose_status">
+                            <option value="taking">Đã phân</option>
+                            <option value="sending">Hoãn </option>
+                            <option value="remove">Đã hoàn thành</option>
+                            <option value="remove">Từ chối</option>
+                            <option value="remove">Hủy</option>
+                          
+                        </select>
+                    </div>
+                    <div class="col-lg-3">
                         <label>Trạng thái:</label>
                         <select class="form-control" id="choose_status">
-                            <option>---Chọn trạng thái---</option>
-                            <option value="taking">Đi lấy hàng</option>
-                            <option value="sending">Đi giao hàng</option>
-                            <option value="remove">Đi chuyển hoàn</option>
-                            <option value="remove">Lấy & giao hàng</option>
+                            <option value="taking">Lấy hàng</option>
+                            <option value="sending">Giao hàng</option>
+                            <option value="remove">Trả lại hàng</option>
+                            <option value="remove">Vừa lấy vừa giao</option>
+                            <option value="remove">Giao lại</option>
                         </select>
                     </div>
                     <div class="col-lg-3"> <label></label> <button type="button" id="view-quick-assign" class="btn btn-primary form-control">

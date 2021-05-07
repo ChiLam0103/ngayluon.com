@@ -25,9 +25,11 @@
                     <div class="col-lg-4">
                         <select class="form-control" id="choose_status">
                             <option>---Chọn trạng thái---</option>
-                            <option value="new">Chờ lấy hàng</option>
-                            <option value="sending">Chờ giao hàng</option>
-                            <option value="remove">Chờ chuyển hoàn</option>
+                            <option value="new"> Lấy hàng</option>
+                            <option value="sending"> Giao hàng</option>
+                            <option value="remove"> Trả lại</option>
+                            <option value="remove"> Vừa lấy vừa giao</option>
+                            <option value="remove"> Giao lại</option>
                         </select>
                     </div>
                 </div>
@@ -41,8 +43,9 @@
                             <option>---Chọn trạng thái---</option>
                             <option value="taking">Đi lấy hàng</option>
                             <option value="sending">Đi giao hàng</option>
-                            <option value="remove">Đi chuyển hoàn</option>
+                            <option value="remove">Đi trả lại</option>
                             <option value="remove">Lấy & giao hàng</option>
+                            <option value="remove">Giao lại</option>
                         </select>
                     </div>
                     <div class="col-lg-9">

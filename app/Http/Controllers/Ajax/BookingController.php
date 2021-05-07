@@ -163,14 +163,59 @@ class BookingController extends Controller
         $booking = DB::table('book_deliveries as bd')
             ->leftJoin('bookings as b', 'b.id', 'bd.book_id')
             ->leftJoin('users as u', 'u.id', 'bd.user_id')
-            ->select('b.id','b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
+            ->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
             ->orderBy('b.id', 'DESC')
             ->get();
         return datatables()->of($booking)
             ->editColumn('uuid', function ($b) {
                 return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
             })
-            ->rawColumns(['uuid'])
+            //'processing','delay','completed','return','deny','cancel'
+            ->editColumn('category', function ($b) {
+                $title = '';
+                $title_status = '';
+                switch ($b->status) {
+                    case 'processing':
+                        $title_status = "Đã phân";
+                        break;
+                    case 'delay':
+                        $title_status = "Hoãn";
+                        break;
+                    case 'completed':
+                        $title_status = "Đã";
+                        break;
+                    case 'return':
+                        $title_status = "Trả lại";
+                        break;
+                    case 'deny':
+                        $title_status = "Từ chối";
+                        break;
+                    case 'cancel':
+                        $title_status = "Hủy";
+                        break;
+                }
+                switch ($b->category) {
+                    case 'receive':
+                        $title = "đi lấy";
+                        break;
+                    case 'send':
+                        $title = "đi giao";
+                        break;
+                    case 'return':
+                        $title = "trả lại";
+                        break;
+                    case 'receive-and-send':
+                        $title = "vừa lấy vừa giao";
+                        break;
+                    case 'move':
+                        $title = "giao lại";
+                        break;
+                    default:
+                        break;
+                }
+                return "<span style='font-size:10px'>" . $title_status . " " . $title . "</span>";
+            })
+            ->rawColumns(['uuid', 'category'])
             ->make(true);
     }
     public function actionBooking(Request $request)

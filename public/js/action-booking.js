@@ -359,7 +359,8 @@ function viewQuickAssign() {
       { data: "send_phone", title: "SDT người gửi" },
       { data: "send_address", title: "Địa chỉ gửi" },
       { data: "receive_address", title: "Địa chỉ nhận" },
-      { data: "status", title: "Trạng thái" },
+      // { data: "status", title: "Trạng thái" },
+      { data: "category", title: "Trạng thái" },
       { data: "shipper_name", title: "Tên shipper" },
     ],
   });
