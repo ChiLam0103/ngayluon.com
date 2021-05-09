@@ -158,12 +158,15 @@ class BookingController extends Controller
             ->get();
         return response()->json(['booking' => $booking]);
     }
-    public function viewQuickAssign()
+    public function viewQuickAssign(Request $request)
     {
-        $booking = DB::table('book_deliveries as bd')
+        $query = DB::table('book_deliveries as bd')
             ->leftJoin('bookings as b', 'b.id', 'bd.book_id')
-            ->leftJoin('users as u', 'u.id', 'bd.user_id')
-            ->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
+            ->leftJoin('users as u', 'u.id', 'bd.user_id');
+        if ($request->status != null) {
+            $query->where('bd.user_id', $request->shipper_id)->where("bd.status", $request->status)->where("bd.category", $request->category);
+        }
+        $booking = $query->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
             ->orderBy('b.id', 'DESC')
             ->get();
         return datatables()->of($booking)
@@ -1379,43 +1382,90 @@ class BookingController extends Controller
         }
 
         if (count($data['book_ids']) > 0) {
-            if (request()->type_assign == 'no_assign') {
-                foreach ($data['book_ids'] as $id) {
-                    $booking = Booking::find($id);
-                    $check = BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
-                    if (empty($check)) {
-                        DB::beginTransaction();
-                        try {
-                            $booking->update(['status' => 'taking']);
-                            BookDelivery::insert([
-                                'user_id' => $data['shipper_id'],
-                                'send_address' => $booking->send_full_address,
-                                'receive_address' => $booking->receive_full_address,
-                                'book_id' => $id,
-                                'category' => 'receive',
-                                'sending_active' => 1,
-                                'created_at' => Carbon::now(),
-                                'updated_at' => Carbon::now(),
-                            ]);
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            return $e;
+            foreach ($data['book_ids'] as $id) {
+                $booking = Booking::find($id);
+                $check = BookDelivery::where('book_id', $id)->where('category', request()->type_assign)->first();
+                if (empty($check)) {
+                    DB::beginTransaction();
+                    $status = '';
+                    try {
+                        switch (request()->choose_status) {
+                            case 'new':
+                                $status = 'taking';
+                                break;
+                            case 'taking':
+                                $status = 'sending';
+                                break;
+                            case 'sending':
+                                $status = request()->type_assign;
+                                break;
                         }
+                        $booking->update(['status' => $status]);
+                        BookDelivery::insert([
+                            'user_id' => $data['shipper_id'],
+                            'send_address' => $booking->send_full_address,
+                            'receive_address' => $booking->receive_full_address,
+                            'book_id' => $id,
+                            'category' => 'receive',
+                            'sending_active' => 1,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now(),
+                        ]);
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        return $e;
+                    }
+                } else {
+                    DB::beginTransaction();
+                    try {
+                        BookDelivery::whereIn('book_id', $data['book_ids'])
+                            ->where('sending_active', 1)
+                            ->update(['user_id' => $data['shipper_id']]);
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        return $e;
                     }
                 }
-            } else {
-                DB::beginTransaction();
-                try {
-                    BookDelivery::whereIn('book_id', $data['book_ids'])
-                        ->where('sending_active', 1)
-                        ->update(['user_id' => $data['shipper_id']]);
-                    DB::commit();
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return $e;
-                }
             }
+            // if (request()->type_assign == 'no_assign') {
+            //     foreach ($data['book_ids'] as $id) {
+            //         $booking = Booking::find($id);
+            //         $check = BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
+            //         if (empty($check)) {
+            //             DB::beginTransaction();
+            //             try {
+            //                 $booking->update(['status' => 'taking']);
+            //                 BookDelivery::insert([
+            //                     'user_id' => $data['shipper_id'],
+            //                     'send_address' => $booking->send_full_address,
+            //                     'receive_address' => $booking->receive_full_address,
+            //                     'book_id' => $id,
+            //                     'category' => 'receive',
+            //                     'sending_active' => 1,
+            //                     'created_at' => Carbon::now(),
+            //                     'updated_at' => Carbon::now(),
+            //                 ]);
+            //                 DB::commit();
+            //             } catch (\Exception $e) {
+            //                 DB::rollBack();
+            //                 return $e;
+            //             }
+            //         }
+            //     }
+            // } else {
+            //     DB::beginTransaction();
+            //     try {
+            //         BookDelivery::whereIn('book_id', $data['book_ids'])
+            //             ->where('sending_active', 1)
+            //             ->update(['user_id' => $data['shipper_id']]);
+            //         DB::commit();
+            //     } catch (\Exception $e) {
+            //         DB::rollBack();
+            //         return $e;
+            //     }
+            // }
         } else {
             return json_encode(['status' => 'Chọn ít nhất 1 đơn hàng!']);
         }

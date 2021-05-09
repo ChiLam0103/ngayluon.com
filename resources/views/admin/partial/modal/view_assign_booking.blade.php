@@ -12,31 +12,31 @@
                 <legend style="font-size:20px;color:red">Phân công đơn hàng</legend>
                 <div class="row">
                     <div class="col-lg-3">
-                        <label>Phân công cho Shipper:</label>
-                        {{ Form::select('shipper', \App\Models\User::getUserOption('shipper'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'shipper', 'onchange' => 'loadCustomerFr()']) }}
+                        <label>danh sách Shipper:</label>
+                        {{ Form::select('shipper', \App\Models\User::getUserOption('shipper'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'shipper_id', 'onchange' => 'loadCustomerFr()']) }}
                     </div>
                     <div class="col-lg-3">
                         <label>Hành động:</label>
-                        <select class="form-control" id="choose_status">
-                            <option value="taking">Đã phân</option>
-                            <option value="sending">Hoãn </option>
-                            <option value="remove">Đã hoàn thành</option>
-                            <option value="remove">Từ chối</option>
-                            <option value="remove">Hủy</option>
+                        <select class="form-control" id="status">
+                            <option value="processing">Đã phân</option>
+                            <option value="delay">Hoãn </option>
+                            <option value="completed">Đã hoàn thành</option>
+                            <option value="deny">Từ chối</option>
+                            <option value="cancel">Hủy</option>
                           
                         </select>
                     </div>
                     <div class="col-lg-3">
                         <label>Trạng thái:</label>
-                        <select class="form-control" id="choose_status">
-                            <option value="taking">Lấy hàng</option>
-                            <option value="sending">Giao hàng</option>
-                            <option value="remove">Trả lại hàng</option>
-                            <option value="remove">Vừa lấy vừa giao</option>
-                            <option value="remove">Giao lại</option>
+                        <select class="form-control" id="category">
+                            <option value="receive">Lấy hàng</option>
+                            <option value="send">Giao hàng</option>
+                            <option value="return">Trả lại hàng</option>
+                            <option value="receive-and-send">Vừa lấy vừa giao</option>
+                            <option value="move">Giao lại</option>
                         </select>
                     </div>
-                    <div class="col-lg-3"> <label></label> <button type="button" id="view-quick-assign" class="btn btn-primary form-control">
+                    <div class="col-lg-3"> <label></label> <button type="button" id="btnView" class="btn btn-primary form-control">
                             <i class="fa fa-eye" aria-hidden="true"></i> Xem 
                         </button></div>
                     <div class="col-lg-12" id="table_booking" style="margin-top: 2em">
@@ -53,3 +53,6 @@
         </div>
     </div>
 </div>
+<script>
+
+</script>

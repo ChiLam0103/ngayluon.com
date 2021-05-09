@@ -25,27 +25,23 @@
                     <div class="col-lg-4">
                         <select class="form-control" id="choose_status">
                             <option>---Chọn trạng thái---</option>
-                            <option value="new"> Lấy hàng</option>
+                            <option value="new">Chờ xử lý</option>
+                            <option value="taking"> Lấy hàng</option>
                             <option value="sending"> Giao hàng</option>
-                            <option value="remove"> Trả lại</option>
-                            <option value="remove"> Vừa lấy vừa giao</option>
-                            <option value="remove"> Giao lại</option>
+                            <option value="return"> Trả lại</option>
+                            <option value="move"> Giao lại</option>
                         </select>
                     </div>
                 </div>
+                <form action="" method="POST" id="form-quick-assign">
                 <legend style="font-size:20px; margin-top:3em;color:red">Phân công đơn hàng</legend>
                 <div class="row">
                     <div class="col-lg-3">
                         <label>Phân công cho Shipper:</label>
                         {{ Form::select('shipper', \App\Models\User::getUserOption('shipper'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'shipper', 'onchange' => 'loadCustomerFr()']) }}
                         <label>Trạng thái:</label>
-                        <select class="form-control" id="choose_status">
-                            <option>---Chọn trạng thái---</option>
-                            <option value="taking">Đi lấy hàng</option>
-                            <option value="sending">Đi giao hàng</option>
-                            <option value="remove">Đi trả lại</option>
-                            <option value="remove">Lấy & giao hàng</option>
-                            <option value="remove">Giao lại</option>
+                        <select class="form-control" id="assign">
+                            
                         </select>
                     </div>
                     <div class="col-lg-9">
@@ -72,6 +68,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Thoát</button>
                 <button type="button" class="btn btn-primary" id="save-quick-assign">Đồng ý</button>
             </div>
+        </form>
         </div>
     </div>
 </div>
