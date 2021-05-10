@@ -184,6 +184,7 @@ $(document).ready(function () {
       $("input[name=weight]").val(data.booking.weight);
       $("input[name=other_note]").val(data.booking.other_note);
       $('.imgUser').attr('src', '../public/' + data.booking.image_order);
+      $('input[name=is_prioritize][value="' + data.user.is_prioritize + '"]').prop('checked', 'checked');
       $(' #name_to_err').text('');
       $('#phone_number_to_err').text('');
       $('#home_number_to_err').text('');
@@ -316,6 +317,7 @@ function actionBooking(action) {
   var price = $("input[name=price]").val();
   var weight = $("input[name=weight]").val();
   var other_note = $("input[name=other_note]").val();
+  var is_prioritize = $('input[name=is_prioritize]:checked').val();
 
   var flag = 0;
   var required = "Trường dữ liêu bắt buộc";
@@ -347,6 +349,7 @@ function actionBooking(action) {
     formData.append('weight', weight);
     formData.append('other_note', other_note);
     formData.append('avatar', avatar);
+    formData.append('is_prioritize', is_prioritize);
     formData.append('action', action);
 
     $.ajax({

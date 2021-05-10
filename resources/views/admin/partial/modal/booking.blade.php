@@ -203,7 +203,6 @@
                             </div>
                             <div class="row" style="margin-bottom: 15px">
                                 <div class="form-group">
-                                    
                                     <div class="col-lg-3">
                                         <label class="control-label" for="inputError">Khối lượng (gram)</label>
                                         <input name="weight" value="{{ old('weight') }}"
@@ -220,6 +219,13 @@
                                         <input class="form-control spinner"
                                                value="{{ old( 'other_note') }}"
                                                name="other_note" type="text">
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <label class="control-label" for="inputError" id="is_prioritize">Ưu tiên: </label>
+                                        <div class="form-group">
+                                            <label><input type="radio" class="option-input radio"  name="is_prioritize" value="0" checked> Không</label>
+                                            <label><input type="radio" class="option-input radio"  name="is_prioritize" value="1" > Có </label>
+                                        </div>
                                     </div>
                                 </div>
         

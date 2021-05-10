@@ -259,6 +259,7 @@ class BookingController extends Controller
             $data->price = $request->price;
             $data->weight = $request->weight;
             $data->other_note = $request->other_note;
+            $data->is_prioritize = $request->is_prioritize;
 
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
