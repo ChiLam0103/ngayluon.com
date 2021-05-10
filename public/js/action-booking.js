@@ -125,6 +125,7 @@ $(document).ready(function () {
         { data: "send_name", title: "Người gửi" },
         { data: "receive_name", title: "Người nhận" },
         { data: "price", title: "Giá" },
+        { data: "is_prioritize", title: "Ưu tiên" },
         { data: "created_at", title: "Ngày tạo" },
       ],
     });
@@ -184,7 +185,7 @@ $(document).ready(function () {
       $("input[name=weight]").val(data.booking.weight);
       $("input[name=other_note]").val(data.booking.other_note);
       $('.imgUser').attr('src', '../public/' + data.booking.image_order);
-      $('input[name=is_prioritize][value="' + data.user.is_prioritize + '"]').prop('checked', 'checked');
+      $('input[name=is_prioritize][value="' + data.booking.is_prioritize + '"]').prop('checked', 'checked');
       $(' #name_to_err').text('');
       $('#phone_number_to_err').text('');
       $('#home_number_to_err').text('');
@@ -296,6 +297,7 @@ var table = $("#list_booking").DataTable({
     { data: "send_name", title: "Người gửi" },
     { data: "receive_name", title: "Người nhận" },
     { data: "price", title: "Giá" },
+    { data: "is_prioritize", title: "Ưu tiên" },
     { data: "status", title: "Trạng thái" },
     { data: "created_at", title: "Ngày tạo" },
   ],
