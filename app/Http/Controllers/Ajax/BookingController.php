@@ -123,13 +123,13 @@ class BookingController extends Controller
             ->editColumn('is_prioritize', function ($user) {
                 $name = '';
                 if ($user->is_prioritize == 0) {
-                    $name .= '<input type="checkbox" value="0" readonly>';
+                    $name .= '<img src="' . asset('public/img/incorect.png') . '" width="30px"></img>';
                 } elseif ($user->is_prioritize == 1) {
-                    $name .= '<input type="checkbox"  checked value="1" readonly >';
+                    $name .= '<img src="' . asset('public/img/corect.png') . '" width="30px"></img>';
                 }
                 return $name;
             })
-            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action','is_prioritize'])
+            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action', 'is_prioritize'])
             ->make(true);
     }
     public static function generateBookID()

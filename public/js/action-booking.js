@@ -58,17 +58,17 @@ $(document).ready(function () {
     var customer_id = $("#customer option:selected").val();
     var choose_status = $("#choose_status option:selected").val();
     $('#quickAssignModal #assign').empty();
-    var option="";
-    switch(choose_status){
+    var option = "";
+    switch (choose_status) {
       case 'new':
-        option=" <option value='receive'>Đi lấy hàng</option> <option value='receive-and-send'>Đi lấy & giao hàng</option>";
-      break;
+        option = " <option value='receive'>Đi lấy hàng</option> <option value='receive-and-send'>Đi lấy & giao hàng</option>";
+        break;
       case 'taking':
-        option="  <option value='send'>Đi giao hàng</option>";
-      break;
+        option = "  <option value='send'>Đi giao hàng</option>";
+        break;
       case 'sending':
-        option="<option value='return'> Trả lại</option> <option value='move'> Giao lại</option>";
-      break;
+        option = "<option value='return'> Trả lại</option> <option value='move'> Giao lại</option>";
+        break;
     }
     $('#quickAssignModal #assign').append(option);
     $.ajax({
@@ -155,9 +155,8 @@ $(document).ready(function () {
     var id = $(this).attr("name");
     $('.modal-title').text('Chỉnh sửa thông tin đơn hàng');
     $('#modalBooking .action').attr('id', 'editBooking');
-    $('#modalBooking').modal('show');
     $("#name_id_fr").prop("disabled", "disabled");
-
+    $("#editBooking .modal-body .input").val('');
     $.ajax({
       type: "GET",
       url: "../ajax/detail_booking/" + id,
@@ -186,11 +185,12 @@ $(document).ready(function () {
       $("input[name=other_note]").val(data.booking.other_note);
       $('.imgUser').attr('src', '../public/' + data.booking.image_order);
       $('input[name=is_prioritize][value="' + data.booking.is_prioritize + '"]').prop('checked', 'checked');
-      $(' #name_to_err').text('');
+      $('#name_to_err').text('');
       $('#phone_number_to_err').text('');
       $('#home_number_to_err').text('');
       $('#name_err').text('');
     });
+    $('#modalBooking').modal('show');
   });
   // modal show detail booking
   $(document).on("click", ".uuid", function () {

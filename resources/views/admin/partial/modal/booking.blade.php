@@ -220,17 +220,22 @@
                                                value="{{ old( 'other_note') }}"
                                                name="other_note" type="text">
                                     </div>
+                                    <div class="col-lg-3" id="frm_is_advance_money" style="display: none">
+                                        <label class="control-label" for="inputError">Tiền tạm ứng</label>
+                                        <input id="is_advance_money" name="is_advance_money" value="{{ old('is_advance_money') }}"
+                                               class="form-control spinner" type="text"
+                                               placeholder="Nhập số tiền">
+                                        @if ($errors->has('is_advance_money'))
+                                            @foreach ($errors->get('is_advance_money') as $error)
+                                                <span style="color: red" class="help-block">{!! $error !!}</span>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                     <div class="col-lg-3">
-                                        <label class="control-label" for="inputError" id="is_prioritize">Ưu tiên: </label>
-                                        <div class="form-group">
-                                            <label><input type="radio" class="option-input radio"  name="is_prioritize" value="0" checked> Không</label>
-                                            <label><input type="radio" class="option-input radio"  name="is_prioritize" value="1" > Có </label>
-                                        </div>
+                                            <label><input type="checkbox" class="option-input radio"  name="is_prioritize" value="1" > Ưu tiên </label>
                                     </div>
                                 </div>
-        
                             </div>
-                           
                         </div>
                     </div>
                 </div>
@@ -273,7 +278,6 @@
                 }
             });
         }
-
         function loadWardFrom(id) {
             $("#ward_fr option[value!='-1']").remove();
             $.ajax({
@@ -290,7 +294,6 @@
                 }
             });
         }
-
         function loadDistrictTo() {
             var province_to = $('#province_to').val();
             $("#district_to option[value!='-1']").remove();
@@ -340,6 +343,7 @@
                 $("#home_number_fr").val(msg.user.home_number);
                 $('select[name="district_id_fr"] option[value="'+msg.user.district_id+'"]').prop('selected', true);
                 $('select[name="ward_id_fr"] option[value="'+msg.user.ward_id+'"]').prop('selected', true);
+                (msg.user.is_advance_money == 1) ? $('#frm_is_advance_money').show() : $('#frm_is_advance_money').hide();
             });
         }
     </script>
