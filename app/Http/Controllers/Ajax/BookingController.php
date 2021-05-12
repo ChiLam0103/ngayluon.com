@@ -238,7 +238,7 @@ class BookingController extends Controller
             $title = '';
             if ($request->action == "store") {
                 $uuid = $this->generateBookID();
-                $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
+                $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->first();
 
                 $data->uuid = $uuid;
                 $data->sender_id = $sender->id;
@@ -265,6 +265,7 @@ class BookingController extends Controller
             $data->name = $request->name;
             $data->payment_type = $request->payment_type;
             $data->COD = $request->cod;
+            $data->COD_edit = $request->COD_edit;
             $data->price = $request->price;
             $data->weight = $request->weight;
             $data->other_note = $request->other_note;
@@ -280,7 +281,7 @@ class BookingController extends Controller
 
             $data->save();
             DB::commit();
-            // Thông báo tới admin có đơn hàng mới
+        //    Thông báo tới admin có đơn hàng mới
             $bookingTmp = $data->toArray();
             $bookingTmp['uuid'] = $data->uuid;
             dispatch(new NotificationJob($bookingTmp, 'admin', $title, 'push_order'));

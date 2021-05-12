@@ -220,13 +220,13 @@
                                                value="{{ old( 'other_note') }}"
                                                name="other_note" type="text">
                                     </div>
-                                    <div class="col-lg-3" id="frm_is_advance_money" style="display: none">
+                                    <div class="col-lg-3" id="frm_COD_edit" style="display: none">
                                         <label class="control-label" for="inputError">Tiền tạm ứng</label>
-                                        <input id="is_advance_money" name="is_advance_money" value="{{ old('is_advance_money') }}"
+                                        <input id="COD_edit" name="COD_edit" value="{{ old('COD_edit') }}"
                                                class="form-control spinner" type="text"
                                                placeholder="Nhập số tiền">
-                                        @if ($errors->has('is_advance_money'))
-                                            @foreach ($errors->get('is_advance_money') as $error)
+                                        @if ($errors->has('COD_edit'))
+                                            @foreach ($errors->get('COD_edit') as $error)
                                                 <span style="color: red" class="help-block">{!! $error !!}</span>
                                             @endforeach
                                         @endif
@@ -343,7 +343,7 @@
                 $("#home_number_fr").val(msg.user.home_number);
                 $('select[name="district_id_fr"] option[value="'+msg.user.district_id+'"]').prop('selected', true);
                 $('select[name="ward_id_fr"] option[value="'+msg.user.ward_id+'"]').prop('selected', true);
-                (msg.user.is_advance_money == 1) ? $('#frm_is_advance_money').show() : $('#frm_is_advance_money').hide();
+                (msg.user.is_advance_money == 1) ? $('#frm_COD_edit').show() : $('#frm_COD_edit').hide();
             });
         }
     </script>
