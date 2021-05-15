@@ -165,9 +165,9 @@ class OrderController extends ApiController
             'receiver.phone' => 'required|string',
             'price' => 'required|between:0,99.99',
             'weight' => 'required|between:0,99.99',
-            'transport_type' => 'required|integer',
-            'receive_type' => 'required|integer',
-            'payment_type' => 'required|integer',
+            // 'transport_type' => 'required|integer',
+            // 'receive_type' => 'required|integer',
+            'payment_type' => 'required|integer',//1: người gửi trả cước ; 2: người nhận trả cước
             'COD' => 'required|numeric|min:0',
             'COD_edit' => 'numeric|min:0',
         ];
@@ -227,20 +227,20 @@ class OrderController extends ApiController
             $book->receive_ward_id = $req->receiver['address']['ward'];
             $book->receive_homenumber = $req->receiver['address']['homenumber'];
             $book->receive_full_address = $req->receiver['address']['full_address'];
-            $book->receive_type = $req->receive_type;
+            // $book->receive_type = $req->receive_type;
             $book->price = $req->price;
             $book->weight = $req->weight;
-            $book->transport_type = $req->transport_type;
+            // $book->transport_type = $req->transport_type;
             $book->payment_type = $req->payment_type;
             $book->COD = $req->COD;
             $book->COD = $req->COD_edit;
             $book->other_note = $req->other_note;
             $book->status = 'new';
 
-            $book->transport_type_services = $req->transport_type_services;
-            $book->transport_type_service1 = (isset($req->transport_type_service1) && $req->transport_type_service1 == 1) ? 1 : 0;
-            $book->transport_type_service2 = (isset($req->transport_type_service2) && $req->transport_type_service2 == 1) ? 1 : 0;
-            $book->transport_type_service3 = (isset($req->transport_type_service3) && $req->transport_type_service3 == 1) ? 1 : 0;
+            // $book->transport_type_services = $req->transport_type_services;
+            // $book->transport_type_service1 = (isset($req->transport_type_service1) && $req->transport_type_service1 == 1) ? 1 : 0;
+            // $book->transport_type_service2 = (isset($req->transport_type_service2) && $req->transport_type_service2 == 1) ? 1 : 0;
+            // $book->transport_type_service3 = (isset($req->transport_type_service3) && $req->transport_type_service3 == 1) ? 1 : 0;
             // kiểm tra khách lần đầu tiên sử dụng hệ thống (khách mới)
             $check = Booking::where('sender_id', $req->user()->id)->count();
             if ($check == 0) {

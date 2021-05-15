@@ -120,7 +120,16 @@ class BookingController extends Controller
                 }
                 return "<span style='font-size:10px'>" . $title . "</span>";
             })
-            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action'])
+            ->editColumn('is_prioritize', function ($user) {
+                $name = '';
+                if ($user->is_prioritize == 0) {
+                    $name .= '<img src="' . asset('public/img/incorect.png') . '" width="30px"></img>';
+                } elseif ($user->is_prioritize == 1) {
+                    $name .= '<img src="' . asset('public/img/corect.png') . '" width="30px"></img>';
+                }
+                return $name;
+            })
+            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action', 'is_prioritize'])
             ->make(true);
     }
     public static function generateBookID()
@@ -229,7 +238,7 @@ class BookingController extends Controller
             $title = '';
             if ($request->action == "store") {
                 $uuid = $this->generateBookID();
-                $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->where('delete_status', 0)->first();
+                $sender = User::where('id', $request->name_id_fr)->where('role', 'customer')->first();
 
                 $data->uuid = $uuid;
                 $data->sender_id = $sender->id;
@@ -256,9 +265,11 @@ class BookingController extends Controller
             $data->name = $request->name;
             $data->payment_type = $request->payment_type;
             $data->COD = $request->cod;
+            $data->COD_edit = $request->COD_edit;
             $data->price = $request->price;
             $data->weight = $request->weight;
             $data->other_note = $request->other_note;
+            $data->is_prioritize = $request->is_prioritize;
 
             if ($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
@@ -270,7 +281,7 @@ class BookingController extends Controller
 
             $data->save();
             DB::commit();
-            // Thông báo tới admin có đơn hàng mới
+        //    Thông báo tới admin có đơn hàng mới
             $bookingTmp = $data->toArray();
             $bookingTmp['uuid'] = $data->uuid;
             dispatch(new NotificationJob($bookingTmp, 'admin', $title, 'push_order'));

@@ -136,6 +136,7 @@ $(document).on('click', '#btnAddNew', function () {
     $('#email_err').text('');
     $('#password_err').text('');
     $('#cf_password_err').text('');
+    $('input[name=is_advance_money]').prop('checked', false)
 });
 //   show edit booking
 $(document).on('click', '.edit_user', function () {
@@ -163,7 +164,6 @@ $(document).on('click', '.edit_user', function () {
         $("input[name=bank_name]").val(data.user.bank_name);
         $("input[name=bank_branch]").val(data.user.bank_branch);
         $('.imgUser').attr('src', '../' + data.user.avatar);
-        $('input[name=is_advance_money][value="' + data.user.is_advance_money + '"]').prop('checked', 'checked');
         $('#uuid_err').text('');
         $('#name_err').text('');
         $('#email_err').text('');
@@ -177,6 +177,7 @@ $(document).on('click', '.edit_user', function () {
         $('#cf_password_err').text('');
         $("input[name=email]").attr("disabled", "disabled");
         $("input[name=phone_number]").attr("disabled", "disabled");
+        (data.user.is_advance_money == 1) ? $('input[name=is_advance_money]').prop('checked', true) : $('input[name=is_advance_money]').prop('checked', false);
     });
 });
 

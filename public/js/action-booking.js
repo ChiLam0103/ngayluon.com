@@ -58,17 +58,17 @@ $(document).ready(function () {
     var customer_id = $("#customer option:selected").val();
     var choose_status = $("#choose_status option:selected").val();
     $('#quickAssignModal #assign').empty();
-    var option="";
-    switch(choose_status){
+    var option = "";
+    switch (choose_status) {
       case 'new':
-        option=" <option value='receive'>Đi lấy hàng</option> <option value='receive-and-send'>Đi lấy & giao hàng</option>";
-      break;
+        option = " <option value='receive'>Đi lấy hàng</option> <option value='receive-and-send'>Đi lấy & giao hàng</option>";
+        break;
       case 'taking':
-        option="  <option value='send'>Đi giao hàng</option>";
-      break;
+        option = "  <option value='send'>Đi giao hàng</option>";
+        break;
       case 'sending':
-        option="<option value='return'> Trả lại</option> <option value='move'> Giao lại</option>";
-      break;
+        option = "<option value='return'> Trả lại</option> <option value='move'> Giao lại</option>";
+        break;
     }
     $('#quickAssignModal #assign').append(option);
     $.ajax({
@@ -125,6 +125,7 @@ $(document).ready(function () {
         { data: "send_name", title: "Người gửi" },
         { data: "receive_name", title: "Người nhận" },
         { data: "price", title: "Giá" },
+        { data: "is_prioritize", title: "Ưu tiên" },
         { data: "created_at", title: "Ngày tạo" },
       ],
     });
@@ -148,15 +149,15 @@ $(document).ready(function () {
     $('#phone_number_to_err').text('');
     $('#home_number_to_err').text('');
     $('#name_err').text('');
+    $('input[name=is_prioritize]').prop('checked', false)
   });
   //modal add edit booking
   $(document).on('click', '.btnEdit', function () {
     var id = $(this).attr("name");
     $('.modal-title').text('Chỉnh sửa thông tin đơn hàng');
     $('#modalBooking .action').attr('id', 'editBooking');
-    $('#modalBooking').modal('show');
     $("#name_id_fr").prop("disabled", "disabled");
-
+    $("#editBooking .modal-body .input").val('');
     $.ajax({
       type: "GET",
       url: "../ajax/detail_booking/" + id,
@@ -184,11 +185,14 @@ $(document).ready(function () {
       $("input[name=weight]").val(data.booking.weight);
       $("input[name=other_note]").val(data.booking.other_note);
       $('.imgUser').attr('src', '../public/' + data.booking.image_order);
-      $(' #name_to_err').text('');
+      (data.booking.is_prioritize == 1) ? $('input[name=is_prioritize]').prop('checked', true) : $('input[name=is_prioritize]').prop('checked', false);
+
+      $('#name_to_err').text('');
       $('#phone_number_to_err').text('');
       $('#home_number_to_err').text('');
       $('#name_err').text('');
     });
+    $('#modalBooking').modal('show');
   });
   // modal show detail booking
   $(document).on("click", ".uuid", function () {
@@ -295,6 +299,7 @@ var table = $("#list_booking").DataTable({
     { data: "send_name", title: "Người gửi" },
     { data: "receive_name", title: "Người nhận" },
     { data: "price", title: "Giá" },
+    { data: "is_prioritize", title: "Ưu tiên" },
     { data: "status", title: "Trạng thái" },
     { data: "created_at", title: "Ngày tạo" },
   ],
@@ -316,6 +321,8 @@ function actionBooking(action) {
   var price = $("input[name=price]").val();
   var weight = $("input[name=weight]").val();
   var other_note = $("input[name=other_note]").val();
+  var COD_edit = $("input[name=COD_edit]").val();
+  var is_prioritize = $('input[name=is_prioritize]:checked').val();
 
   var flag = 0;
   var required = "Trường dữ liêu bắt buộc";
@@ -325,7 +332,6 @@ function actionBooking(action) {
   (home_number_to == '') ? ($('#home_number_to_err').text(required)) && (flag = 1) : ($('#home_number_to_err').text(''));
   (name == '') ? ($('#name_err').text(required)) && (flag = 1) : ($('#name_err').text(''));
   (checkPhoneNumber(phone_number_to) == false) ? ($(' #phone_number_to_err').text(phone_err)) && (flag = 1) : ($('#phone_number_to_err').text(''));
-
   if (flag == 1) {
     return false;
   } else {
@@ -347,6 +353,8 @@ function actionBooking(action) {
     formData.append('weight', weight);
     formData.append('other_note', other_note);
     formData.append('avatar', avatar);
+    formData.append('COD_edit', COD_edit);
+    formData.append('is_prioritize', is_prioritize);
     formData.append('action', action);
 
     $.ajax({
@@ -358,6 +366,7 @@ function actionBooking(action) {
     }).done(function (res) {
       $("#modalBooking #btnSave").prop('disabled', true);
       location.reload();
+      console.log(res);
     });
   }
 }

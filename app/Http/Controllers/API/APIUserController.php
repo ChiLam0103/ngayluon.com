@@ -36,151 +36,169 @@ class APIUserController extends ApiController
 
     public function login(Request $req)
     {
-        // try{
-        $check = false;
-        $messages = [
-            'account.required' => 'Vui lòng nhập tài khoản đăng nhập',
-        ];
-        if (isset(request()->deviceToken) || isset(request()->deviceType)) {
-            request()->device_token = request()->deviceToken;
-            request()->device_type = request()->deviceType;
-        }
-        $roles = [
-            'account' => 'required',
-            //'password' => 'required|min:5',
-            'device_token' => 'string',
-            'device_type' => 'string|in:ios,android',
-        ];
-        $validator = Validator::make($req->all(), $roles, $messages);
+        try {
+            $check = false;
+            $messages = [
+                'account.required' => 'Vui lòng nhập tài khoản đăng nhập',
+            ];
+            if (isset(request()->deviceToken) || isset(request()->deviceType)) {
+                request()->device_token = request()->deviceToken;
+                request()->device_type = request()->deviceType;
+            }
+            $roles = [
+                'account' => 'required',
+                //'password' => 'required|min:5',
+                'device_token' => 'string',
+                'device_type' => 'string|in:ios,android',
+            ];
+            $validator = Validator::make($req->all(), $roles, $messages);
 
-        if ($validator->fails()) {
-            return response([
-                'msg' => $validator->errors()->first(),
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $user = User::where('username', $req->account)
-            ->orWhere('phone_number', $req->account)
-            ->orWhere('email', $req->account)
+            if ($validator->fails()) {
+                return response([
+                    'msg' => $validator->errors()->first(),
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+            $user = User::where('phone_number', $req->account)
             ->where('delete_status', 0)
+            ->where('role', 'customer')
             ->with('provinces', 'districts', 'wards')
             ->first();
-        // $user = User::where(function($query) use ($req){
-        //     $query->where('username', $req->account);
-        //     $query->orWhere('phone_number', $req->account);
-        //     $query->orWhere('email', $req->account);
-        // })->where('delete_status', 0)
-        //     ->with('provinces', 'districts', 'wards')
-        //     ->first();
-        if ($user == null) {
-            return $this->apiError('Tài khoản không đúng!');
-        }
-        if (empty($user)) {
-            $check = true;
-
-            $createUser = [
-                'phone_number' => $req->account,
-                //                'password' => bcrypt($req->password)
-            ];
-            if (isset($req->password_code)) {
-                $createUser['password_code'] = $req->password_code;
+            // $user = User::where('username', $req->account)
+            //     ->orWhere('phone_number', $req->account)
+            //     ->orWhere('email', $req->account)
+            //     ->where('delete_status', 0)
+            //     ->where('role', 'customer')
+            //     ->with('provinces', 'districts', 'wards')
+            //     ->first();
+            // $user = User::where(function($query) use ($req){
+            //     $query->where('username', $req->account);
+            //     $query->orWhere('phone_number', $req->account);
+            //     $query->orWhere('email', $req->account);
+            // })->where('delete_status', 0)
+            //     ->with('provinces', 'districts', 'wards')
+            //     ->first();
+            if ($user == null) {
+                return $this->apiError('Tài khoản không đúng!');
             }
-            $user = User::create($createUser);
-        }
-        if (isset($req->password_code)) {
-            if (empty($user->password_code)) {
-                $user = User::find($user->id);
-                $user->password_code = $req->password_code;
-                $user->save();
-            } else {
-                if ($user->password_code != request()->password_code) {
-                    return $this->apiError('Mật khẩu không đúng!');
+            // if (empty($user)) {
+            //     $check = true;
+
+            //     $createUser = [
+            //         'phone_number' => $req->account,
+            //         //'password' => bcrypt($req->password)
+            //     ];
+            //     if (isset($req->password_code)) {
+            //         $createUser['password_code'] = $req->password_code;
+            //     }
+            //     $user = User::create($createUser);
+            // }
+            // if (isset($req->password)) {
+            //     if (empty($user->password)) {
+            //         $user = User::find($user->id);
+            //         $user->password_code = $req->password_code;
+            //         $user->save();
+            //     } else {
+            //         if ($user->password_code != request()->password_code) {
+            //             return $this->apiError('Mật khẩu không đúng!');
+            //         }
+            //     }
+            // } else {
+            //     if (!empty($user->password_code)) {
+            //         return $this->apiError('Mật khẩu không đúng!');
+            //     }
+            // }
+            if (!$token = JWTAuth::attempt(['phone_number' => $req->account, 'password' => $req->password])) {
+                return response()->json(['code_token' => 0, 'status' => '404', 'msg' => 'Mật khẩu không đúng!', 'datatype' => 1, 'data' => []], 401);
+            }
+
+            if (!empty($req->device_token) && !empty($req->device_type)) {
+                $deviceInfo = [
+                    'user_id' => $user->id,
+                    'device_token' => $req->device_token,
+                    'device_type' => $req->device_type,
+                ];
+                $userDevice = Device::where('device_token', $req->device_token)
+                    ->where('device_type', $req->device_type)
+                    ->first();
+
+                if (!$userDevice) {
+                    $userDevice = Device::create($deviceInfo);
+                } else {
+                    $userDevice->update($deviceInfo);
                 }
             }
-        } else {
-            if (!empty($user->password_code)) {
-                return $this->apiError('Mật khẩu không đúng!');
-            }
-        }
 
-        if (!empty($req->device_token) && !empty($req->device_type)) {
-            $deviceInfo = [
-                'user_id' => $user->id,
-                'device_token' => $req->device_token,
-                'device_type' => $req->device_type,
+            $tokenGenerateJwt = $user->generateJwt(); //->đây là code tạo token dựa trên
+            $user->toArray();
+            $data = [
+                'id' => $user['id'],
+                'token' => $tokenGenerateJwt,
+                'phone_number' => $user['phone_number'],
+                'created_at' => (string) $user['created_at'],
+                'updated_at' => (string) $user['updated_at'],
             ];
-            $userDevice = Device::where('device_token', $req->device_token)
-                ->where('device_type', $req->device_type)
-                ->first();
-
-            if (!$userDevice) {
-                $userDevice = Device::create($deviceInfo);
+            unset($user['id'], $user['phone_number'], $user['created_at'], $user['updated_at']);
+            if ($check) {
+                $profile = ['profile' => null];
             } else {
-                $userDevice->update($deviceInfo);
+                $child = $user;
+                $full_address = '';
+                if ($user->home_number != null) {
+                    $full_address .= $user->home_number . ', ';
+                }
+                if ($user->ward_id != null) {
+                    $full_address .= $user->wards->name . ', ';
+                }
+                if ($user->district_id != null) {
+                    $full_address .= $user->districts->name . ', ';
+                }
+                if ($user->province_id != null) {
+                    $full_address .= $user->provinces->name;
+                }
+                if ($user->avatar != null) {
+                    $user->avatar = url($user->avatar);
+                }
+                if ($full_address != '') {
+                    $child['address'] = [
+                        'full_address' => $full_address,
+                        'province_id' => $user->province_id,
+                        'district_id' => $user->district_id,
+                        'ward_id' => $user->ward_id,
+                        'home_number' => $user->home_number,
+                    ];
+                } else {
+                    $child['address'] = null;
+                }
+                if ($user->bank_account_number != null) {
+                    $child['bank_info'] = [
+                        'account' => $user->bank_account,
+                        'account_number' => $user->bank_account_number,
+                        'name' => $user->bank_name,
+                        'branch' => $user->bank_branch,
+                    ];
+                } else {
+                    $child['bank_info'] = null;
+                }
+                unset(
+                    $child['provinces'],
+                    $child['districts'],
+                    $child['wards'],
+                    $child['province_id'],
+                    $child['district_id'],
+                    $child['ward_id'],
+                    $child['home_number'],
+                    $child['bank_account'],
+                    $child['bank_account_number'],
+                    $child['bank_name'],
+                    $child['bank_branch']
+                );
+                $profile = ['profile' => $child];
             }
+            return $this->apiOk(array_merge($data, $profile));
+        } catch (\Exception $e) {
+            return $this->apiError($e, 404);
         }
-
-        $tokenGenerateJwt = $user->generateJwt(); //->đây là code tạo token dựa trên
-        $user->toArray();
-        $data = [
-            'id' => $user['id'],
-            'token' => $tokenGenerateJwt,
-            'phone_number' => $user['phone_number'],
-            'created_at' => (string) $user['created_at'],
-            'updated_at' => (string) $user['updated_at'],
-        ];
-        unset($user['id'], $user['phone_number'], $user['created_at'], $user['updated_at']);
-        if ($check) {
-            $profile = ['profile' => null];
-        } else {
-            $child = $user;
-            $full_address = '';
-            if ($user->home_number != null) {
-                $full_address .= $user->home_number . ', ';
-            }
-            if ($user->ward_id != null) {
-                $full_address .= $user->wards->name . ', ';
-            }
-            if ($user->district_id != null) {
-                $full_address .= $user->districts->name . ', ';
-            }
-            if ($user->province_id != null) {
-                $full_address .= $user->provinces->name;
-            }
-            if ($user->avatar != null) {
-                $user->avatar = url($user->avatar);
-            }
-            if ($full_address != '') {
-                $child['address'] = [
-                    'full_address' => $full_address,
-                    'province_id' => $user->province_id,
-                    'district_id' => $user->district_id,
-                    'ward_id' => $user->ward_id,
-                    'home_number' => $user->home_number,
-                ];
-            } else {
-                $child['address'] = null;
-            }
-            if ($user->bank_account_number != null) {
-                $child['bank_info'] = [
-                    'account' => $user->bank_account,
-                    'account_number' => $user->bank_account_number,
-                    'name' => $user->bank_name,
-                    'branch' => $user->bank_branch,
-                ];
-            } else {
-                $child['bank_info'] = null;
-            }
-            unset($child['provinces'], $child['districts'], $child['wards'], $child['province_id'], $child['district_id'], $child['ward_id'], $child['home_number'],
-            $child['bank_account'], $child['bank_account_number'], $child['bank_name'], $child['bank_branch']);
-            $profile = ['profile' => $child];
-        }
-        return $this->apiOk(array_merge($data, $profile));
-        // }catch(\Exception $e){
-        //     return $this->apiError($e,404);
-        // }
-
     }
 
     public function loginWithPassword(Request $req)
@@ -206,7 +224,12 @@ class APIUserController extends ApiController
                 'errors' => $validator->errors(),
             ], 422);
         }
-        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'shipper')->with('provinces', 'districts', 'wards')->first();
+        // $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'shipper')->with('provinces', 'districts', 'wards')->first();
+        $user = User::where('phone_number', $req->account)
+        ->where('delete_status', 0)
+        ->where('role', 'shipper')
+        ->with('provinces', 'districts', 'wards')
+        ->first();
 
         if (empty($user)) {
             return response([
@@ -233,8 +256,8 @@ class APIUserController extends ApiController
             }
         }
 
-        if (!$token = JWTAuth::attempt(['uuid' => $req->account, 'password' => $req->password])) {
-            return response()->json(['code_token' => 0, 'status' => '404', 'msg' => 'wrong password', 'datatype' => 1, 'data' => []], 401);
+        if (!$token = JWTAuth::attempt(['phone_number' => $req->account, 'password' => $req->password])) {
+            return response()->json(['code_token' => 0, 'status' => '404', 'msg' => 'Mật khẩu không đúng!', 'datatype' => 1, 'data' => []], 401);
         }
 
         $tokenGenerateJwt = $user->generateJwt(); //->đây là code tạo token dựa trên
@@ -345,7 +368,12 @@ class APIUserController extends ApiController
                 'errors' => $validator->errors(),
             ], 422);
         }
-        $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'warehouse')->with('provinces', 'districts', 'wards')->first();
+        // $user = User::where('uuid', $req->account)->where('delete_status', 0)->where('role', 'warehouse')->with('provinces', 'districts', 'wards')->first();
+        $user = User::where('phone_number', $req->account)
+        ->where('delete_status', 0)
+        ->where('role', 'warehouse')
+        ->with('provinces', 'districts', 'wards')
+        ->first();
         if (empty($user)) {
             return response([
                 'msg' => 'Account does not exist',
@@ -369,8 +397,8 @@ class APIUserController extends ApiController
             }
         }
 
-        if (!$token = JWTAuth::attempt(['uuid' => $req->account, 'password' => $req->password])) {
-            return response()->json(['code_token' => 0, 'status' => '404', 'msg' => 'wrong password', 'datatype' => 1, 'data' => []], 401);
+        if (!$token = JWTAuth::attempt(['phone_number' => $req->account, 'password' => $req->password])) {
+            return response()->json(['code_token' => 0, 'status' => '404', 'msg' => 'Mật khẩu không đúng!', 'datatype' => 1, 'data' => []], 401);
         }
 
         $tokenGenerateJwt = $user->generateJwt(); //->đây là code tạo token dựa trên
@@ -697,8 +725,19 @@ class APIUserController extends ApiController
             $data->bank_info = null;
         }
 
-        unset($data['provinces'], $data['districts'], $data['wards'], $data['province_id'], $data['district_id'], $data['ward_id'], $data['home_number'],
-        $data['bank_account'], $data['bank_account_number'], $data['bank_name'], $data['bank_branch']);
+        unset(
+            $data['provinces'],
+            $data['districts'],
+            $data['wards'],
+            $data['province_id'],
+            $data['district_id'],
+            $data['ward_id'],
+            $data['home_number'],
+            $data['bank_account'],
+            $data['bank_account_number'],
+            $data['bank_name'],
+            $data['bank_branch']
+        );
         return $this->apiOk($data);
     }
 
