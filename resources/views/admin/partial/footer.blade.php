@@ -2,6 +2,6 @@
 <!-- Footer -->
 
 <div class="page-footer-inner">
-    Copyright &copy; UITShop 2017
+    Copyright &copy; Ngay & Luôn 2021
 </div>
 

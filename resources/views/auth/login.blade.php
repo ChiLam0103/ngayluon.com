@@ -2,7 +2,7 @@
 @section('main')
     <form class="login-form" id="login" action="{!!  url('loginPage') !!}" method="post">
         {{ csrf_field() }}
-        <h3 class="form-title font-green">Sign In</h3>
+        <h3 class="form-title font-green">Đăng nhập</h3>
         @if (\Session::has('err'))
             <div class="alert alert-danger">
                 <p>{!! \Session::get('err') !!}</p>
@@ -14,16 +14,16 @@
         </div>
         <div class="form-group">
             <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-            <label class="control-label visible-ie8 visible-ie9">Email</label>
+            <label class="control-label visible-ie8 visible-ie9">Email / Số điện thoại</label>
             <input class="form-control form-control-solid placeholder-no-fix" value="{!!  old('email') !!}" type="text"
-                placeholder="Your Email" name="email" />
+                placeholder="Nhập email hoặc số điện thoại" name="email" />
             @if ($errors->has('email'))
                 <div class="error" style="color: red">{{ $errors->first('email') }}</div>
             @endif
         </div>
         <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="password" placeholder="Password"
+            <label class="control-label visible-ie8 visible-ie9">Mật khẩu</label>
+            <input class="form-control form-control-solid placeholder-no-fix" type="password" placeholder="Nhập mật khẩu"
                 name="password" />
             @if ($errors->has('password'))
                 <div class="error" style="color: red">{{ $errors->first('password') }}</div>
@@ -35,9 +35,9 @@
             </div>
         @endif
         <div class="form-actions">
-            <button type="submit" id="submit" class="btn green uppercase">Login</button>
+            <button type="submit" id="submit" class="btn green uppercase">Đăng nhập</button>
             <label class="rememberme check mt-checkbox mt-checkbox-outline">
-                <input type="checkbox" name="remember" value="1" />Remember
+                <input type="checkbox" name="remember" value="1" />Ghi nhớ
                 <span></span>
             </label>
             {{-- <a href="#" id="forget-password" class="forget-password">Forgot Password?</a> --}}

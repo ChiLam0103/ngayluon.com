@@ -24,14 +24,14 @@ class CollaboratorController extends Controller
 
     public function __construct()
     {
-        $this->middleware('admin', ['except' => ['postLogin','postRegister', 'logout']]);
+        $this->middleware('admin', ['except' => ['postLogin', 'postRegister', 'logout']]);
     }
 
     protected $breadcrumb = ['Quản lý thành viên', 'cộng tác viên'];
 
     public function postLogin(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->orWhere('phone_number', $request->email)->first();
         if (empty($user)) {
             return redirect()->back()->with('err', 'Tài khoản không tồn tại!');
         }
@@ -41,13 +41,13 @@ class CollaboratorController extends Controller
         if ($user->status != 'active') {
             return redirect()->back()->with('err', 'Tài khoản chưa được kích hoạt');
         }
-        if ($user->role == 'admin' || $user->role == 'collaborators') {
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                // Authentication passed...
-                return redirect(url('/admin/report'));
-            } else {
-                return redirect()->back()->with('err', 'Email hoặc mật khẩu không đúng!');
-            }
+        if ($user->role == 'admin' || $user->role == 'shipper' || $user->role == 'collaborators') {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // Authentication passed...
+            return redirect(url('/admin/report'));
+        } else {
+            return redirect()->back()->with('err', 'Tài khoản hoặc mật khẩu không đúng!');
+        }
         } else {
             return redirect()->back()->with('err', 'Tài khoản không có quyền truy cập vào hệ thống quản trị!');
         }

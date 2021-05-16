@@ -185,6 +185,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .navbar a:hover, .navbar .active, .navbar li:hover > a {
   color: #dc3545!important;
+  font-weight: 700;
 }
 
 .navbar .getstarted {
