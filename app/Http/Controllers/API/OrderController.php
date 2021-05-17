@@ -235,6 +235,7 @@ class OrderController extends ApiController
             $book->COD = $req->COD;
             $book->COD = $req->COD_edit;
             $book->other_note = $req->other_note;
+            $book->is_prioritize = $req->is_prioritize;
             $book->status = 'new';
 
             // $book->transport_type_services = $req->transport_type_services;

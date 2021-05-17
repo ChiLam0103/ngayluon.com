@@ -24,7 +24,7 @@ class IsAdminUser
             // abort(403, 'Bạn không có quyền truy cập vào trang này!');
             return redirect('login');
         } else {
-            if (($user->role != 'admin' && $user->role != 'collaborators') || empty($user->role)) {
+            if (($user->role != 'admin' && $user->role != 'collaborators'  && $user->role != 'shipper' && $user->role != 'customer' && $user->role != 'warehouse') || empty($user->role)) {
                 return redirect('/');
             }
         }

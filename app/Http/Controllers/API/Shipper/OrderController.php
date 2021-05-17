@@ -70,7 +70,7 @@ class OrderController extends ApiController
 
     public function getListBook(Request $req)
     {
-        $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
+        // $shipperOnline = ShipperLocation::where('user_id', request()->user()->id)->where('online', 1)->first();
         // if (empty($shipperOnline)) {
         //     return $this->apiErrorWithStatus(403, 'Kích hoạt chế độ Đang hoạt động để thấy đơn hàng1!');
         // }
@@ -94,12 +94,12 @@ class OrderController extends ApiController
                         $q->orWhere('uuid', 'LIKE', '%' . $req->keyword . '%');
                     });
                 }
-                if (isset($req->district_id) && !empty($req->district_id)) {
-                    $query->where('bookings.send_district_id', 'LIKE', '%' . $req->district_id . '%');
-                }
-                if (isset($req->ward_id) && !empty($req->ward_id)) {
-                    $query->where('bookings.send_ward_id', 'LIKE', '%' . $req->ward_id . '%');
-                }
+                // if (isset($req->district_id) && !empty($req->district_id)) {
+                //     $query->where('bookings.send_district_id', 'LIKE', '%' . $req->district_id . '%');
+                // }
+                // if (isset($req->ward_id) && !empty($req->ward_id)) {
+                //     $query->where('bookings.send_ward_id', 'LIKE', '%' . $req->ward_id . '%');
+                // }
             }
             if ($req->category == 'send') {
                 $query->where(function ($query) {
@@ -122,12 +122,12 @@ class OrderController extends ApiController
                         $q->orWhere('uuid', 'LIKE', '%' . $req->keyword . '%');
                     });
                 }
-                if (isset($req->district_id) && !empty($req->district_id)) {
-                    $query->where('bookings.receive_district_id', 'LIKE', '%' . $req->district_id . '%');
-                }
-                if (isset($req->ward_id) && !empty($req->ward_id)) {
-                    $query->where('bookings.receive_ward_id', 'LIKE', '%' . $req->ward_id . '%');
-                }
+                // if (isset($req->district_id) && !empty($req->district_id)) {
+                //     $query->where('bookings.receive_district_id', 'LIKE', '%' . $req->district_id . '%');
+                // }
+                // if (isset($req->ward_id) && !empty($req->ward_id)) {
+                //     $query->where('bookings.receive_ward_id', 'LIKE', '%' . $req->ward_id . '%');
+                // }
             }
             if ($req->category == 'return') {
 
@@ -154,12 +154,12 @@ class OrderController extends ApiController
                         $q->orWhere('uuid', 'LIKE', '%' . $req->keyword . '%');
                     });
                 }
-                if (isset($req->district_id) && !empty($req->district_id)) {
-                    $query->where('bookings.send_district_id', 'LIKE', '%' . $req->district_id . '%');
-                }
-                if (isset($req->ward_id) && !empty($req->ward_id)) {
-                    $query->where('bookings.send_ward_id', 'LIKE', '%' . $req->ward_id . '%');
-                }
+                // if (isset($req->district_id) && !empty($req->district_id)) {
+                //     $query->where('bookings.send_district_id', 'LIKE', '%' . $req->district_id . '%');
+                // }
+                // if (isset($req->ward_id) && !empty($req->ward_id)) {
+                //     $query->where('bookings.send_ward_id', 'LIKE', '%' . $req->ward_id . '%');
+                // }
             }
         }
         $rows = $query->select('bookings.*', 'bookings.transport_type', 'book_deliveries.id', 'book_deliveries.user_id', 'book_deliveries.book_id', 'book_deliveries.category', 'book_deliveries.status', 'book_deliveries.last_move', 'book_deliveries.delay_total', 'book_deliveries.sending_active', 'book_deliveries.created_at as assign_time', 'book_deliveries.completed_at as completed_time')

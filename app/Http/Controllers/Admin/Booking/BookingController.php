@@ -61,6 +61,13 @@ class BookingController extends Controller
         $time_from = $time != null ? date("Y-m-d", strtotime($time)) : Carbon::today()->toDateString();
         return view('admin.elements.booking.index', ['active' => 'booking', 'breadcrumb' => $this->breadcrumb, 'time_from' => $time_from]);
     }
+    public function assignBooking()
+    {
+        // $this->updateNotificationReaded($request);
+
+        $this->breadcrumb[] = 'phân công đơn hàng';
+        return view('admin.elements.booking.assign.index', ['active' => 'assign', 'breadcrumb' => $this->breadcrumb]);
+    }
     protected function getBookingScope()
     {
         $user_id = Auth::user()->id;

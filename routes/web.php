@@ -124,6 +124,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
 
     Route::group(['prefix' => 'booking', 'namespace' => 'Booking'], function () {
         Route::get('/', 'BookingController@allBooking');
+        Route::get('assign', 'BookingController@assignBooking');
         Route::get('create', 'BookingController@createBooking');
         Route::post('create-booking', 'BookingController@postCreateBooking');
         Route::get('new', 'BookingController@newBooking');

@@ -23,9 +23,19 @@
             <i class="fa fa-line-chart" aria-hidden="true"></i> Tổng quan
              @if(isset($active)&& $active == 'report')<span class="selected"></span>
             @endif</a>
-        <a href="{{ url('/admin/booking') }}"  class=" @if(isset($active)&& $active == 'booking') active @endif">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
-        <div class="dropdown  @if(isset($active)&& $active == 'admin' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
+        {{-- <a href="{{ url('/admin/booking') }}"  class=" @if(isset($active)&& $active == 'booking') active @endif">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a> --}}
+            <div class="dropdown @if(isset($active)&& $active == 'booking' ) active open @endif">
+                <button class="dropbtn"><i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="{{ url('/admin/booking')}}" class="@if(isset($active)&& $active == 'booking') active @endif"><i class="fa fa-list" aria-hidden="true"></i> Danh sách</a>
+                  <a href="{{ url('/admin/booking/assign')}}" class="@if(isset($active)&& $active == 'assign') active @endif"><i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công</a>
+                </div>
+            </div>     
+         @if(Auth::user()->role == 'admin')  
+            <div class="dropdown  @if(isset($active)&& $active == 'admin' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
           <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
             <i class="fa fa-caret-down"></i>
           </button>
@@ -37,6 +47,7 @@
             <a href="{{ url('/admin/shippers')}}" class="@if(isset($active)&& $active == 'shipper') active @endif"><i class="fa fa-truck" aria-hidden="true"></i> Shipper</a>
           </div>
         </div> 
+     
         <div class="dropdown @if(isset($active)&& $active == 'district_type' || $active == 'price' || $active == 'notification-handle' || $active == 'promotions' || $active == 'feedback' || $active == 'version') active open @endif">
             <button class="dropbtn"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý
               <i class="fa fa-caret-down"></i>
@@ -49,7 +60,8 @@
               <a href="{{ url('/admin/feedback')}}" class="@if(isset($active)&& $active == 'feedback') active @endif">  <i class="fa fa-comment-o" aria-hidden="true"></i> Phản hồi</a>
               <a href="{{ url('/admin/versions')}}" class="@if(isset($active)&& $active == 'version') active @endif"> <i class="fa fa-level-up" aria-hidden="true" ></i> Version</a>
             </div>
-          </div> 
+        </div> 
+        @endif  
         <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
       </nav>
     <div class="top-menu">

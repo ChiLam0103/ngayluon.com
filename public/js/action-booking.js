@@ -201,7 +201,8 @@ $(document).ready(function () {
     $("#detailBooking .modal-body .content p").remove();
     $.ajax({
       type: "GET",
-      url: "../ajax/detail_booking/" + id,
+      // url: "../ajax/detail_booking/" + id,
+      url: "{{route('detailBooking')}}/" + id,
     }).done(function (msg) {
       var status_name = '';
       switch (msg.booking.status) {
@@ -375,12 +376,13 @@ function viewQuickAssign() {
   $("#list_table_assign_booking").DataTable({
     order: [[0, "desc"]],
     ajax: {
-      url: "../ajax/view_quick_assign",
+      url: "../../ajax/view_quick_assign",
       type: "GET",
     },
     serverSide: true,
     processing: true,
     columns: [
+      { data: "id", title: "ID" },
       { data: "uuid", title: "UUID" },
       { data: "name", title: "Tên đơn hàng" },
       { data: "send_name", title: "Người gửi" },
