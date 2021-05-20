@@ -293,7 +293,66 @@ class BookingController extends Controller
             return false;
         }
     }
+    public function countBooking(){
 
+        $data['all'] = 0;
+        $data['new'] = 0;
+        $data['taking'] = 0;
+        $data['warehouse'] = 0;
+        $data['sending'] = 0;
+        $data['completed'] = 0;
+        $data['return'] = 0;
+        $data['cancel'] = 0;
+        $data['move'] = 0;
+        // $data['received'] = 0;
+        // $data['sented'] = 0;
+        // $data['return'] = 0;
+        // $data['cancel'] = 0;
+        // $data['re-send'] = 0;
+        $query = Booking::select('id', 'sender_id', 'status');
+
+        if(Auth::user()->role =="customer"){
+            $query->where('sender_id', Auth::user()->id);
+        }
+        $booking = '';
+      
+
+        $booking = $query->get();
+
+        $data['all'] = count($booking);
+        if (!empty($booking) && count($booking) > 0) {
+            foreach ($booking as $item) {
+                if ($item->status == 'new') {
+                    $data['new']++;
+                } elseif ($item->status == 'taking') {
+                    $data['taking']++;
+                } elseif ($item->warehouse == 1) {
+                    $data['warehouse']++;
+                } elseif ($item->status == 'sending') {
+                    $data['sending']++;
+                } elseif ($item->status == 'completed') {
+                    $data['completed']++;
+                } elseif ($item->status == 'return') {
+                    $data['return']++;
+                } elseif ($item->status == 'cancel') {
+                    $data['cancel']++;
+                } elseif ($item->status == 'move') {
+                    $data['move']++;
+                }
+                //  elseif ($item->status == 'return') {
+
+                //     if (!empty($item->returnDeliveries)) {
+                //         $data['return']++;
+                //     }
+                //     if (!empty($item->requestDeliveries)) {
+                //         $data['re-send']++;
+                //     }
+                // }
+            }
+        }
+        return $data;
+    }
+    //---------------------end ken design--------------------
     public function newBooking()
     {
         if (Auth::user()->role == 'collaborators') {

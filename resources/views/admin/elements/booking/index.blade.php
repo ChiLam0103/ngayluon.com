@@ -73,29 +73,30 @@
         </div>
         <div class="col-lg-2 col-md-2" id="status_booking">
             <h5><b>Trạng thái đơn hàng</b></h5>
-            <div><label><input type="radio" class="option-input radio" name="booking_status" value="new">Chờ xử lý</label> </div>
-            <div><label><input type="radio" class="option-input radio" name="booking_status" value="warehouse">Trong kho</label> </div>
-            <div><label><input type="radio" class="option-input radio" name="booking_status" value="taking">Lấy hàng</label></div>
-            <div class=" sub_radio">
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="all">Tất cả (<span id="status_all"></span>)</label> </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="new">Chờ xử lý (<span id="status_new"></span>)</label> </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="warehouse">Trong kho (<span id="status_warehouse"></span>)</label> </div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="taking">Lấy hàng (<span id="status_taking"></span>)</label></div>
+            {{-- <div class=" sub_radio">
                 <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_doing">Đang lấy hàng</label>  </div>
                 <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_waiting">Chờ lấy hàng</label></div>
                 <div> <label><input type="radio" class="option-input radio" name="booking_status" value="taking_finish">Đã lấy hàng</label></div>
-            </div>
-            <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending">Giao hàng</label> </div>
-            <div class=" sub_radio">
+            </div> --}}
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending">Giao hàng (<span id="status_sending"></span>)</label> </div>
+            {{-- <div class=" sub_radio">
                 <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending_doing">Đang giao hàng</label></div>
                 <div><label><input type="radio" class="option-input radio" name="booking_status" value="sending_waiting">Chờ giao lại</label></div>
-            </div>
-            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="completed">Giao thành công</label></div>
-            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="split">Tách hàng</label></div>
-            <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_transfer">Chuyển hoàn</label></div>
-            <div class=" sub_radio">
+            </div> --}}
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="completed">Giao thành công (<span id="status_completed"></span>)</label></div>
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="split">Tách hàng (<span id="status_return"></span>)</label></div>
+            <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_transfer">Chuyển hoàn (<span id="status_move"></span>)</label></div>
+            {{-- <div class=" sub_radio">
               <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting">Chờ chuyển hoàn</label></div>
               <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_doing">Đang chuyển hoàn</label></div>
               <div><label><input type="radio" class="option-input radio" name="booking_status" value="refund_waiting_again">Chờ chuyển hoàn lại</label></div>
-            </div>
-            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="refunded">Đã chuyển hoàn</label></div>
-            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ</label></div>
+            </div> --}}
+            {{-- <div ><label><input type="radio" class="option-input radio" name="booking_status" value="refunded">Đã chuyển hoàn (<span id="status_new"></span>)</label></div> --}}
+            <div ><label><input type="radio" class="option-input radio" name="booking_status" value="cancel">Đã huỷ (<span id="status_cancel"></span>)</label></div>
         </div>
        
         <div class="col-lg-10 col-md-10" id="table_booking">

@@ -22,9 +22,6 @@
                                 <button type="button" id="quick-assign" class="btn btn-primary">
                                     <i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công đơn hàng
                                 </button>
-                                
-                                <button type="button" class="btn btn-primary " id="btnAddNewBooking"><i class="fa fa-plus"
-                                    aria-hidden="true"></i> Thêm mới</button>
                             </div>
                         </div>
                     </div>
@@ -40,6 +37,7 @@
                 <div class="col-lg-3">
                     <label>Hành động:</label>
                     <select class="form-control" id="status">
+                        <option value="new">Chờ xử lý</option>
                         <option value="processing">Đã phân</option>
                         <option value="delay">Hoãn </option>
                         <option value="completed">Đã hoàn thành</option>
@@ -70,18 +68,3 @@
         </div>
     </div>
 
-    
-
-    <!-- Modal  -->
-    @include('admin.partial.modal.detail_img')
-    @include('admin.partial.modal.detail_booking')
-    @include('admin.partial.modal.booking')
-    @include('admin.partial.modal.assign_booking')
-@endsection
-@push('script')
-    <script src="{{ asset('public/js/action-booking.js') }}"></script>
-    <script>
-     viewQuickAssign();
-    </script>
-  
-@endpush

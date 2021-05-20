@@ -1,4 +1,5 @@
 $(document).ready(function () {
+  countListStatus();
   lightbox.option({
     resizeDuration: 200,
     wrapAround: true,
@@ -201,8 +202,7 @@ $(document).ready(function () {
     $("#detailBooking .modal-body .content p").remove();
     $.ajax({
       type: "GET",
-      // url: "../ajax/detail_booking/" + id,
-      url: "{{route('detailBooking')}}/" + id,
+      url: "../ajax/detail_booking/" + id,
     }).done(function (msg) {
       var status_name = '';
       switch (msg.booking.status) {
@@ -376,7 +376,7 @@ function viewQuickAssign() {
   $("#list_table_assign_booking").DataTable({
     order: [[0, "desc"]],
     ajax: {
-      url: "../../ajax/view_quick_assign",
+      url: "../ajax/view_quick_assign",
       type: "GET",
     },
     serverSide: true,
@@ -418,5 +418,24 @@ function actionGetQuickAssign(shipper_id, status, category) {
       { data: "shipper_name", title: "Tên shipper" },
     ],
   });
-}
 
+}
+//count list
+function countListStatus() {
+  $.ajax({
+    type: "get",
+    url: "../ajax/count_booking",
+    dataType: "JSON",
+  }).done(function (msg) {
+    $('#status_booking #status_all').html(msg.all);
+    $('#status_booking #status_new').html(msg.new);
+    $('#status_booking #status_warehouse').html(msg.warehouse);
+    $('#status_booking #status_taking').html(msg.taking);
+    $('#status_booking #status_sending').html(msg.sending);
+    $('#status_booking #status_completed').html(msg.completed);
+    $('#status_booking #status_return').html(msg.return);
+    $('#status_booking #status_move').html(msg.move);
+    $('#status_booking #status_cancel').html(msg.cancel);
+   console.log(msg.all);
+  });
+}

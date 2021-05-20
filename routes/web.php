@@ -252,6 +252,8 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     Route::get('get_list_booking_assign', 'BookingController@getListBookingAssign');//get list booking (district, customer, status)
     Route::get('view_quick_assign', 'BookingController@viewQuickAssign');//view quick assign
     Route::post('assign_booking', 'BookingController@postAssignBooking');//post assign booking
+    Route::get('count_booking', 'BookingController@countBooking');//view quick assign
+
     Route::get('new_booking', 'BookingController@newBooking');
     Route::get('receive_booking', 'BookingController@receiveBooking');
     Route::get('move', 'BookingController@moveBooking');
@@ -271,7 +273,6 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
     //setting route
     Route::get('discount', 'SettingController@getDiscount');
     //end setting route
-
     // price route
     Route::get('provincial', 'SettingController@provincial');
     Route::get('provincial-vip', 'SettingController@provincialVip');

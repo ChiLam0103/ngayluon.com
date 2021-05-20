@@ -179,7 +179,7 @@
                                     <div class="col-lg-3">
                                         <label class="control-label" for="inputError">Tiền thu hộ</label>
                                         <input id="cod" name="cod" value="{{ old('cod') }}"
-                                               class="form-control spinner" type="text"
+                                               class="form-control spinner number" type="text"
                                                placeholder="Nhập số tiền thu hộ">
                                         @if ($errors->has('cod'))
                                             @foreach ($errors->get('cod') as $error)
@@ -189,7 +189,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <label class="control-label" for="inputError">Giá đơn hàng</label>
-                                        <input class="form-control spinner"
+                                        <input class="form-control spinner number"
                                                value="{{ old( 'price') }}"
                                                name="price" type="text" >
                                         @if ($errors->has('price'))
@@ -206,7 +206,7 @@
                                     <div class="col-lg-3">
                                         <label class="control-label" for="inputError">Khối lượng (gram)</label>
                                         <input name="weight" value="{{ old('weight') }}"
-                                               class="form-control spinner" type="text"
+                                               class="form-control spinner number" type="text"
                                                placeholder="Nhập khối lượng">
                                         @if ($errors->has('weight'))
                                             @foreach ($errors->get('weight') as $error)
@@ -223,7 +223,7 @@
                                     <div class="col-lg-3" id="frm_COD_edit" style="display: none">
                                         <label class="control-label" for="inputError">Tiền tạm ứng</label>
                                         <input id="COD_edit" name="COD_edit" value="{{ old('COD_edit') }}"
-                                               class="form-control spinner" type="text"
+                                               class="form-control spinner number" type="text"
                                                placeholder="Nhập số tiền">
                                         @if ($errors->has('COD_edit'))
                                             @foreach ($errors->get('COD_edit') as $error)

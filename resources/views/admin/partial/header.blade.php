@@ -4,72 +4,104 @@
         max-width: 120px;
         height: 3em
     }
+
 </style>
 <div class="page-header-inner ">
     <!-- BEGIN LOGO -->
     <div class="page-logo">
         <a href="{{ url('/') }}">
-            <img src="{{ asset('public/img/logo.png') }}" alt="logo" class="logo-default"/> </a>
+            <img src="{{ asset('public/img/logo.png') }}" alt="logo" class="logo-default" /> </a>
         <div class="menu-toggler sidebar-toggler">
             <span></span>
         </div>
     </div>
     <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
-       data-target=".navbar-collapse">
+        data-target=".navbar-collapse">
         <span></span>
     </a>
     <nav class="topnav" id="myTopnav">
-        <a href="{{ url('/admin/report') }}" class=" @if(isset($active)&& $active == 'report') active @endif"> 
+        <a href="{{ url('/admin/report') }}" class=" @if (isset($active) && $active=='report'
+            ) active @endif">
             <i class="fa fa-line-chart" aria-hidden="true"></i> Tổng quan
-             @if(isset($active)&& $active == 'report')<span class="selected"></span>
-            @endif</a>
-        {{-- <a href="{{ url('/admin/booking') }}"  class=" @if(isset($active)&& $active == 'booking') active @endif">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a> --}}
-            <div class="dropdown @if(isset($active)&& $active == 'booking' ) active open @endif">
-                <button class="dropbtn"><i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng
-                  <i class="fa fa-caret-down"></i>
+            @if (isset($active) && $active == 'report')<span class="selected"></span>
+            @endif
+        </a>
+        <a href="{{ url('/admin/booking') }}" class=" @if (isset($active) && $active=='booking'
+            ) active @endif">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i> Đơn hàng</a>
+        @if (Auth::user()->role == 'admin')
+            <div class="dropdown  @if ((isset($active) && $active=='admin' ) ||
+                $active=='customer' || $active=='collaborators' || $active=='warehouse' || $active=='shipper' ) active open @endif">
+                <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
+                    <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                  <a href="{{ url('/admin/booking')}}" class="@if(isset($active)&& $active == 'booking') active @endif"><i class="fa fa-list" aria-hidden="true"></i> Danh sách</a>
-                  <a href="{{ url('/admin/booking/assign')}}" class="@if(isset($active)&& $active == 'assign') active @endif"><i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công</a>
+                    <a href="{{ url('/admin/admin') }}" class="@if (isset($active) &&
+                        $active=='admin' ) active @endif"><i class="fa fa-cogs"
+                            aria-hidden="true"></i> Admin</a>
+                    <a href="{{ url('/admin/customer') }}" class="@if (isset($active) &&
+                        $active=='customer' ) active @endif"><i class="fa fa-user"
+                            aria-hidden="true"></i> Khách hàng</a>
+                    {{-- <a href="{{ url('/admin/collaborators')}}" class="@if (isset($active) && $active == 'collaborators') active @endif"><i class="fa fa-user-plus" aria-hidden="true"></i> Nhân viên của KH</a> --}}
+                    <a href="{{ url('/admin/warehouse') }}" class="@if (isset($active) &&
+                        $active=='warehouse' ) active @endif"><i class="fa fa-home"
+                            aria-hidden="true"></i> Quản lý Kho</a>
+                    <a href="{{ url('/admin/shippers') }}" class="@if (isset($active) &&
+                        $active=='shipper' ) active @endif"><i class="fa fa-truck"
+                            aria-hidden="true"></i> Shipper</a>
                 </div>
-            </div>     
-         @if(Auth::user()->role == 'admin')  
-            <div class="dropdown  @if(isset($active)&& $active == 'admin' || $active == 'customer' || $active == 'collaborators' || $active == 'warehouse' || $active == 'shipper') active open @endif">
-          <button class="dropbtn"><i class="fa fa-users"></i> Đối tác
-            <i class="fa fa-caret-down"></i>
-          </button>
-          <div class="dropdown-content">
-            <a href="{{ url('/admin/admin')}}" class="@if(isset($active)&& $active == 'admin') active @endif"><i class="fa fa-cogs" aria-hidden="true"></i> Admin</a>
-            <a href="{{ url('/admin/customer')}}" class="@if(isset($active)&& $active == 'customer') active @endif"><i class="fa fa-user" aria-hidden="true"></i> Khách hàng</a>
-            {{-- <a href="{{ url('/admin/collaborators')}}" class="@if(isset($active)&& $active == 'collaborators') active @endif"><i class="fa fa-user-plus" aria-hidden="true"></i> Nhân viên của KH</a> --}}
-            <a href="{{ url('/admin/warehouse')}}" class="@if(isset($active)&& $active == 'warehouse') active @endif"><i class="fa fa-home" aria-hidden="true"></i> Quản lý Kho</a>
-            <a href="{{ url('/admin/shippers')}}" class="@if(isset($active)&& $active == 'shipper') active @endif"><i class="fa fa-truck" aria-hidden="true"></i> Shipper</a>
-          </div>
-        </div> 
-     
-        <div class="dropdown @if(isset($active)&& $active == 'district_type' || $active == 'price' || $active == 'notification-handle' || $active == 'promotions' || $active == 'feedback' || $active == 'version') active open @endif">
-            <button class="dropbtn"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý
-              <i class="fa fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content">
-              <a href="{{ url('/admin/district_type')}}" class="@if(isset($active)&& $active == 'district_type') active @endif"><i class="fa fa-map" aria-hidden="true"></i> Quận/Huyện</a>
-              <a href="{{ url('/admin/price')}}" class="@if(isset($active)&& $active == 'price') active @endif"><i class="fa fa-money" aria-hidden="true"></i> Giá cước</a>
-              <a href="{{ url('/admin/notification-handles')}}" class="@if(isset($active)&& $active == 'notification-handle') active @endif"> <i class="icon-bell" aria-hidden="true"></i> Thông báo</a>
-              <a href="{{ url('/admin/promotions')}}" class="@if(isset($active)&& $active == 'promotions') active @endif"> <i class="fa fa-ticket" aria-hidden="true"></i> Chương trình khuyến mãi</a>
-              <a href="{{ url('/admin/feedback')}}" class="@if(isset($active)&& $active == 'feedback') active @endif">  <i class="fa fa-comment-o" aria-hidden="true"></i> Phản hồi</a>
-              <a href="{{ url('/admin/versions')}}" class="@if(isset($active)&& $active == 'version') active @endif"> <i class="fa fa-level-up" aria-hidden="true" ></i> Version</a>
             </div>
-        </div> 
-        @endif  
+
+            <div class="dropdown @if ((isset($active) && $active=='district_type' ) ||
+                $active=='price' || $active=='notification-handle' || $active=='promotions' || $active=='feedback' ||
+                $active=='version' ) active open @endif">
+                <button class="dropbtn"><i class="fa fa-cog" aria-hidden="true"></i> Quản lý
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="{{ url('/admin/district_type') }}" class="@if (isset($active) &&
+                        $active=='district_type' ) active @endif"><i class="fa fa-map"
+                            aria-hidden="true"></i> Quận/Huyện</a>
+                    {{-- <a href="{{ url('/admin/price')}}" class="@if (isset($active) && $active == 'price') active @endif"><i class="fa fa-money" aria-hidden="true"></i> Giá cước</a> --}}
+                    <a href="{{ url('/admin/notification-handles') }}" class="@if (isset($active)
+                        && $active=='notification-handle' ) active @endif"> <i
+                            class="icon-bell" aria-hidden="true"></i> Thông báo</a>
+                    <a href="{{ url('/admin/promotions') }}" class="@if (isset($active) &&
+                        $active=='promotions' ) active @endif"> <i class="fa fa-ticket"
+                            aria-hidden="true"></i> Chương trình khuyến mãi</a>
+                    {{-- <a href="{{ url('/admin/feedback')}}" class="@if (isset($active) && $active == 'feedback') active @endif">  <i class="fa fa-comment-o" aria-hidden="true"></i> Phản hồi</a> --}}
+                    <a href="{{ url('/admin/versions') }}" class="@if (isset($active) &&
+                        $active=='version' ) active @endif"> <i class="fa fa-level-up"
+                            aria-hidden="true"></i> Version</a>
+                </div>
+            </div>
+            <div class="dropdown @if ((isset($active) && $active=='contact' ) || $active=='price'
+                || $active=='notification-handle' || $active=='promotions' || $active=='feedback' || $active=='version'
+                ) active open @endif">
+                <button class="dropbtn"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="{{ url('/admin/district_type') }}" class="@if (isset($active) &&
+                        $active=='district_type' ) active @endif"><i
+                            class="fa fa-pencil-square-o" aria-hidden="true"></i> Làm tài xế</a>
+                    <a href="{{ url('/admin/feedback') }}" class="@if (isset($active) &&
+                        $active=='notification-handle' ) active @endif"> <i
+                            class="fa fa-envelope" aria-hidden="true"></i> Liên hệ</a>
+                    <a href="{{ url('/admin/promotions') }}" class="@if (isset($active) &&
+                        $active=='promotions' ) active @endif"><i class="fa fa-newspaper-o"
+                            aria-hidden="true"></i> Nhận bảng tin</a>
+                </div>
+            </div>
+        @endif
         <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
-      </nav>
+    </nav>
     <div class="top-menu">
-      
+
         <ul class="nav navbar-nav pull-right">
             <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                   data-close-others="true">
+                    data-close-others="true">
                     <i class="icon-bell"></i>
                     <span class="badge badge-default" id="count-notification"></span>
                 </a>
@@ -80,7 +112,8 @@
                         <a href="page_user_profile_1.html">view all</a>
                     </li> -->
                     <li>
-                        <ul class="dropdown-menu-list scroller" id="list-notification" style="height: 250px;" data-handle-color="#637283">
+                        <ul class="dropdown-menu-list scroller" id="list-notification" style="height: 250px;"
+                            data-handle-color="#637283">
                             <li>
                                 <a href="">
                                     <span class="time">just now</span>
@@ -369,17 +402,16 @@
             </li> -->
             <li class="dropdown dropdown-user">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                   data-close-others="true">
+                    data-close-others="true">
                     <img alt="" class="img-circle" src="
-                    @if(Auth::user()->avatar != null) {{ url(Auth::user()->avatar) }}
-                    @else
-                   {{ url('public/img/default-avatar.jpg') }}
-                    @endif"/>
+                    @if (Auth::user()->avatar != null) {{ url(Auth::user()->avatar) }}
+                @else
+                    {{ url('public/img/default-avatar.jpg') }} @endif"/>
                     <span class="username username-hide-on-mobile">{!! @Auth::user()->name !!}</span>
                     <i class="fa fa-angle-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-default">
-                   <li>
+                    <li>
                         <a href="page_user_profile_1.html">
                             <i class="icon-user"></i> Hồ sơ cá nhân </a>
                     </li>
@@ -389,11 +421,11 @@
                     </li>
                 </ul>
             </li>
-            {{--<li class="dropdown dropdown-quick-sidebar-toggler">
+            {{-- <li class="dropdown dropdown-quick-sidebar-toggler">
                 <a href="javascript:;" class="dropdown-toggle">
                     <i class="icon-logout"></i>
                 </a>
-            </li>--}}
+            </li> --}}
         </ul>
     </div>
 </div>
