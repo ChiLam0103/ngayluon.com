@@ -199,12 +199,17 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     Route::get('wallet/bookings/{walletId}', 'Wallet\WalletController@getBookings');
     Route::get('wallet/export-booking/{walletId}', 'Wallet\WalletController@exportBooking');
     Route::get('wallet/update-status/{walletId}', 'Wallet\WalletController@getUpdateStatus');
-    //ray
+    //qr code
     Route::group(['prefix' => 'qrcode'], function () {
         Route::get('/', 'QRCode\QRCodeController@index');
         Route::post('create', 'QRCode\QRCodeController@postCreate');
         Route::post('find', 'QRCode\QRCodeController@find');
         Route::get('print', 'QRCode\QRCodeController@print');
+    });
+    Route::group(['prefix' => 'feedback', 'namespace' => 'Feedback'], function () {
+        Route::get('contact', 'FeedbackController@getContact');
+        Route::get('signin', 'FeedbackController@getSignin');
+        Route::get('newspaper', 'FeedbackController@getNewspaper');
     });
 });
 
@@ -284,7 +289,7 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
 
     Route::get('register/shipper', 'RegisterController@shipper');
     Route::get('register/agency', 'RegisterController@agency');
-    Route::get('feedback', 'RegisterController@feedback');
+    // Route::get('feedback', 'RegisterController@feedback');
     Route::get('version', 'SettingController@version');
     //qrcode
     Route::get('qrcode', 'QRCodeController@qrcode');

@@ -613,10 +613,10 @@
                     <h4 class="modal-title" style="color: #ff760c">Đăng Ký Ngay</h4>
                     <button type="button" class="close btn" data-dismiss="modal">&times;</button>
                 </div>
+                <form action="forms/contact.php" method="post" role="form" class="php-email-form">
 
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                    <!-- Modal body -->
+                    <div class="modal-body">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="name">Họ & Tên</label>
@@ -644,14 +644,14 @@
                                 <input type="file" class="custom-file-input" id="customFile" name="filename">
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
 
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Gửi</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-                </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
 
             </div>
         </div>

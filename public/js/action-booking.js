@@ -436,6 +436,5 @@ function countListStatus() {
     $('#status_booking #status_return').html(msg.return);
     $('#status_booking #status_move').html(msg.move);
     $('#status_booking #status_cancel').html(msg.cancel);
-   console.log(msg.all);
   });
 }
