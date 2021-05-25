@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/loginPage', 'Admin\User\CollaboratorController@postLogin');
 Route::post('/registerPage', 'Admin\User\CollaboratorController@postRegister');
-Route::get('/logout', 'Admin\User\CollaboratorController@logout');
+Route::get('/logout', 'Admin\User\CollaboratorController@logout');   
 
 Auth::routes();
 Route::get('/', function () {
@@ -289,7 +289,7 @@ Route::group(['prefix' => 'ajax', 'namespace' => 'Ajax'], function () {
 
     Route::get('register/shipper', 'RegisterController@shipper');
     Route::get('register/agency', 'RegisterController@agency');
-    // Route::get('feedback', 'RegisterController@feedback');
+    Route::get('feedback', 'RegisterController@feedback');
     Route::get('version', 'SettingController@version');
     //qrcode
     Route::get('qrcode', 'QRCodeController@qrcode');

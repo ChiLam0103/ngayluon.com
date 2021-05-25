@@ -75,21 +75,21 @@
                             aria-hidden="true"></i> Version</a>
                 </div>
             </div>
-            <div class="dropdown @if ((isset($active) && $active=='contact' ) || $active=='price'
-                || $active=='notification-handle' || $active=='promotions' || $active=='feedback' || $active=='version'
+            <div class="dropdown @if ((isset($active) && $active=='contact' ) || $active=='signin'
+               || $active=='newspaper' || $active=='feedback'
                 ) active open @endif">
                 <button class="dropbtn"><i class="fa fa-user-plus" aria-hidden="true"></i> Đăng ký
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="{{ url('/admin/district_type') }}" class="@if (isset($active) &&
-                        $active=='district_type' ) active @endif"><i
+                    <a href="{{ url('/admin/feedback/signin') }}" class="@if (isset($active) &&
+                        $active=='signin' ) active @endif"><i
                             class="fa fa-pencil-square-o" aria-hidden="true"></i> Làm tài xế</a>
-                    <a href="{{ url('/admin/feedback') }}" class="@if (isset($active) &&
-                        $active=='notification-handle' ) active @endif"> <i
+                    <a href="{{ url('/admin/feedback/contact') }}" class="@if (isset($active) &&
+                        $active=='contact' ) active @endif"> <i
                             class="fa fa-envelope" aria-hidden="true"></i> Liên hệ</a>
-                    <a href="{{ url('/admin/promotions') }}" class="@if (isset($active) &&
-                        $active=='promotions' ) active @endif"><i class="fa fa-newspaper-o"
+                    <a href="{{ url('/admin/feedback/newspaper') }}" class="@if (isset($active) &&
+                        $active=='newspaper' ) active @endif"><i class="fa fa-newspaper-o"
                             aria-hidden="true"></i> Nhận bảng tin</a>
                 </div>
             </div>

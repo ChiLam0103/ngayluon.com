@@ -477,7 +477,9 @@
                     </div>
 
                     <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-                        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                        <form action="front-ent/feedback?type=contact" method="post" role="form" class="php-email-form" id="formContact"
+                            enctype="multipart/form-data" >
+                            {{ csrf_field() }}
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="name">Họ & Tên</label>
@@ -500,14 +502,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Nội dung</label>
-                                <textarea class="form-control" name="message" rows="10" required></textarea>
+                                <textarea class="form-control" name="content" rows="10" required></textarea>
                             </div>
                             <div class="my-3">
                                 <div class="loading">Đang tải</div>
                                 <div class="error-message"></div>
                                 <div class="sent-message">Tin nhắn của bạn đã được gửi. Cảm ơn bạn!</div>
                             </div>
-                            <div class="text-center"><button type="submit">Gửi</button></div>
+                            <div class="text-center"><input type="button" value="Gửi" id="btnContact"></div>
                         </form>
                     </div>
 
@@ -527,8 +529,12 @@
                     <div class="col-lg-6">
                         <h4>Tham gia bản tin của chúng tôi</h4>
                         <p>Bạn hãy điền email bên dưới. Chúng tôi sẽ gửi cho bạn những bản tin mới nhất!</p>
-                        <form action="" method="post">
-                            <input type="email" name="email"><input type="submit" value="Đăng ký">
+                        <form action="front-ent/feedback?type=newspaper" method="post" role="form" id="formFeedback"
+                            class="php-email-form">
+                            {{ csrf_field() }}
+                            <span style="color: red;" id="email_err"
+                                        class="help-block"></span>
+                            <input type="email" name="email" id="email"><input type="button" id="btnFeedback" value="Đăng ký">
                         </form>
                     </div>
                 </div>
@@ -613,23 +619,27 @@
                     <h4 class="modal-title" style="color: #ff760c">Đăng Ký Ngay</h4>
                     <button type="button" class="close btn" data-dismiss="modal">&times;</button>
                 </div>
-                <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-
+                <form action="front-ent/feedback?type=signin" method="post" role="form" class="php-email-form "
+                    id="formSignin" enctype="multipart/form-data">
+                    {{ csrf_field() }}
                     <!-- Modal body -->
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="name">Họ & Tên</label>
+                                <label for="name">Họ & Tên*: <span style="color: red;" id="name_err"
+                                        class="help-block"></span></label>
                                 <input type="text" name="name" class="form-control" id="name" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="name">Số điện thoại</label>
+                                <label for="name">Số điện thoại*: <span style="color: red;" id="phone_number_err"
+                                        class="help-block"></span> </label>
                                 <input type="tel" name="phone" class="form-control" id="phone" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label for="name">Email</label>
+                                <label for="name">Email*: <span style="color: red;" id="email_err"
+                                        class="help-block"></span></label>
                                 <input type="email" name="email" class="form-control" id="email" required>
                             </div>
                             <div class="form-group col-md-6">
@@ -641,14 +651,14 @@
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label>Tải CV:</label>
-                                <input type="file" class="custom-file-input" id="customFile" name="filename">
+                                <input type="file" class="custom-file-input" id="link_cv" name="link_cv">
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Gửi</button>
+                        <button type="button" id="btnSubmitSignin" class="btn btn-primary">Gửi</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
                     </div>
                 </form>
@@ -672,6 +682,33 @@
     <!-- Load Facebook SDK for JavaScript -->
     <div id="fb-root"></div>
     <script>
+        //function check formart email, phone
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+
+        function checkPhoneNumber(phone) {
+            var flag = false;
+            phone = phone.replace('(+84)', '0');
+            phone = phone.replace('+84', '0');
+            phone = phone.replace('0084', '0');
+            phone = phone.replace(/ /g, '');
+            if (phone != '') {
+                var firstNumber = phone.substring(0, 2);
+                if ((firstNumber == '09' || firstNumber == '08' || firstNumber == '07' || firstNumber == '05' ||
+                        firstNumber == '03') && phone.length == 10) {
+                    if (phone.match(/^\d{10}/)) {
+                        flag = true;
+                    }
+                } else if (firstNumber == '02' && phone.length == 11) {
+                    if (phone.match(/^\d{11}/)) {
+                        flag = true;
+                    }
+                }
+            }
+            return flag;
+        }
         window.fbAsyncInit = function() {
             FB.init({
                 xfbml: true,
@@ -711,16 +748,68 @@
                     ] + '</option>')
                 }
             }
-            // if (typeof $('select[name=district_id]').val() !== 'undefined') {
-            //     loadWard($('select[name=district_id]').val());
-            // } else if ("{{ old('district_id') }}") {
-            //     loadWard('{{ old('district_id') }}');
-            // } else {
-            //     loadWard(msg[0]['id']);
-
-            // }
         });
+        //submit form
+        var flag = 0;
+        var required = "Trường dữ liêu bắt buộc";
+        var email_err = "Trường dữ liêu không đúng định dạng email";
+        var phone_err = "Trường dữ liêu không đúng định dạng số điện thoại";
+        $("#btnSubmitSignin").click(function(e) {
+            var name = $("#formSignin #name").val();
+            var phone = $("#formSignin #phone").val();
+            var email = $("#formSignin #email").val();
 
+            (name == '') ? ($('#formSignin #name_err').text(required)) && (flag = 1) : ($(
+                '#formSignin #name_err').text(''));
+            (email == '') ? ($('#formSignin #email_err').text(required)) && (flag = 1) : ($(
+                '#formSignin #email_err').text(''));
+            (phone == '') ? ($('#formSignin #phone_number_err').text(required)) && (flag = 1) : ($(
+                '#formSignin #phone_number_err').text(''));
+            (isEmail(email) == false) ? ($('#formSignin #email_err').text(email_err)) && (flag = 1) : ($(
+                    '#formSignin #email_err')
+                .text(''));
+            (checkPhoneNumber(phone) == false) ? ($('#formSignin #phone_number_err').text(
+                phone_err)) && (flag =
+                1) : ($('#formSignin #phone_number_err').text(''));
+            if (flag == 0) {
+                $('#formSignin').submit();
+                // location.reload();
+            }
+        });
+        $("#btnFeedback").click(function(e) {
+            var email = $("#formFeedback #email").val();
+            (email == '') ? ($('#formFeedback #email_err').text(required)) && (flag = 1) : ($(
+                '#formFeedback #email_err').text(''));
+            (isEmail(email) == false) ? ($('#formFeedback #email_err').text(email_err)) && (flag = 1) : ($(
+                    '#formFeedback #email_err')
+                .text(''));
+            if (flag == 0) {
+                $('#formFeedback').submit();
+                // location.reload();
+            }
+        });
+        $("#btnContact").click(function(e) {
+            var name = $("#formContact #name").val();
+            var phone = $("#formContact #phone").val();
+            var email = $("#formContact #email").val();
+
+            (name == '') ? ($('#formContact #name_err').text(required)) && (flag = 1) : ($(
+                '#formContact #name_err').text(''));
+            (email == '') ? ($('#formContact #email_err').text(required)) && (flag = 1) : ($(
+                '#formContact #email_err').text(''));
+            (phone == '') ? ($('#formContact #phone_number_err').text(required)) && (flag = 1) : ($(
+                '#formContact #phone_number_err').text(''));
+            (isEmail(email) == false) ? ($('#formContact #email_err').text(email_err)) && (flag = 1) : ($(
+                    '#formContact #email_err')
+                .text(''));
+            (checkPhoneNumber(phone) == false) ? ($('#formContact #phone_number_err').text(
+                phone_err)) && (flag =
+                1) : ($('#formContact #phone_number_err').text(''));
+            if (flag == 0) {
+                $('#formContact').submit();
+                // location.reload();
+            }
+        });
     </script>
 
     <!-- Your Chat Plugin code -->

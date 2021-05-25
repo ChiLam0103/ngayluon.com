@@ -37,7 +37,7 @@ class ShipperController extends Controller
             DB::rollBack();
             return $e;
         }
-        return redirect(url('admin/feedback'))->with('delete', 'Xóa phản hồi thành công');
+        return redirect(url('admin/feedback/signin'))->with('delete', 'Xóa phản hồi thành công');
     }
 
     public function index()
