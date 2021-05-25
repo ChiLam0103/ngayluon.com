@@ -14,11 +14,11 @@
         @include('admin.partial.log.success_log',['name' => 'success'])
         <div class="well" style="padding-left: 0px">
             <div class="row">
-                <form action="{!! url('admin/booking/exportAdvance') !!}" method="get">
+                {{-- <form action="{!! url('admin/booking/exportAdvance') !!}" method="get">
                     <input type="hidden" name="status[]" value="new">
                     <input type="hidden" name="status[]" value="taking">
-                    <input type="hidden" name="sub_status[]" value="none">
-                    <div class="col-lg-8">
+                    <input type="hidden" name="sub_status[]" value="none"> --}}
+                    {{-- <div class="col-lg-8">
                         <div class="input-group">
                              <span class="input-group-addon" id="sizing-addon2"><span
                                          class="glyphicon glyphicon-calendar"> </span> Từ ngày</span>
@@ -31,9 +31,9 @@
                             <span class="input-group-addon">Số điện thoại</span>
                             <input style="min-width: 180px" type="text" id="phone" name="phone" class="form-control">
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-12" style="margin-top: 5px">
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-lg-8">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="sizing-addon2">Quận / Huyện</span>
@@ -48,14 +48,14 @@
                                 </div>
                             </div>
                             
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-lg-12" style="margin-top: 5px">
-                                <button type="submit" class="btn btn-primary"><i
+                                {{-- <button type="submit" class="btn btn-primary"><i
                                             class="fa fa-print"
                                             aria-hidden="true"></i>
                                     Xuất dữ liệu
-                                </button>
+                                </button> --}}
                                 <button type="button" id="view-quick-assign" class="btn btn-primary">
                                     <i class="fa fa-eye" aria-hidden="true"></i> Xem danh sách đã phân công
                                 </button>
@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                {{-- </form> --}}
             </div>
         </div>
         <div class="col-lg-2 col-md-2" id="status_booking">
