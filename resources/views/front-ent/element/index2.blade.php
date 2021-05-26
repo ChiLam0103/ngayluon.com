@@ -529,12 +529,13 @@
                     <div class="col-lg-6">
                         <h4>Tham gia bản tin của chúng tôi</h4>
                         <p>Bạn hãy điền email bên dưới. Chúng tôi sẽ gửi cho bạn những bản tin mới nhất!</p>
-                        <form action="front-ent/feedback?type=newspaper" method="post" role="form" id="formFeedback"
+                        <form action="front-ent/feedback?type=newspaper" method="post" role="form" id="formFeedback"  class="php-email-form "
                             class="php-email-form">
                             {{ csrf_field() }}
                             <span style="color: red;" id="email_err"
                                         class="help-block"></span>
                             <input type="email" name="email" id="email"><input type="button" id="btnFeedback" value="Đăng ký">
+                            
                         </form>
                     </div>
                 </div>

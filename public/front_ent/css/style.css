@@ -1617,19 +1617,6 @@ section {
     padding: 10px 12px;
 }
 
-.contact .php-email-form button[type="submit"] {
-    background: #dc3545;
-    border: 0;
-    padding: 12px 34px;
-    color: #fff;
-    transition: 0.4s;
-    border-radius: 50px;
-}
-
-.contact .php-email-form button[type="submit"]:hover {
-    background: #209dd8;
-}
-
 .contact .php-email-form input[type="button"] {
     background: #dc3545;
     border: 0;
@@ -1756,7 +1743,7 @@ section {
     width: calc(100% - 100px);
 }
 
-#footer .footer-newsletter form input[type="submit"] {
+#footer .footer-newsletter form input[type="button"] {
     position: absolute;
     top: 0;
     right: 0;
@@ -1772,7 +1759,7 @@ section {
     box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 }
 
-#footer .footer-newsletter form input[type="submit"]:hover {
+#footer .footer-newsletter form input[type="button"]:hover {
     background: #209dd8;
 }
 
