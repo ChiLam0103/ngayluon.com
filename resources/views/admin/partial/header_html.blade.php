@@ -1,6 +1,8 @@
 <!-- App CSS -->
 <title>{!! ENV('APP_NAME') !!}</title>
-<link rel="shortcut icon" href="{{ asset('public/img/logo.png') }}"/>
+{{-- <link rel="shortcut icon" href="{{ asset('public/img/logo.png') }}"/> --}}
+<link href="{{ asset('public/front_ent/img/favicon.png') }}" rel="icon">
+<link href="{{ asset('public/front_ent/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <meta content="Preview page of Metronic Admin Theme #1 for statistics, charts, recent events and reports" name="description" />

@@ -10,21 +10,7 @@ $(document).ready(function() {
     }, 1000);
     $("#quick-assign").click(function() {
         $('#quickAssignModal').modal('show');
-    });
-    //view list all assign
-    $("#view-quick-assign").click(function() {
-        $("#list_table_assign_booking").destroy();
-        $("#list_table_assign_booking").empty();
-        $('#viewQuickAssignModal').modal('show');
-        viewQuickAssign();
-    });
-    //action click btn view list all assign
-    $("#viewQuickAssignModal #btnView").click(function() {
-        var shipper_id = $("#shipper_id option:selected").val();
-        var status = $("#status option:selected").val();
-        var category = $("#category option:selected").val();
-        actionGetQuickAssign(shipper_id, status, category);
-    });
+    });;
 
     $("#save-quick-assign").click(function(e) {
         $.ajax({
@@ -57,26 +43,31 @@ $(document).ready(function() {
         }
     });
 
-    $('#quickAssignModal #choose_status').on('change', function() {
-        var customer_id = $("#customer option:selected").val();
-        var choose_status = $("#choose_status option:selected").val();
+    $("#quickAssignModal #btnViewAssign").on("click", function(event) {
+        var customer_id = $("#quickAssignModal #customer option:selected").val();
+        var choose_status = $("#quickAssignModal #choose_status option:selected").val();
+        var date_from = $("#quickAssignModal #date_from").val();
+        var date_to = $("#quickAssignModal #date_to").val();
         $('#quickAssignModal #assign').empty();
         var option = "";
         switch (choose_status) {
             case 'new':
-                option = " <option value='receive'>Đi lấy hàng</option> <option value='receive-and-send'>Đi lấy & giao hàng</option>";
+                option = " <option value='receive'>Đi lấy hàng</option>";
                 break;
             case 'taking':
                 option = "  <option value='send'>Đi giao hàng</option>";
                 break;
-            case 'sending':
-                option = "<option value='return'> Trả lại</option> <option value='move'> Giao lại</option>";
+            case 'return':
+                option = " <option value='return'>Đi trả lại</option>";
+                break;
+            case 'move':
+                option = "  <option value='move'>Đi giao lại</option>";
                 break;
         }
         $('#quickAssignModal #assign').append(option);
         $.ajax({
             type: "GET",
-            url: '../ajax/get_list_booking_assign?' + 'sender_id=' + customer_id + '&status=' + choose_status,
+            url: '../ajax/get_list_booking_assign?' + 'sender_id=' + customer_id + '&status=' + choose_status + '&date_from=' + date_from + '&date_to=' + date_to,
         }).done(function(msg) {
             $('#quickAssignModal #ul-book tbody').html('');
             if (msg.booking.length > 0) {
@@ -376,59 +367,6 @@ function actionBooking(action) {
             console.log(res);
         });
     }
-}
-// view quick assign
-function viewQuickAssign() {
-    $("#list_table_assign_booking").DataTable({
-        order: [
-            [0, "desc"]
-        ],
-        ajax: {
-            url: "../ajax/view_quick_assign",
-            type: "GET",
-        },
-        serverSide: true,
-        processing: true,
-        columns: [
-            { data: "id", title: "ID" },
-            { data: "uuid", title: "UUID" },
-            { data: "name", title: "Tên đơn hàng" },
-            { data: "send_name", title: "Người gửi" },
-            { data: "send_phone", title: "SDT người gửi" },
-            { data: "send_address", title: "Địa chỉ gửi" },
-            { data: "receive_address", title: "Địa chỉ nhận" },
-            { data: "category", title: "Trạng thái" },
-            { data: "shipper_name", title: "Tên shipper" },
-        ],
-    });
-}
-//action click btn view list all assign
-function actionGetQuickAssign(shipper_id, status, category) {
-    var table = $("#list_table_assign_booking").DataTable();
-    table.destroy();
-    $("#list_table_assign_booking").empty();
-    $("#list_table_assign_booking").DataTable({
-        order: [
-            [0, "desc"]
-        ],
-        ajax: {
-            url: "../ajax/view_quick_assign?shipper_id=" + shipper_id + "&status=" + status + "&category=" + category,
-            type: "GET",
-        },
-        serverSide: true,
-        processing: true,
-        columns: [
-            { data: "uuid", title: "UUID" },
-            { data: "name", title: "Tên đơn hàng" },
-            { data: "send_name", title: "Người gửi" },
-            { data: "send_phone", title: "SDT người gửi" },
-            { data: "send_address", title: "Địa chỉ gửi" },
-            { data: "receive_address", title: "Địa chỉ nhận" },
-            { data: "category", title: "Trạng thái" },
-            { data: "shipper_name", title: "Tên shipper" },
-        ],
-    });
-
 }
 //count list
 function countListStatus() {

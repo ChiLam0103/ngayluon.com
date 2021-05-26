@@ -158,78 +158,37 @@ class BookingController extends Controller
     }
     public function getListBookingAssign(Request $request)
     {
-        $booking = DB::table('bookings as b')
+        $query = DB::table('bookings as b')
             ->leftJoin('book_deliveries as bd', 'b.id', 'bd.book_id')
             ->leftJoin('users as u', 'u.id', 'bd.user_id')
             ->where('b.sender_id', $request->sender_id)
-            ->where('b.status', $request->status)
-            ->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'b.send_full_address', 'u.name as shipper_name')
-            ->get();
+            ->whereBetween('b.created_at', [$request->date_from, $request->date_to])
+            ->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'b.send_full_address', 'u.name as shipper_name');
+        if ($request->status == 'all') {
+            $query->whereIn('bd.category', ['receive', 'send', 'return', 'move']);
+        } else {
+            switch ($request->status) {
+                case 'receive':
+                    $query->where('b.status', 'new');
+                    break;
+                case 'send':
+                    $query->where('bd.category', 'receive')
+                        ->where('bd.status', 'completed');
+                    break;
+                case 'return':
+                    $query->where('bd.category', 'return')
+                        ->where('bd.status', 'processing');
+                    break;
+                case 'move':
+                    $query->where('bd.category', 'move')
+                        ->where('bd.status', 'processing');
+                    break;
+            }
+        }
+        $booking = $query->get();
         return response()->json(['booking' => $booking]);
     }
-    public function viewQuickAssign(Request $request)
-    {
-        $query = DB::table('book_deliveries as bd')
-            ->leftJoin('bookings as b', 'b.id', 'bd.book_id')
-            ->leftJoin('users as u', 'u.id', 'bd.user_id');
-        if ($request->status != null) {
-            $query->where('bd.user_id', $request->shipper_id)->where("bd.status", $request->status)->where("bd.category", $request->category);
-        }
-        $booking = $query->select('b.id', 'b.uuid', 'b.name', 'b.send_name', 'b.send_phone', 'bd.send_address', 'bd.receive_address', 'u.name as shipper_name', 'bd.status', 'bd.category')
-            ->orderBy('b.id', 'DESC')
-            ->get();
-        return datatables()->of($booking)
-            ->editColumn('uuid', function ($b) {
-                return '<a href="javascript:void(0);" name="' . $b->id . '" class="uuid">' . $b->uuid . '</a>';
-            })
-            //'processing','delay','completed','return','deny','cancel'
-            ->editColumn('category', function ($b) {
-                $title = '';
-                $title_status = '';
-                switch ($b->status) {
-                    case 'processing':
-                        $title_status = "Đã phân";
-                        break;
-                    case 'delay':
-                        $title_status = "Hoãn";
-                        break;
-                    case 'completed':
-                        $title_status = "Đã";
-                        break;
-                    case 'return':
-                        $title_status = "Trả lại";
-                        break;
-                    case 'deny':
-                        $title_status = "Từ chối";
-                        break;
-                    case 'cancel':
-                        $title_status = "Hủy";
-                        break;
-                }
-                switch ($b->category) {
-                    case 'receive':
-                        $title = "đi lấy";
-                        break;
-                    case 'send':
-                        $title = "đi giao";
-                        break;
-                    case 'return':
-                        $title = "trả lại";
-                        break;
-                    case 'receive-and-send':
-                        $title = "vừa lấy vừa giao";
-                        break;
-                    case 'move':
-                        $title = "giao lại";
-                        break;
-                    default:
-                        break;
-                }
-                return "<span style='font-size:10px'>" . $title_status . " " . $title . "</span>";
-            })
-            ->rawColumns(['uuid', 'category'])
-            ->make(true);
-    }
+   
     public function actionBooking(Request $request)
     {
         DB::beginTransaction();
@@ -281,7 +240,7 @@ class BookingController extends Controller
 
             $data->save();
             DB::commit();
-        //    Thông báo tới admin có đơn hàng mới
+            //    Thông báo tới admin có đơn hàng mới
             $bookingTmp = $data->toArray();
             $bookingTmp['uuid'] = $data->uuid;
             dispatch(new NotificationJob($bookingTmp, 'admin', $title, 'push_order'));
@@ -293,7 +252,8 @@ class BookingController extends Controller
             return false;
         }
     }
-    public function countBooking(){
+    public function countBooking()
+    {
 
         $data['all'] = 0;
         $data['new'] = 0;
@@ -311,11 +271,11 @@ class BookingController extends Controller
         // $data['re-send'] = 0;
         $query = Booking::select('id', 'sender_id', 'status');
 
-        if(Auth::user()->role =="customer"){
+        if (Auth::user()->role == "customer") {
             $query->where('sender_id', Auth::user()->id);
         }
         $booking = '';
-      
+
 
         $booking = $query->get();
 
@@ -1458,16 +1418,24 @@ class BookingController extends Controller
                 if (empty($check)) {
                     DB::beginTransaction();
                     $status = '';
+                    $category = '';
                     try {
                         switch (request()->choose_status) {
-                            case 'new':
+                            case 'receive':
                                 $status = 'taking';
+                                $category = 'receive';
                                 break;
-                            case 'taking':
+                            case 'send':
                                 $status = 'sending';
+                                $category = 'send';
                                 break;
-                            case 'sending':
-                                $status = request()->type_assign;
+                            case 'return':
+                                $status = 'return';
+                                $category = 'return';
+                                break;
+                            case 'move':
+                                $status = 'move';
+                                $category = 'move';
                                 break;
                         }
                         $booking->update(['status' => $status]);
@@ -1476,7 +1444,7 @@ class BookingController extends Controller
                             'send_address' => $booking->send_full_address,
                             'receive_address' => $booking->receive_full_address,
                             'book_id' => $id,
-                            'category' => 'receive',
+                            'category' => $category,
                             'sending_active' => 1,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),

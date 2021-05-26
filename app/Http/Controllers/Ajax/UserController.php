@@ -282,8 +282,8 @@ class UserController extends Controller
                 //role shipper
                 if ($user->role == "shipper") {
                     $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
-                    $action[] = '<a style="float:left" href="' . url('admin/shippers/refresh-book/' . $user->id) . '" class="btn btn-xs btn-default" onclick="if(!confirm(\'Bạn chắc chắn muốn làm mới phân công của shipper này không ?\')) return false;"><i class="fa fa-refresh"></i> Làm mới ĐH</a>';
-                    $action[] = '<a style="float:left" href="' . url('admin/shippers/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
+                    // $action[] = '<a style="float:left" href="' . url('admin/shippers/refresh-book/' . $user->id) . '" class="btn btn-xs btn-default" onclick="if(!confirm(\'Bạn chắc chắn muốn làm mới phân công của shipper này không ?\')) return false;"><i class="fa fa-refresh"></i> Làm mới ĐH</a>';
+                    // $action[] = '<a style="float:left" href="' . url('admin/shippers/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
                 }
                 //role customer
                 if ($user->role == "customer") {

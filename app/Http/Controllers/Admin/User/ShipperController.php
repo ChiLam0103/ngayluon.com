@@ -62,9 +62,9 @@ class ShipperController extends Controller
         if ($request->status == 'all') {
             $path = 'donhang_tatca.xlsx';
             $booking = $booking->where('bookings.status', '!=', 'cancel')
-                        ->where('book_deliveries.user_id', $request->shipper)
-                        ->whereDate('book_deliveries.updated_at', '>=', $request->date_assign)
-                        ->whereDate('book_deliveries.updated_at', '<=', $request->date_assign_to);
+                ->where('book_deliveries.user_id', $request->shipper)
+                ->whereDate('book_deliveries.updated_at', '>=', $request->date_assign)
+                ->whereDate('book_deliveries.updated_at', '<=', $request->date_assign_to);
         }
         $booking = $booking->select('bookings.*', 'book_deliveries.created_at as time_assign', 'book_deliveries.status as book_deliveries_status', 'book_deliveries.category', 'book_deliveries.completed_at as book_deliveries_compeleted', 'book_deliveries.sending_active')->orderBy('time_assign', 'desc')->get();
         $result = [];
@@ -156,14 +156,13 @@ class ShipperController extends Controller
                 $cellDate = ($request->status == 'all') ? 'K1' : 'G1';
                 $sheet->cell($cellDate, function ($cell) use ($request) {
                     if ($request->status == 'all') {
-                        $cell->setValue('Ngày: ' . $request->date_assign . ' - ' . $request->date_assign_to);   
+                        $cell->setValue('Ngày: ' . $request->date_assign . ' - ' . $request->date_assign_to);
                     } else {
-                        $cell->setValue('Ngày: ' . $request->date_assign);   
+                        $cell->setValue('Ngày: ' . $request->date_assign);
                     }
                 });
                 $sheet->fromArray($result, null, 'A6', true, false);
             });
-
         })->setFilename('DanhSachDonHangCuaShipper')->export('xlsx');
     }
 
@@ -172,11 +171,11 @@ class ShipperController extends Controller
         DB::beginTransaction();
         try {
             $revenue = ShipperRevenue::where('shipper_id', $request->user_id)->first();
-            if ($revenue != null){
-                if ($request->type == 'COD_paid'){
+            if ($revenue != null) {
+                if ($request->type == 'COD_paid') {
                     $revenue->COD_paid += $request->paid;
                 }
-                if ($request->type == 'price_paid'){
+                if ($request->type == 'price_paid') {
                     $revenue->price_paid += $request->paid;
                 }
                 $revenue->save();
@@ -197,16 +196,16 @@ class ShipperController extends Controller
     public function index()
     {
         $shipperOnline = User::leftJoin('shipper_locations as SL', 'users.id', '=', 'SL.user_id')
-                    ->where('role', 'shipper')
-                    ->where('status', 'active')
-                    ->where('delete_status', 0)
-                    ->where('SL.online', 1)
-                    ->select('SL.user_id', 'SL.online', 'users.name', 'users.username')
-                    ->get();
+            ->where('role', 'shipper')
+            ->where('status', 'active')
+            ->where('delete_status', 0)
+            ->where('SL.online', 1)
+            ->select('SL.user_id', 'SL.online', 'users.name', 'users.username')
+            ->get();
         $shippers = User::where('role', 'shipper')
-                    ->where('status', 'active')
-                    ->where('delete_status', 0)
-                    ->get();
+            ->where('status', 'active')
+            ->where('delete_status', 0)
+            ->get();
         return view('admin.elements.users.shipper.index', ['active' => 'shipper', 'breadcrumb' => $this->breadcrumb, 'shipperOnline' => $shipperOnline, 'shippers' => $shippers]);
     }
 
@@ -277,7 +276,7 @@ class ShipperController extends Controller
             DB::rollBack();
             dd($e);
         }
-//        Mail::to($request->email)->send(new ShipperMail($request->name, $uuid->uuid, $request->password));
+        //        Mail::to($request->email)->send(new ShipperMail($request->name, $uuid->uuid, $request->password));
         return redirect(url('admin/shippers'))->with('success', 'Thêm mới Shipper thành công');
     }
 
@@ -404,20 +403,21 @@ class ShipperController extends Controller
         return redirect(url('admin/shippers'))->with('delete', 'Xóa Shipper thành công');
     }
 
-    public function getDetailTotalCOD($shipperId) {
+    public function getDetailTotalCOD($shipperId)
+    {
         $type = isset(request()->type) ? request()->type : 'cod';
         $name = isset(request()->name) ? request()->name : '';
         $db = DB::table('book_deliveries as BD')
-                ->join('bookings', 'BD.book_id', '=', 'bookings.id')
-                ->where('BD.user_id', $shipperId);
+            ->join('bookings', 'BD.book_id', '=', 'bookings.id')
+            ->where('BD.user_id', $shipperId);
         if ($type == 'cod') {
             $db = $db->where('BD.sending_active', 1)
-                    ->where('BD.category', 'send')
-                    ->where('BD.status', 'completed');
+                ->where('BD.category', 'send')
+                ->where('BD.status', 'completed');
         } else {
             // whereIn('BD.category', ['receive', 'return', 'send'])
             $db = $db->where('BD.status', 'completed')
-                    ->whereIn('BD.category', ['receive', 'return', 'send']);
+                ->whereIn('BD.category', ['receive', 'return', 'send']);
         }
         $bookUsers = $db->select('BD.book_id', 'BD.user_id', 'BD.sending_active', 'BD.status as bd_status', 'BD.category', 'bookings.*')->get();
         if ($type == 'ship') {
@@ -438,21 +438,22 @@ class ShipperController extends Controller
         return view('admin.elements.users.shipper.detail_total_cod', array('active' => 'shipper', 'breadcrumb' => $this->breadcrumb, 'bookUsers' => $bookUsers, 'name' => $name, 'type' => $type));
     }
 
-    public function refreshBook($shipperId) {
+    public function refreshBook($shipperId)
+    {
         // đi lấy
         $receive = BookDelivery::where('user_id', $shipperId)
-                            ->where('status', 'processing')
-                            ->where('category', 'receive')
-                            ->where('sending_active', 1);
+            ->where('status', 'processing')
+            ->where('category', 'receive')
+            ->where('sending_active', 1);
         $receiveBookIds = $receive->pluck('book_id');
         $receiveDeliveries = $receive->delete();
         Booking::whereIn('id', $receiveBookIds)->update(['status' => 'new']);
 
         // đi giao
         $send = BookDelivery::where('user_id', $shipperId)
-                            ->where('status', 'processing')
-                            ->where('category', 'send')
-                            ->where('sending_active', 1);
+            ->where('status', 'processing')
+            ->where('category', 'send')
+            ->where('sending_active', 1);
         $sendBookIds = $send->pluck('book_id');
         Booking::whereIn('id', $sendBookIds)->update(['status' => 'sending']);
         $sendDeliveries = $send->delete();
@@ -473,42 +474,43 @@ class ShipperController extends Controller
             'category' => 'return',
             'sending_active' => 1
         ]);
-//        $return_processing = BookDelivery::where('user_id', $shipperId)
-//                            ->where('status', 'processing')
-//                            ->where('category', 'return')
-//                            ->where('sending_active', 1);
-        
+        //        $return_processing = BookDelivery::where('user_id', $shipperId)
+        //                            ->where('status', 'processing')
+        //                            ->where('category', 'return')
+        //                            ->where('sending_active', 1);
+
         //$return_processing->delete();
-        
+
         $re_send = BookDelivery::where('user_id', $shipperId)
             ->where('status', 'deny')
             ->where('category', 're-send')
             ->where('sending_active', 1);
 
-//        $sub_book_request = Booking::where(['sub_status' => 'request-return'])
-//            ->whereIn('id', function($q) use ($shipperId) {
-//            $q->from('book_deliveries');
-//            $q->select('book_id');
-//            $q->where(['user_id' => $shipperId]);
-//        });
+        //        $sub_book_request = Booking::where(['sub_status' => 'request-return'])
+        //            ->whereIn('id', function($q) use ($shipperId) {
+        //            $q->from('book_deliveries');
+        //            $q->select('book_id');
+        //            $q->where(['user_id' => $shipperId]);
+        //        });
 
-//        $sub_book_request->update([
-//            'sub_status' => 'none'
-//        ]);
- 
+        //        $sub_book_request->update([
+        //            'sub_status' => 'none'
+        //        ]);
+
         // $re_send->delete();
-        
+
         $re_send->update([
-            'user_id'=>0,
+            'user_id' => 0,
             'status' => 'deny',
             'category' => 're-send',
             'sending_active' => 1
         ]);
-            
+
         return redirect()->back()->with('success', 'Làm mới phân công cho shipper thành công');
     }
 
-    public function manageScope($shipperId) {
+    public function manageScope($shipperId)
+    {
         $shipper = User::find($shipperId);
         if (request()->isMethod('post')) {
             DB::beginTransaction();
@@ -518,69 +520,70 @@ class ShipperController extends Controller
                 $shipper->save();
 
                 if (request()->type == 2) {
-                    ManagementProvinceScope::where('shipper_id', $shipperId)->delete();
+                    // ManagementProvinceScope::where('shipper_id', $shipperId)->delete();
                     ManagementScope::where('shipper_id', $shipperId)->delete();
                     ManagementWardScope::where('shipper_id', $shipperId)->delete();
-                    if (!empty(request()->province_scope) && count(request()->province_scope) > 0) {
-                        foreach (request()->province_scope as $s) {
-                            ManagementProvinceScope::insert([
+
+                    // if (!empty(request()->province_scope) && count(request()->province_scope) > 0) {
+                    //     foreach (request()->province_scope as $s) {
+                    //         ManagementProvinceScope::insert([
+                    //             'shipper_id' => $shipperId,
+                    //             'province_id' => $s,
+                    //             'agency_id' => 0
+                    //         ]);
+                    //     }
+
+                    $arrDistrictId = [];
+                    // if (!isset(request()->scope) || request()->scope == null) {
+                    //     $district = District::whereIn('provinceId', request()->province_scope)->select('id', 'provinceId')->get();
+                    //     foreach ($district as $s) {
+                    //         ManagementScope::insert([
+                    //             'shipper_id' => $shipperId,
+                    //             'district_id' => $s->id,
+                    //             'agency_id' => 0,
+                    //             'province_id' => $s->provinceId
+                    //         ]);
+                    //         $arrDistrictId[] = $s->id;
+                    //     }
+                    // } else {
+                    $district = District::whereIn('id', request()->scope)->select('id', 'provinceId')->get();
+                    foreach ($district as $s) {
+                        ManagementScope::insert([
+                            'shipper_id' => $shipperId,
+                            'district_id' => $s->id,
+                            'agency_id' => 0,
+                            'province_id' => $s->provinceId
+                        ]);
+                        $arrDistrictId[] = $s->id;
+                    }
+                    // }
+
+                    if (!isset(request()->ward_scope) || request()->ward_scope == null) {
+                        $ward = Ward::whereIn('districtId', $arrDistrictId)->select('id', 'districtId', 'provinceId')->get();
+                        foreach ($ward as $w) {
+                            ManagementWardScope::insert([
                                 'shipper_id' => $shipperId,
-                                'province_id' => $s,
-                                'agency_id' => 0
+                                'ward_id' => $w->id,
+                                'agency_id' => 0,
+                                'district_id' => $w->districtId,
+                                'province_id' => $w->provinceId
                             ]);
                         }
-
-                        $arrDistrictId = [];
-                        if (!isset(request()->scope) || request()->scope == null) {
-                            $district = District::whereIn('provinceId', request()->province_scope)->select('id', 'provinceId')->get();
-                            foreach ($district as $s) {
-                                ManagementScope::insert([
-                                    'shipper_id' => $shipperId,
-                                    'district_id' => $s->id,
-                                    'agency_id' => 0,
-                                    'province_id' => $s->provinceId
-                                ]);
-                                $arrDistrictId[] = $s->id;
-                            }
-                        } else {
-                            $district = District::whereIn('id', request()->scope)->select('id', 'provinceId')->get();
-                            foreach ($district as $s) {
-                                ManagementScope::insert([
-                                    'shipper_id' => $shipperId,
-                                    'district_id' => $s->id,
-                                    'agency_id' => 0,
-                                    'province_id' => $s->provinceId
-                                ]);
-                                $arrDistrictId[] = $s->id;
-                            }
-                        }
-                        
-                        if (!isset(request()->ward_scope) || request()->ward_scope == null) {
-                            $ward = Ward::whereIn('districtId', $arrDistrictId)->select('id', 'districtId', 'provinceId')->get();
-                            foreach ($ward as $w) {
-                                ManagementWardScope::insert([
-                                    'shipper_id' => $shipperId,
-                                    'ward_id' => $w->id,
-                                    'agency_id' => 0,
-                                    'district_id' => $w->districtId,
-                                    'province_id' => $w->provinceId
-                                ]);
-                            }
-                        } else {
-                            $ward = Ward::whereIn('id', request()->ward_scope)->select('id', 'districtId', 'provinceId')->get();
-                            foreach ($ward as $ws) {
-                                ManagementWardScope::insert([
-                                    'shipper_id' => $shipperId,
-                                    'ward_id' => $ws->id,
-                                    'agency_id' => 0,
-                                    'district_id' => $ws->districtId,
-                                    'province_id' => $ws->provinceId
-                                ]);
-                            }
+                    } else {
+                        $ward = Ward::whereIn('id', request()->ward_scope)->select('id', 'districtId', 'provinceId')->get();
+                        foreach ($ward as $ws) {
+                            ManagementWardScope::insert([
+                                'shipper_id' => $shipperId,
+                                'ward_id' => $ws->id,
+                                'agency_id' => 0,
+                                'district_id' => $ws->districtId,
+                                'province_id' => $ws->provinceId
+                            ]);
                         }
                     }
+                    // }
                 }
-                
+
                 DB::commit();
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -595,8 +598,8 @@ class ShipperController extends Controller
         $wardScopes = Ward::whereIn('id', $ward_scope)->get();
         $provinceScopes = Province::whereIn('id', $province_scope)->get();
         return view('admin.elements.users.shipper.manage_scope', [
-            'selected_col' => [], 
-            'active' => 'shipper', 
+            'selected_col' => [],
+            'active' => 'shipper',
             'breadcrumb' => $this->breadcrumb,
             'shipperId' => $shipperId,
             'scope' => $scope,

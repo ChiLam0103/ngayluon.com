@@ -10,7 +10,7 @@
     <!-- BEGIN LOGO -->
     <div class="page-logo">
         <a href="{{ url('/') }}">
-            <img src="{{ asset('public/img/logo.png') }}" alt="logo" class="logo-default" /> </a>
+            <img src="{{ asset('public/front_ent/img/apple-touch-icon.png') }}" alt="logo" class="logo-default" /> </a>
         <div class="menu-toggler sidebar-toggler">
             <span></span>
         </div>

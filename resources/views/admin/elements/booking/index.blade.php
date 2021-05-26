@@ -56,9 +56,9 @@
                                             aria-hidden="true"></i>
                                     Xuất dữ liệu
                                 </button> --}}
-                                <button type="button" id="view-quick-assign" class="btn btn-primary">
+                                {{-- <button type="button" id="view-quick-assign" class="btn btn-primary">
                                     <i class="fa fa-eye" aria-hidden="true"></i> Xem danh sách đã phân công
-                                </button>
+                                </button> --}}
                                 <button type="button" id="quick-assign" class="btn btn-primary">
                                     <i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công đơn hàng
                                 </button>
@@ -112,7 +112,6 @@
     @include('admin.partial.modal.detail_booking')
     @include('admin.partial.modal.booking')
     @include('admin.partial.modal.assign_booking')
-    @include('admin.partial.modal.view_assign_booking')
 @endsection
 @push('script')
     <script src="{{ asset('public/js/action-booking.js') }}"></script>
