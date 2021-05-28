@@ -29,4 +29,5 @@
 <!-- <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet" /> -->
 
 <link href="{{asset('public/css/style.css')}}" rel="stylesheet">
+<link href="{{asset('public/css/responsive.css')}}" rel="stylesheet">
 @stack('css')

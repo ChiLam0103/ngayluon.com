@@ -11,6 +11,9 @@ $(document).ready(function() {
     $("#quick-assign").click(function() {
         $('#quickAssignModal').modal('show');
     });;
+    $("#shipper-change-status").click(function() {
+        $('#shipperChangeStatusModal').modal('show');
+    });;
 
     $("#save-quick-assign").click(function(e) {
         $.ajax({
@@ -295,7 +298,9 @@ var table = $("#list_booking").DataTable({
         { data: "image_order", title: "Ảnh đơn hàng" },
         { data: "uuid", title: "ID" },
         { data: "send_name", title: "Người gửi" },
+        { data: "send_district_name", title: "Đ/C Gửi" },
         { data: "receive_name", title: "Người nhận" },
+        { data: "receive_district_name", title: "Đ/C nhận" },
         { data: "price", title: "Giá" },
         { data: "is_prioritize", title: "Ưu tiên" },
         { data: "status", title: "Trạng thái" },

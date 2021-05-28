@@ -31,6 +31,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Template Main CSS File -->
     <link href="public/front_ent/css/style.css" rel="stylesheet">
+    <link href="public/front_ent/css/responsive.css" rel="stylesheet">
 
     <!-- =======================================================
   * Template Name: Arsha - v4.1.0

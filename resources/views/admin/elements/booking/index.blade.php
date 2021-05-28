@@ -56,13 +56,15 @@
                                             aria-hidden="true"></i>
                                     Xuất dữ liệu
                                 </button> --}}
-                                {{-- <button type="button" id="view-quick-assign" class="btn btn-primary">
-                                    <i class="fa fa-eye" aria-hidden="true"></i> Xem danh sách đã phân công
-                                </button> --}}
-                                <button type="button" id="quick-assign" class="btn btn-primary">
-                                    <i class="fa fa-motorcycle" aria-hidden="true"></i> Phân công đơn hàng
+                                <button type="button" id="shipper-change-status" class="btn btn-primary">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Shipper-Thay đổi trạng thái Đ/H
                                 </button>
-                                
+                                <button type="button" id="warehouse-import-export " class="btn btn-primary">
+                                    <i class="fa fa-home" aria-hidden="true"></i> Kho-Nhập/xuất Đ/H
+                                </button>
+                                <button type="button" id="quick-assign" class="btn btn-primary">
+                                    <i class="fa fa-motorcycle" aria-hidden="true"></i> Admin-Phân công đơn hàng
+                                </button>
                                 <button type="button" class="btn btn-primary " id="btnAddNewBooking"><i class="fa fa-plus"
                                     aria-hidden="true"></i> Thêm mới</button>
                             </div>
@@ -112,6 +114,7 @@
     @include('admin.partial.modal.detail_booking')
     @include('admin.partial.modal.booking')
     @include('admin.partial.modal.assign_booking')
+    @include('admin.partial.modal.shipper_change_status')
 @endsection
 @push('script')
     <script src="{{ asset('public/js/action-booking.js') }}"></script>

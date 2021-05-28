@@ -36,10 +36,10 @@
         @endif
         <div class="form-actions">
             <button type="submit" id="submit" class="btn green uppercase">Đăng nhập</button>
-            <label class="rememberme check mt-checkbox mt-checkbox-outline">
+            {{-- <label class="rememberme check mt-checkbox mt-checkbox-outline">
                 <input type="checkbox" name="remember" value="1" />Ghi nhớ
                 <span></span>
-            </label>
+            </label> --}}
             {{-- <a href="#" id="forget-password" class="forget-password">Forgot Password?</a> --}}
         </div>
         {{-- <div class="login-options">
