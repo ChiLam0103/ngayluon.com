@@ -1,13 +1,3 @@
-/* srceen laptop */
-@media  screen and (max-width: 991px){
-    .page-header.navbar{
-        padding: 0!important;
-    }
-    .navbar{
-        border-radius:0!important;
-    }
-   
-}
 /* screen mobile */
 @media screen and (max-width: 600px) {
     .topnav a:not(:first-child),
