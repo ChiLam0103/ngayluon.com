@@ -107,8 +107,6 @@
         </div>
     </div>
 
-    
-
     <!-- Modal  -->
     @include('admin.partial.modal.detail_img')
     @include('admin.partial.modal.detail_booking')

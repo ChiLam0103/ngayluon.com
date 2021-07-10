@@ -7,12 +7,6 @@ input[type="checkbox"][readonly] {
     pointer-events: none;
 }
 
-
-/* .topnav {
-  overflow: hidden;
-  background-color: #333;
-} */
-
 .topnav a {
     float: left;
     display: block;
@@ -93,11 +87,13 @@ input[type="checkbox"][readonly] {
 .page-content-wrapper {
     background: #fff;
 }
-
-.page-content-wrapper .page-content {
+.page-content-wrapper .page-content{
+    margin-left:0;
+}
+/* .page-content-wrapper .page-content {
     margin-left: 120px!important;
     margin-right: 120px!important;
-}
+} */
 
 #status_booking .sui-treeview-list {
     padding-left: 0;
@@ -192,4 +188,26 @@ input[type="checkbox"][readonly] {
 
 .option-input.radio::after {
     border-radius: 50%;
+}
+.navbar-inverse{
+    background-color: #eee!important;
+    border-color:#fff!important
+}
+.navbar .navbar-brand img {
+    margin: -1em 1em!important;
+    max-width: 120px;
+    height: 3em
+}
+.navbar-inverse .navbar-nav>li>a:hover{
+    color: #1bbc9b!important;
+
+}
+.navbar-inverse .navbar-nav>.active>a{
+    color: #fff!important;
+}
+.navbar-inverse .navbar-nav>li>a{
+    color: #000!important;
+}
+.navbar-right li>a{
+font-size: 12px;
 }

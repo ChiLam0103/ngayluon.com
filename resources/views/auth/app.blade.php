@@ -2,12 +2,14 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="{{ asset('public/img/logo.png') }}"/>
     <title>{!! ENV('APP_NAME') !!}</title>
     <link href="{{asset('public/css/metronic/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('public/css/metronic/components.min.css')}}" rel="stylesheet" id="style_components" type="text/css" />
     <link href="{{asset('public/css/metronic/login.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('public/css/metronic/responsive.css')}}" rel="stylesheet" type="text/css" />
 <!-- END HEAD -->
 
 <body class="login">
