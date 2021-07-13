@@ -137,7 +137,15 @@ class BookingController extends Controller
                 }
                 return $name;
             })
-            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action', 'is_prioritize'])
+            ->addColumn('send_district_name', function ($b) {
+                $district_name = District::find($b->send_district_id)->name;
+                return   $district_name;
+            })
+            ->addColumn('receive_district_name', function ($b) {
+                $district_name = District::find($b->receive_district_id)->name;
+                return  $district_name;
+            })
+            ->rawColumns(['uuid', 'image_order', 'price', 'status', 'action', 'is_prioritize', 'send_district_name', 'receive_district_name'])
             ->make(true);
     }
     public static function generateBookID()

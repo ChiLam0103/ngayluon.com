@@ -122,9 +122,12 @@ $(document).ready(function() {
                 { data: "image_order", title: "Ảnh đơn hàng" },
                 { data: "uuid", title: "ID" },
                 { data: "send_name", title: "Người gửi" },
+                { data: "send_district_name", title: "Đ/C Gửi" },
                 { data: "receive_name", title: "Người nhận" },
+                { data: "receive_district_name", title: "Đ/C nhận" },
                 { data: "price", title: "Giá" },
                 { data: "is_prioritize", title: "Ưu tiên" },
+                { data: "status", title: "Trạng thái" },
                 { data: "created_at", title: "Ngày tạo" },
             ],
         });

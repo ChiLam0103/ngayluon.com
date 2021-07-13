@@ -519,6 +519,7 @@ class ShipperController extends Controller
                 $shipper->auto_send = isset(request()->auto_send) ? request()->auto_send : 0;
                 $shipper->save();
 
+                //Chọn mới khu vực type=2
                 if (request()->type == 2) {
                     // ManagementProvinceScope::where('shipper_id', $shipperId)->delete();
                     ManagementScope::where('shipper_id', $shipperId)->delete();
@@ -558,29 +559,29 @@ class ShipperController extends Controller
                     }
                     // }
 
-                    if (!isset(request()->ward_scope) || request()->ward_scope == null) {
-                        $ward = Ward::whereIn('districtId', $arrDistrictId)->select('id', 'districtId', 'provinceId')->get();
-                        foreach ($ward as $w) {
-                            ManagementWardScope::insert([
-                                'shipper_id' => $shipperId,
-                                'ward_id' => $w->id,
-                                'agency_id' => 0,
-                                'district_id' => $w->districtId,
-                                'province_id' => $w->provinceId
-                            ]);
-                        }
-                    } else {
-                        $ward = Ward::whereIn('id', request()->ward_scope)->select('id', 'districtId', 'provinceId')->get();
-                        foreach ($ward as $ws) {
-                            ManagementWardScope::insert([
-                                'shipper_id' => $shipperId,
-                                'ward_id' => $ws->id,
-                                'agency_id' => 0,
-                                'district_id' => $ws->districtId,
-                                'province_id' => $ws->provinceId
-                            ]);
-                        }
-                    }
+                    // if (!isset(request()->ward_scope) || request()->ward_scope == null) {
+                    //     $ward = Ward::whereIn('districtId', $arrDistrictId)->select('id', 'districtId', 'provinceId')->get();
+                    //     foreach ($ward as $w) {
+                    //         ManagementWardScope::insert([
+                    //             'shipper_id' => $shipperId,
+                    //             'ward_id' => $w->id,
+                    //             'agency_id' => 0,
+                    //             'district_id' => $w->districtId,
+                    //             'province_id' => $w->provinceId
+                    //         ]);
+                    //     }
+                    // } else {
+                    //     $ward = Ward::whereIn('id', request()->ward_scope)->select('id', 'districtId', 'provinceId')->get();
+                    //     foreach ($ward as $ws) {
+                    //         ManagementWardScope::insert([
+                    //             'shipper_id' => $shipperId,
+                    //             'ward_id' => $ws->id,
+                    //             'agency_id' => 0,
+                    //             'district_id' => $ws->districtId,
+                    //             'province_id' => $ws->provinceId
+                    //         ]);
+                    //     }
+                    // }
                     // }
                 }
 
@@ -592,21 +593,23 @@ class ShipperController extends Controller
             return redirect(url('admin/shippers'))->with('success', 'Cập nhật khu vực thành công');
         }
         $scope = ManagementScope::where('shipper_id', $shipperId)->pluck('district_id');
-        $ward_scope = ManagementWardScope::where('shipper_id', $shipperId)->pluck('ward_id');
-        $province_scope = ManagementProvinceScope::where('shipper_id', $shipperId)->pluck('province_id');
+        $getDistrict= District::get();
+        // $ward_scope = ManagementWardScope::where('shipper_id', $shipperId)->pluck('ward_id');
+        // $province_scope = ManagementProvinceScope::where('shipper_id', $shipperId)->pluck('province_id');
         $districtScopes = District::whereIn('id', $scope)->get();
-        $wardScopes = Ward::whereIn('id', $ward_scope)->get();
-        $provinceScopes = Province::whereIn('id', $province_scope)->get();
+        // $wardScopes = Ward::whereIn('id', $ward_scope)->get();
+        // $provinceScopes = Province::whereIn('id', $province_scope)->get();
         return view('admin.elements.users.shipper.manage_scope', [
             'selected_col' => [],
             'active' => 'shipper',
             'breadcrumb' => $this->breadcrumb,
             'shipperId' => $shipperId,
             'scope' => $scope,
-            'ward_scope' => $ward_scope,
+            'getDistrict'=>$getDistrict,
+            // 'ward_scope' => $ward_scope,
             'districtScopes' => $districtScopes,
-            'wardScopes' => $wardScopes,
-            'provinceScopes' => $provinceScopes,
+            // 'wardScopes' => $wardScopes,
+            // 'provinceScopes' => $provinceScopes,
             'shipper' => $shipper
         ]);
     }

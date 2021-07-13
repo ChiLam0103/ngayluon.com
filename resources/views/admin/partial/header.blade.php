@@ -23,7 +23,7 @@
                                 class="selected"></span>
                         @endif
                     </a></li>
-                <li class="dropdown">
+                <li class="dropdown @if (isset($active) && $active=='admin' || $active=='customer'|| $active=='warehouse'|| $active=='shipper') active @endif">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-users"></i> Đối tác <span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -41,7 +41,7 @@
                                     aria-hidden="true"></i> Shipper</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
+                <li class="dropdown @if (isset($active) && $active=='signin' || $active=='contact'|| $active=='newspaper') active @endif">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user-plus"
                             aria-hidden="true"></i> Đăng ký <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -51,6 +51,12 @@
                                     class="fa fa-envelope" aria-hidden="true"></i> Liên hệ</a></li>
                         <li class="@if (isset($active) && $active=='newspaper' ) active @endif"> <a href="{{ url('/admin/feedback/newspaper') }}"><i
                                     class="fa fa-newspaper-o" aria-hidden="true"></i> Nhận bảng tin</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown @if (isset($active) && $active=='district_type') active @endif">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-server" aria-hidden="true"></i> Quản lý <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li  class="@if (isset($active) && $active=='district_type' ) active @endif"><a href="{{ url('/admin/district_type') }}"><i class="fa fa-map-o" aria-hidden="true"></i> Quận/Huyện-Bảng giá</a></li>
                     </ul>
                 </li>
 

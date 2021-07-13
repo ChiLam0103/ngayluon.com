@@ -25,14 +25,14 @@
                         <div class="col-md-12">
                             <h4>Khu vực quản lý hiện tại</h4>
                             <table cellspacing="0">
-                                <tr>
+                                {{-- <tr>
                                     <td style="vertical-align: top; padding-bottom: 10px">Tỉnh/TP quản lý:</td>
                                     <td style="vertical-align: top; padding: 0 0 10px 10px">
                                         @foreach ($provinceScopes as $province)
                                             {{ $province->name }},
                                         @endforeach
                                     </td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td style="vertical-align: top; padding-bottom: 10px">Quận/Huyện quản lý:</td>
                                     <td style="vertical-align: top; padding: 0 0 10px 10px">
@@ -41,14 +41,14 @@
                                         @endforeach
                                     </td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td style="vertical-align: top; padding-bottom: 10px">Phường/Xã quản lý:</td>
                                     <td style="vertical-align: top; padding: 0 0 10px 10px">
                                         @foreach ($wardScopes as $ward)
                                             {{ $ward->name }},
                                         @endforeach
                                     </td>
-                                </tr>
+                                </tr> --}}
                             </table>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                                         @endforeach
                                     @endif
                                 </div> --}}
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <label>Phạm vi quản lý (Quận/Huyện)</label>
                                     <select id="scope" multiple="" name="scope[]" class="form-control"
                                         style="height: 200px">
@@ -83,7 +83,7 @@
                                         @endforeach
                                     @endif
                                 </div>
-                                <div class="col-lg-6">
+                                {{-- <div class="col-lg-6">
                                     <label>Phạm vi quản lý (Phường/Xã)</label>
                                     <select id="ward_scope" multiple="" name="ward_scope[]" class="form-control"
                                         style="height: 200px">
@@ -93,7 +93,7 @@
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

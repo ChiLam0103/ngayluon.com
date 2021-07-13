@@ -72,8 +72,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
     // Route::get('shippers/paid', 'User\ShipperController@paidBooking');
     // Route::get('shippers/maps', 'User\ShipperController@maps');
     // Route::get('shippers/detail_total_cod/{id}', 'User\ShipperController@getDetailTotalCOD');
-    // Route::get('shippers/refresh-book/{shipperId}', 'User\ShipperController@refreshBook');
-    // Route::any('shippers/manage-scope/{shipperId}', 'User\ShipperController@manageScope');
+    Route::get('shippers/refresh-book/{shipperId}', 'User\ShipperController@refreshBook');
+    Route::any('shippers/manage-scope/{shipperId}', 'User\ShipperController@manageScope');
     Route::resource('shippers', 'User\ShipperController');
 
     // Route::resource('collaborators', 'User\CollaboratorController');

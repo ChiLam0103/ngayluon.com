@@ -41,6 +41,7 @@
                ])
         </div>
     </div>
+    <!--Modal Giao diện xuất đơn hàng theo shipper-->
     <div class="modal fade" id="export" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -83,6 +84,7 @@
             </div>
         </div>
     </div>
+    <!--Modal Thống kê Shipper & Đơn hàng-->
     <div class="modal fade" id="statistical" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -121,6 +123,7 @@
             </div>
         </div>
     </div>
+    <!--Modal Số tiền shipper đã thanh toán-->
     <div class="modal fade" id="shipper_paid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->

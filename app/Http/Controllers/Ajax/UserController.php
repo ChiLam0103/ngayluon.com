@@ -283,7 +283,7 @@ class UserController extends Controller
                 if ($user->role == "shipper") {
                     $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
                     // $action[] = '<a style="float:left" href="' . url('admin/shippers/refresh-book/' . $user->id) . '" class="btn btn-xs btn-default" onclick="if(!confirm(\'Bạn chắc chắn muốn làm mới phân công của shipper này không ?\')) return false;"><i class="fa fa-refresh"></i> Làm mới ĐH</a>';
-                    // $action[] = '<a style="float:left" href="' . url('admin/shippers/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
+                    $action[] = '<a style="float:left" href="' . url('admin/shippers/manage-scope/' . $user->id) . '" class="btn btn-xs btn-default"><i class="fa fa-refresh"></i> Phân khu vực</a>';
                 }
                 //role customer
                 if ($user->role == "customer") {
@@ -510,7 +510,7 @@ class UserController extends Controller
         return datatables()->of($user)
             ->addColumn('action', function ($user) {
                 $action = [];
-                $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng</a>';
+                $action[] = '<a style="float:left" href="#" onclick="exportBooking(' . $user->id . ')" class="btn btn-xs btn-warning"><i class="glyphicon glyphicon-edit"></i> Xuất đơn hàng2</a>';
                 $action[] = '<a style="float:left" href="' . url('admin/shippers/' . $user->id . '/edit') . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Sửa</a>';
                 $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/shippers/' . $user->id]]) .
                     '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' .

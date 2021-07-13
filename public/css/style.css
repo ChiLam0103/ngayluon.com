@@ -17,9 +17,13 @@ input[type="checkbox"][readonly] {
     font-size: 17px;
 }
 
-.active {
-    background-color: #0b4d86;
-    color: white;
+.active,.active>i {
+    background-color: #090909;
+    color: white!important;
+}
+.active:hover,.active:hover>i {
+    color: #1bbc9b!important;
+    background-color: #090909!important;
 }
 
 .tab-content .active,
@@ -213,8 +217,19 @@ input[type="checkbox"][readonly] {
     color: #fff!important;
 }
 .navbar-inverse .navbar-nav>li>a{
-    color: #000!important;
+    color: #000;
 }
 .navbar-right li>a{
 font-size: 12px;
+}
+.importFileExcel{
+    background: green; 
+    color: #fff;
+}
+.importFileExcel:hover{
+    background: rgb(5, 110, 5); 
+    color: #fff;
+}
+.importFileExcel input[type="file"] {
+    display: none;
 }
