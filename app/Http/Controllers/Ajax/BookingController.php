@@ -44,7 +44,10 @@ class BookingController extends Controller
     }
     public function detailBooking($id)
     {
-        $booking = Booking::where('id', $id)->first();
+        $booking = DB::table('bookings as b')
+        ->leftJoin('districts as d1','d1.id','b.send_district_id')
+        ->leftJoin('districts as d2','d2.id','b.receive_district_id')
+        ->where('b.id', $id)->select('b.*','d1.name as send_district_name','d2.name as receive_district_name')->first();
         $log = DB::table('notifications')->where('booking_id', $id)->get();
         $shipper =  BookDelivery::where('book_id', $id)->where('category', 'receive')->first();
         return response()->json(['booking' => $booking, 'log' => $log, 'shipper' => $shipper]);

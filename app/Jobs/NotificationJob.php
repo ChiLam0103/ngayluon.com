@@ -140,6 +140,7 @@ class NotificationJob implements ShouldQueue
     {
         DB::beginTransaction();
         try {
+            // dd($booking);
             $notification = Notification::where('booking_id', $booking['id'])->where('title', 'Đơn hàng [' . $booking['uuid'] . ']' . $title)->first();
             if (empty($notification)) {
                 $notification = new Notification();

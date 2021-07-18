@@ -45,7 +45,8 @@ class ReportController extends Controller
         $bookCompleteToday = Booking::whereDate('completed_at', date('Y-m-d'))->where('status', 'completed');
         $bookCompleteTodayArr = [
             'count' => $bookCompleteToday->count(),
-            'amount' => $bookCompleteToday->sum('price')
+            // 'amount' => $bookCompleteToday->sum('price')
+            'amount' => 123
         ];
         $totalCODToday = Booking::whereDate('completed_at', date('Y-m-d'))->where('status', 'completed');
         if (Auth::user()->role != 'admin') {
@@ -60,7 +61,8 @@ class ReportController extends Controller
             $bookCompleteToday = $bookCompleteToday->whereIn('send_ward_id', $this->getBookingScope());
             $bookCompleteTodayArr = [
                 'count' => $bookCompleteToday->count(),
-                'amount' => $bookCompleteToday->sum('price')
+                // 'amount' => $bookCompleteToday->sum('price')
+                'amount' => 123
             ];
             $totalCODToday = $totalCODToday->whereIn('send_ward_id', $this->getBookingScope());
         }

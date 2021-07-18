@@ -218,49 +218,42 @@ $(document).ready(function() {
                     break;
 
             }
-            var payer = msg.booking.payment_type == 1 ? "người gửi" : "người nhận";
             var shipper =
                 msg.shipper != null ?
                 "<p>Shipper lấy đơn: " + msg.shipper.shipper_name + "</p>" :
                 "";
             var content_send =
-                "<p>Họ tên: " +
+                "<p><b>Họ tên:</b> " +
                 msg.booking.send_name +
-                "</p> <p>Số điện thoại: " +
+                "</p> <p><b>Số điện thoại:</b> " +
                 msg.booking.send_phone +
-                "</p> <p>Địa chỉ: " +
-                msg.booking.send_full_address +
+                "</p> <p><b>Địa chỉ:</b> " +
+                msg.booking.send_homenumber + ", " + msg.booking.send_district_name +
                 "</p>";
             var content_receive =
-                "<p>Họ tên: " +
+                "<p><b>Họ tên:</b> " +
                 msg.booking.receive_name +
-                "</p> <p>Số điện thoại: " +
+                "</p> <p><b>Số điện thoại:</b> " +
                 msg.booking.receive_phone +
-                "</p> <p>Địa chỉ: " +
-                msg.booking.receive_full_address +
+                "</p> <p><b>Địa chỉ:</b> " +
+                msg.booking.receive_homenumber + ", " + msg.booking.receive_district_name +
                 "</p>";
             var content_booking =
-                "<p>Tên đơn hàng: " +
+                "<p><b>Tên đơn hàng:</b> " +
                 msg.booking.name +
-                " -- Ngày tạo: " +
+                " </p>  <p><b>Ngày tạo:</b> " +
                 msg.booking.created_at +
-                "</p> <p>Tiền thu hộ: " +
-                formatNumber(msg.booking.COD, ".", ",") +
-                "</p> </p> <p>Giá đơn hàng: " +
-                formatNumber(msg.booking.price, ".", ",") +
-                "</p>  </p> <p>Chi phí phát sinh: " +
-                formatNumber(msg.booking.incurred, ".", ",") +
-                "</p> <p>Số tiền thanh toán: " +
+                "</p> <p><b>Tiền thu:</b> " +
+                formatNumber(msg.booking.receivable_price, ".", ",") +
+                "</p> <p><b>Tiền ship:</b> " +
+                formatNumber(msg.booking.ship_price, ".", ",") +
+                "</p> </p> <b>Tiền hàng:</b> " +
+                formatNumber(msg.booking.product_price, ".", ",") +
+                "</p> <p><b>Số tiền thanh toán:</b> " +
                 formatNumber(msg.booking.paid, ".", ",") +
-                "</p> <p>Khối lượng (gram): " +
-                formatNumber(msg.booking.weight, ".", ",") +
-                "</p>  <p>Ghi chú khách hàng: " +
-                msg.booking.other_note +
-                "</p> <p>Ghi chú hệ thống: " +
+                "</p>  <p><b>Ghi chú:</b> " +
                 msg.booking.note +
-                "</p> <p>Trả cước: " +
-                payer +
-                "</p><p>Trạng thái: " +
+                "</p><p><b>Trạng thái:</b> " +
                 status_name +
                 "</p> " +
                 shipper +
