@@ -28,10 +28,16 @@
                             </button>
                             <button type="button" class="btn btn-primary " id="btnAddNewBooking"><i class="fa fa-plus"
                                     aria-hidden="true"></i> Thêm mới</button>
-                            <label class="importFileExcel btn"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Thêm mới
-                                (Excel)
-                                <input type="file" size="60">
-                            </label>
+                            <form style="display: inline;" action="{{ url('admin/booking/importBooking') }}" method="POST"
+                                enctype="multipart/form-data">
+                                <input type="hidden" id="_token" name="_token" value="{!! csrf_token() !!}">
+                                <label class="importFileExcel btn"><i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                    Thêm
+                                    mới
+                                    (Excel)
+                                    <input type="file" size="60" name="file" onchange="form.submit()" />
+                                </label>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -26,7 +26,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Collaborator;
 use App\Models\ManagementWardScope;
-use Auth, Excel;
+// use Auth, Excel;
+use Auth;
 use Illuminate\Support\Facades\DB;
 use function in_array;
 use function is;
@@ -36,6 +37,8 @@ use function view;
 use App\Helpers\NotificationHelper;
 use App\Jobs\NotificationJob;
 use App\Models\QRCode;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Input;
 
 class BookingController extends Controller
 {
@@ -1065,5 +1068,28 @@ class BookingController extends Controller
             $countRecordToday++;
         } while (DB::table('bookings')->where('uuid', $id)->first());
         return $id;
+    }
+    // import file excel add booking
+    public static function importBooking(){
+        Excel::load(Input::file('file'), function ($reader) {
+            foreach ($reader->toArray() as $array) {
+                BookingController::actionImportBooking($array);
+            }
+        });
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+    public static function actionImportBooking($array){
+        $shop=DB::table('users')->where('uuid',$array['shop'])->where('role','customer')->where('status','active')->first();
+        $shop=DB::table('users')->where('uuid',$array['shipper'])->where('role','shipper')->where('status','active')->first();
+        $district= DB::table('districts')->where('name', 'like', '%' . $array['quan'] . '%')->select('id')->first();
+     
+        dd($district);
+    //    $booking= DB::table('bookings')->insert[
+    //         {
+
+    //         }
+    //     ]
     }
 }
