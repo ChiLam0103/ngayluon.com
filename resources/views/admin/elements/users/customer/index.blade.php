@@ -33,10 +33,10 @@
                     ['data' => 'avatar', 'title' => 'Ảnh đại diện'],
                     ['data' => 'email', 'title' => 'Email'],
                     ['data' => 'phone_number', 'title' => 'Hotline'],
-                    ['data' => 'is_advance_money', 'title' => 'Tạm ứng'],
-                    ['data' => 'owe', 'title' => 'Tổng tiền cước'],
-                    ['data' => 'total_COD', 'title' => 'Tổng tiền thu hộ COD'],
-                    ['data' => 'wallet', 'title' => 'Ví tiền'],
+                    // ['data' => 'is_advance_money', 'title' => 'Tạm ứng'],
+                    // ['data' => 'owe', 'title' => 'Tổng tiền cước'],
+                    // ['data' => 'total_COD', 'title' => 'Tổng tiền thu hộ COD'],
+                    // ['data' => 'wallet', 'title' => 'Ví tiền'],
                     ['data' => 'action', 'title' => 'Hành động', 'orderable' => false]
                 ]])
         </div>

@@ -366,6 +366,7 @@ class BookingController extends Controller
         $booking->product_price=$array['tien_hang'];
         $booking->note=$array['ghi_chu'];
         $booking->status='new';
+        
         $booking->save();
         DB::commit();
        

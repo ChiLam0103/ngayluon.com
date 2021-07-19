@@ -20,9 +20,9 @@
                             <button type="button" id="shipper-change-status" class="btn btn-primary">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Shipper-Thay đổi trạng thái Đ/H
                             </button>
-                            <button type="button" id="warehouse-import-export " class="btn btn-primary">
+                            {{-- <button type="button" id="warehouse-import-export " class="btn btn-primary">
                                 <i class="fa fa-home" aria-hidden="true"></i> Kho-Nhập/xuất Đ/H
-                            </button>
+                            </button> --}}
                             <button type="button" id="quick-assign" class="btn btn-primary">
                                 <i class="fa fa-motorcycle" aria-hidden="true"></i> Admin-Phân công đơn hàng
                             </button>

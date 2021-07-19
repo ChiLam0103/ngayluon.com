@@ -166,26 +166,20 @@ $(document).ready(function() {
         }).done(function(data) {
             $("input[name=id]").val(data.booking.id);
             $('#name_id_fr option[value="' + data.booking.sender_id + '"]').prop('selected', true);
-            $('#province_fr option[value="' + data.booking.send_province_id + '"]').prop('selected', true);
             $("input[name=phone_number_fr]").val(data.booking.send_phone);
-            $('#province_fr option[value="' + data.booking.send_province_id + '"]').prop('selected', true);
             $('#district_fr option[value="' + data.booking.send_district_id + '"]').prop('selected', true);
-            $('#ward_fr option[value="' + data.booking.send_ward_id + '"]').prop('selected', true);
             $("input[name=home_number_fr]").val(data.booking.send_homenumber);
 
             $("input[name=name_to]").val(data.booking.receive_name);
             $("input[name=phone_number_to]").val(data.booking.receive_phone);
-            $('#province_to option[value="' + data.booking.receive_province_id + '"]').prop('selected', true);
             $('#district_to option[value="' + data.booking.receive_district_id + '"]').prop('selected', true);
-            $('#ward_to option[value="' + data.booking.receive_ward_id + '"]').prop('selected', true);
             $("input[name=home_number_to]").val(data.booking.receive_homenumber);
 
             $("input[name=name]").val(data.booking.name);
-            $('#payment_type option[value="' + data.booking.payment_type + '"]').prop('selected', true);
-            $("input[name=cod]").val(data.booking.COD);
-            $("input[name=price]").val(data.booking.price);
-            $("input[name=weight]").val(data.booking.weight);
-            $("input[name=other_note]").val(data.booking.other_note);
+            $("input[name=receivable_price]").val(data.booking.receivable_price);
+            $("input[name=product_price]").val(data.booking.product_price);
+            $("input[name=ship_price]").val(data.booking.ship_price);
+            $("input[name=note]").val(data.booking.note);
             $('.imgUser').attr('src', '../public/' + data.booking.image_order);
             (data.booking.is_prioritize == 1) ? $('input[name=is_prioritize]').prop('checked', true): $('input[name=is_prioritize]').prop('checked', false);
 
@@ -310,17 +304,13 @@ function actionBooking(action) {
     var name_id_fr = $("#name_id_fr option:selected").val();
     var name_to = $("input[name=name_to]").val();
     var phone_number_to = $("input[name=phone_number_to]").val();
-    var province_id_to = $("#province_to option:selected").val();
     var district_id_to = $("#district_to option:selected").val();
-    var ward_id_to = $("#ward_fr option:selected").val();
     var home_number_to = $("input[name=home_number_to]").val();
     var name = $("input[name=name]").val();
-    var payment_type = $("#payment_type option:selected").val();
-    var cod = $("input[name=cod]").val();
-    var price = $("input[name=price]").val();
-    var weight = $("input[name=weight]").val();
-    var other_note = $("input[name=other_note]").val();
-    var COD_edit = $("input[name=COD_edit]").val();
+    var receivable_price = $("input[name=receivable_price]").val();
+    var product_price = $("input[name=product_price]").val();
+    var ship_price = $("input[name=ship_price]").val();
+    var note = $("input[name=note]").val();
     var is_prioritize = $('input[name=is_prioritize]:checked').val();
 
     var flag = 0;
@@ -341,18 +331,14 @@ function actionBooking(action) {
         formData.append('name_id_fr', name_id_fr);
         formData.append('name_to', name_to);
         formData.append('phone_number_to', phone_number_to);
-        formData.append('province_id_to', province_id_to);
         formData.append('district_id_to', district_id_to);
-        formData.append('ward_id_to', ward_id_to);
         formData.append('home_number_to', home_number_to);
         formData.append('name', name);
-        formData.append('payment_type', payment_type);
-        formData.append('cod', cod);
-        formData.append('price', price);
-        formData.append('weight', weight);
-        formData.append('other_note', other_note);
+        formData.append('receivable_price', receivable_price);
+        formData.append('product_price', product_price);
+        formData.append('ship_price', ship_price);
+        formData.append('note', note);
         formData.append('avatar', avatar);
-        formData.append('COD_edit', COD_edit);
         formData.append('is_prioritize', is_prioritize);
         formData.append('action', action);
 

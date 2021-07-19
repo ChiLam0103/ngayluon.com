@@ -12,7 +12,7 @@
             <input type="hidden" id="id" name="id">
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3  col-md-3 col-sm-3">
                         <div class="form-group">
                             <label class="control-label"></label>
                             <input type="file" name="avatar" value="{!! @$user->avatar !!}" id="exampleInputFile"
@@ -28,211 +28,105 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-lg-9">
+                    <div class="col-lg-9  col-md-9 col-sm-9">
                         <div class="portlet-body form">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
                                     <legend>Người gửi</legend>
-                                </div>
-                                <div class="col-lg-6">
-                                    <legend>Người nhận</legend>
-                                </div>
-                            </div>
-        
-                            <div class="row" style="margin-bottom: 15px">
-                                <div class="{{--has-error--}} form-group">
-                                    <div class="col-lg-6">
-                                        <label class="control-label" for="inputError">Họ tên</label>
-                                        {{ Form::select('name_id_fr', \App\Models\User::getUserOption('customer') , old('name_id_fr'),
-                                        ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'name_id_fr', 'onchange'=>'loadCustomerFr()']) }}
-                                       @if (isset($errors) && $errors->has('name_id_fr'))
-                                           @foreach ($errors->get('name_id_to') as $error)
-                                               <span style="color: red" class="help-block">{!! $error !!}</span>
-                                           @endforeach
-                                       @endif
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label class="control-label" for="inputError">Họ tên</label>
-                                        <input class="form-control spinner" value="{{ old( 'name_to') }}"
-                                               name="name_to" type="text" placeholder="Nhập tên">
-                                        <span style="color: red;" id="name_to_err" class="help-block"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-bottom: 15px">
-                                <div class="{{--has-error--}} form-group">
-                                    <div class="col-lg-6">
-                                        <label class="control-label" for="inputError">Số điện thoại</label>
-                                        <input name="phone_number_fr" id="phone_number_fr"
-                                               value="{{ old( 'phone_number_fr') }}"
-                                               class="form-control spinner" type="text"
-                                               placeholder="Nhập số điện thoại" disabled>
-                                        @if ($errors->has('phone_number_fr'))
-                                            @foreach ($errors->get('phone_number_fr') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <label class="control-label" for="inputError">Số điện thoại</label>
-                                        <input name="phone_number_to"
-                                               value="{{ old( 'phone_number_to') }}"
-                                               class="form-control spinner" type="text"
-                                               placeholder="Nhập số điện thoại">
-                                        <span style="color: red;" id="phone_number_to_err" class="help-block"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <label>Tỉnh/Thành phố</label>
-                                    {{ Form::select('province_id_fr', \App\Models\Province::getProvinceOption() , old('province_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'province_fr', 'onchange'=>'loadDistrictFrom()', 'disabled'=>'disabled']) }}
-                                    @if (isset($errors) && $errors->has('province_id_fr'))
-                                        @foreach ($errors->get('province_id_fr') as $error)
+                                    <label class="control-label" for="inputError">Họ tên</label>
+                                    {{ Form::select('name_id_fr', \App\Models\User::getUserOption('customer'), old('name_id_fr'), ['class' => 'form-control', 'style' => 'width:100%', 'id' => 'name_id_fr', 'onchange' => 'loadCustomerFr()']) }}
+                                    @if (isset($errors) && $errors->has('name_id_fr'))
+                                        @foreach ($errors->get('name_id_to') as $error)
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
-                                </div>
-                                <div class="col-lg-3">
+                                    <label class="control-label" for="inputError">Số điện thoại</label>
+                                    <input name="phone_number_fr" id="phone_number_fr"
+                                        value="{{ old('phone_number_fr') }}" class="form-control spinner" type="text"
+                                        placeholder="Nhập số điện thoại" disabled>
+                                    @if ($errors->has('phone_number_fr'))
+                                        @foreach ($errors->get('phone_number_fr') as $error)
+                                            <span style="color: red" class="help-block">{!! $error !!}</span>
+                                        @endforeach
+                                    @endif
                                     <label>Quận/Huyện</label>
-                                    <select id="district_fr" onchange="loadWardFrom(this.value)"
-                                            name="district_id_fr"
-                                            class="form-control" disabled>
+                                    <select id="district_fr" onchange="loadWardFrom(this.value)" name="district_id_fr"
+                                        class="form-control" disabled>
                                     </select>
                                     @if (isset($errors) && $errors->has('district_id_fr'))
                                         @foreach ($errors->get('district_id_fr') as $error)
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
-                                </div>
-                                <div class="col-lg-3">
-                                    <label>Tỉnh/Thành phố</label>
-                                    {{ Form::select('province_id_to', \App\Models\Province::getProvinceOption() , old('province_id_to'),
-                                     ['class' => 'form-control', 'style' => 'width:100%', 'id'=>'province_to', 'onchange'=>'loadDistrictTo()']) }}
-                                    @if (isset($errors) && $errors->has('province_id_to'))
-                                        @foreach ($errors->get('province_id_to') as $error)
+                                    <label>Số nhà</label>
+                                    <input name="home_number_fr" class="form-control spinner" type="text"
+                                        id="home_number_fr" value="{{ old('home_number_fr') }}"
+                                        placeholder="Nhập số nhà" disabled>
+                                    @if ($errors->has('home_number_fr'))
+                                        @foreach ($errors->get('home_number_fr') as $error)
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <legend>Người nhận</legend>
+                                    <label class="control-label" for="inputError">Họ tên</label>
+                                    <input class="form-control spinner" value="{{ old('name_to') }}" name="name_to"
+                                        type="text" placeholder="Nhập tên">
+                                    <span style="color: red;" id="name_to_err" class="help-block"></span>
+
+                                    <label class="control-label" for="inputError">Số điện thoại</label>
+                                    <input name="phone_number_to" value="{{ old('phone_number_to') }}"
+                                        class="form-control spinner" type="text" placeholder="Nhập số điện thoại">
+                                    <span style="color: red;" id="phone_number_to_err" class="help-block"></span>
                                     <label>Quận/Huyện</label>
-                                    <select id="district_to" onchange="loadWardTo(this.value)"
-                                            name="district_id_to"
-                                            class="form-control">
+                                    <select id="district_to" onchange="loadWardTo(this.value)" name="district_id_to"
+                                        class="form-control">
                                     </select>
                                     @if (isset($errors) && $errors->has('district_id_to'))
                                         @foreach ($errors->get('district_id_to') as $error)
                                             <span style="color: red" class="help-block">{!! $error !!}</span>
                                         @endforeach
                                     @endif
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 15px">
-                                <div class="col-lg-3">
-                                    <label>Xã/Phường</label>
-                                    <select id="ward_fr" name="ward_id_fr" class="form-control" disabled>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
                                     <label>Số nhà</label>
-                                    <input name="home_number_fr" class="form-control spinner" type="text" id="home_number_fr"
-                                           value="{{ old('home_number_fr') }}" placeholder="Nhập số nhà" disabled>
-                                    @if ($errors->has('home_number_fr'))
-                                        @foreach ($errors->get('home_number_fr') as $error)
-                                            <span style="color: red"
-                                                  class="help-block">{!! $error !!}</span>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <div class="col-lg-3">
-                                    <label>Xã/Phường</label>
-                                    <select id="ward_to" name="ward_id_to" class="form-control">
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
-                                    <label>Số nhà</label>
-                                    <input name="home_number_to" class="form-control spinner" type="text" value="{{ old('home_number_to') }}"
-                                           placeholder="Nhập số nhà">
+                                    <input name="home_number_to" class="form-control spinner" type="text"
+                                        value="{{ old('home_number_to') }}" placeholder="Nhập số nhà">
                                     <span style="color: red;" id="home_number_to_err" class="help-block"></span>
                                 </div>
                             </div>
+
+
                             <legend style="margin-top: 20px">Thông tin cơ bản</legend>
                             <div class="row" style="margin-bottom: 15px">
                                 <div class="form-group">
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
                                         <label class="control-label" for="inputError">Tên đơn hàng</label>
-                                        <input name="name" value="{{ old('name') }}"
-                                               class="form-control spinner" type="text"
-                                               placeholder="Nhập tên đơn hàng">
+                                        <input name="name" value="{{ old('name') }}" class="form-control spinner"
+                                            type="text" placeholder="Nhập tên đơn hàng">
                                         <span style="color: red;" id="name_err" class="help-block"></span>
+
+                                        <label class="control-label" for="inputError">Tiền thu</label>
+                                        <input id="receivable_price" name="receivable_price" value="{{ old('receivable_price') }}"
+                                            class="form-control spinner number" type="text">
                                     </div>
-                                  
-                                    <div class="col-lg-3">
-                                        <label>Ghi chú bắt buộc</label>
-                                        <select name="payment_type" id="payment_type" class="form-control">
-                                            <option value="1">Người gửi trả cước</option>
-                                            <option value="2">Người nhận trả cước</option>
-                                        </select>
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                        <label class="control-label" for="inputError">Tiền hàng</label>
+                                        <input class="form-control spinner number" value="{{ old('product_price') }}"
+                                            name="product_price" type="text">
+
+                                        <label class="control-label" for="inputError">Tiền ship</label>
+                                        <input class="form-control spinner number" value="{{ old('ship_price') }}"
+                                            name="ship_price" type="text">
+
                                     </div>
-                                   
-                                    <div class="col-lg-3">
-                                        <label class="control-label" for="inputError">Tiền thu hộ</label>
-                                        <input id="cod" name="cod" value="{{ old('cod') }}"
-                                               class="form-control spinner number" type="text"
-                                               placeholder="Nhập số tiền thu hộ">
-                                        @if ($errors->has('cod'))
-                                            @foreach ($errors->get('cod') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="control-label" for="inputError">Giá đơn hàng</label>
-                                        <input class="form-control spinner number"
-                                               value="{{ old( 'price') }}"
-                                               name="price" type="text" >
-                                        @if ($errors->has('price'))
-                                            @foreach ($errors->get('price') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                </div>
-        
-                            </div>
-                            <div class="row" style="margin-bottom: 15px">
-                                <div class="form-group">
-                                    <div class="col-lg-3">
-                                        <label class="control-label" for="inputError">Khối lượng (gram)</label>
-                                        <input name="weight" value="{{ old('weight') }}"
-                                               class="form-control spinner number" type="text"
-                                               placeholder="Nhập khối lượng">
-                                        @if ($errors->has('weight'))
-                                            @foreach ($errors->get('weight') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="control-label" for="inputError">Ghi chú khác</label>
-                                        <input class="form-control spinner"
-                                               value="{{ old( 'other_note') }}"
-                                               name="other_note" type="text">
-                                    </div>
-                                    <div class="col-lg-3" id="frm_COD_edit" style="display: none">
-                                        <label class="control-label" for="inputError">Tiền tạm ứng</label>
-                                        <input id="COD_edit" name="COD_edit" value="{{ old('COD_edit') }}"
-                                               class="form-control spinner number" type="text"
-                                               placeholder="Nhập số tiền">
-                                        @if ($errors->has('COD_edit'))
-                                            @foreach ($errors->get('COD_edit') as $error)
-                                                <span style="color: red" class="help-block">{!! $error !!}</span>
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                    <div class="col-lg-3">
-                                            <label><input type="checkbox" class="option-input radio"  name="is_prioritize" value="1" > Ưu tiên </label>
+                                    <div class="col-lg-4 col-md-4 col-sm-4">
+
+                                        <label class="control-label" for="inputError">Ghi chú</label>
+                                        <input class="form-control spinner" value="{{ old('note') }}" name="note"
+                                            type="text">
+                                        <label class="control-label">
+                                            <input type="checkbox" class="form-control option-input radio"
+                                                name="is_prioritize" value="1"> Ưu tiên </label>
                                     </div>
                                 </div>
                             </div>
@@ -256,96 +150,105 @@
         loadDistrictFrom();
         loadDistrictTo();
         loadCustomerFr();
+
         function loadDistrictFrom() {
-            var province_fr = $('#province_fr').val();
+            // var province_fr = $('#province_fr').val();
+            var province_fr = 50;
             $("#district_fr option[value!='-1']").remove();
             $.ajax({
                 type: "GET",
-                url: '{{url('/ajax/get_district')}}/' + province_fr
-            }).done(function (msg) {
+                url: '{{ url('/ajax/get_district') }}/' + province_fr
+            }).done(function(msg) {
                 var i;
                 for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@old('district_id_fr')}}') {
-                        $('select[name="district_id_fr"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+                    if (msg[i]['id'] == '{{ @old('district_id_fr') }}') {
+                        $('select[name="district_id_fr"]').append('<option value="' + msg[i]['id'] + '" selected>' +
+                            msg[i]['name'] + '</option>')
                     } else {
-                        $('select[name="district_id_fr"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+                        $('select[name="district_id_fr"]').append('<option value="' + msg[i]['id'] + '">' + msg[i][
+                            'name'
+                        ] + '</option>')
                     }
                 }
-                if ('{{@old('district_id_fr')}}') {
-                    loadWardFrom('{{@old('district_id_fr')}}');
-                } else {
-                    loadWardFrom(msg[0]['id']);
-                }
+                // if ('{{ @old('district_id_fr') }}') {
+                //     loadWardFrom('{{ @old('district_id_fr') }}');
+                // } else {
+                //     loadWardFrom(msg[0]['id']);
+                // }
             });
         }
-        function loadWardFrom(id) {
-            $("#ward_fr option[value!='-1']").remove();
-            $.ajax({
-                type: "GET",
-                url: '{{url('/ajax/get_ward/')}}/' + id
-            }).done(function (msg) {
-                var i;
-                for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@old('ward_id_fr')}}') {
-                        $('select[name="ward_id_fr"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
-                    } else {
-                        $('select[name="ward_id_fr"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
-                    }
-                }
-            });
-        }
+        // function loadWardFrom(id) {
+        //     $("#ward_fr option[value!='-1']").remove();
+        //     $.ajax({
+        //         type: "GET",
+        //         url: '{{ url('/ajax/get_ward/') }}/' + id
+        //     }).done(function (msg) {
+        //         var i;
+        //         for (i = 0; i < msg.length; i++) {
+        //             if (msg[i]['id'] == '{{ @old('ward_id_fr') }}') {
+        //                 $('select[name="ward_id_fr"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+        //             } else {
+        //                 $('select[name="ward_id_fr"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+        //             }
+        //         }
+        //     });
+        // }
         function loadDistrictTo() {
-            var province_to = $('#province_to').val();
+            // var province_to = $('#province_to').val();
+            var province_to = 50;
             $("#district_to option[value!='-1']").remove();
             $.ajax({
                 type: "GET",
-                url: '{{url('/ajax/get_district')}}/' + province_to
-            }).done(function (msg) {
+                url: '{{ url('/ajax/get_district') }}/' + province_to
+            }).done(function(msg) {
                 var i;
                 for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@old('district_id_to')}}') {
-                        $('select[name="district_id_to"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+                    if (msg[i]['id'] == '{{ @old('district_id_to') }}') {
+                        $('select[name="district_id_to"]').append('<option value="' + msg[i]['id'] + '" selected>' +
+                            msg[i]['name'] + '</option>')
                     } else {
-                        $('select[name="district_id_to"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+                        $('select[name="district_id_to"]').append('<option value="' + msg[i]['id'] + '">' + msg[i][
+                            'name'
+                        ] + '</option>')
                     }
                 }
-                if ('{{@old('district_id_to')}}') {
-                    loadWardTo('{{@old('district_id_to')}}');
-                } else {
-                    loadWardTo(msg[0]['id']);
-                }
+                // if ('{{ @old('district_id_to') }}') {
+                //     loadWardTo('{{ @old('district_id_to') }}');
+                // } else {
+                //     loadWardTo(msg[0]['id']);
+                // }
             });
         }
 
-        function loadWardTo(id) {
-            $("#ward_to option[value!='-1']").remove();
-            $.ajax({
-                type: "GET",
-                url: '{{url('/ajax/get_ward/')}}/' + id
-            }).done(function (msg) {
-                var i;
-                for (i = 0; i < msg.length; i++) {
-                    if (msg[i]['id'] == '{{@old('ward_id_to')}}') {
-                        $('select[name="ward_id_to"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
-                    } else {
-                        $('select[name="ward_id_to"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
-                    }
-                }
-            });
-        }
+        // function loadWardTo(id) {
+        //     $("#ward_to option[value!='-1']").remove();
+        //     $.ajax({
+        //         type: "GET",
+        //         url: '{{ url('/ajax/get_ward/') }}/' + id
+        //     }).done(function (msg) {
+        //         var i;
+        //         for (i = 0; i < msg.length; i++) {
+        //             if (msg[i]['id'] == '{{ @old('ward_id_to') }}') {
+        //                 $('select[name="ward_id_to"]').append('<option value="' + msg[i]['id'] + '" selected>' + msg[i]['name'] + '</option>')
+        //             } else {
+        //                 $('select[name="ward_id_to"]').append('<option value="' + msg[i]['id'] + '">' + msg[i]['name'] + '</option>')
+        //             }
+        //         }
+        //     });
+        // }
         function loadCustomerFr() {
             var name_id_fr = $('#name_id_fr').val();
             $.ajax({
                 type: "GET",
-                url: '{{url('/ajax/detail_user')}}/' + name_id_fr
-            }).done(function (msg) {
+                url: '{{ url('/ajax/detail_user') }}/' + name_id_fr
+            }).done(function(msg) {
                 $("#phone_number_fr").val(msg.user.phone_number);
                 $("#home_number_fr").val(msg.user.home_number);
-                $('select[name="district_id_fr"] option[value="'+msg.user.district_id+'"]').prop('selected', true);
-                $('select[name="ward_id_fr"] option[value="'+msg.user.ward_id+'"]').prop('selected', true);
-                (msg.user.is_advance_money == 1) ? $('#frm_COD_edit').show() : $('#frm_COD_edit').hide();
+                $('select[name="district_id_fr"] option[value="' + msg.user.district_id + '"]').prop('selected',
+                    true);
+                $('select[name="ward_id_fr"] option[value="' + msg.user.ward_id + '"]').prop('selected', true);
+                (msg.user.is_advance_money == 1) ? $('#frm_COD_edit').show(): $('#frm_COD_edit').hide();
             });
         }
     </script>
 @endpush
-

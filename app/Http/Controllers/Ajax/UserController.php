@@ -276,8 +276,27 @@ class UserController extends Controller
     public function getUserRole($role)
     {
         $user = User::with('revenues', 'shipper')->where('role', $role)->where('delete_status', 0)->where('status', 'active');
+     
+        $roles='';
+       
         return datatables()->of($user)
             ->addColumn('action', function ($user) {
+                switch($user->role){
+                    case "shipper":
+                        $roles = "shippers";
+                        break;
+                    case  "customer":
+                        $roles = "customer";
+                        break;
+                    case  "admin":
+                        $roles = "admin";
+                        break;
+                    case  "warehouse":
+                        $roles = "warehouse";
+                        break;
+                    default:
+                        break;
+                }
                 $action = [];
                 //role shipper
                 if ($user->role == "shipper") {
@@ -292,7 +311,7 @@ class UserController extends Controller
                     $action[] = '<a href="' . url('admin/customers/withdrawal/' . $user->id) . '" class="btn btn-xs btn-default" onclick="return confirm(\'Bạn có chắc chắn muốn rút tiền?\');"><span class="glyphicon glyphicon-piggy-bank" aria-hidden="true"></span> Rút tiền</a>';
                 }
                 $action[] = '<a class="btn btn-xs btn-primary edit_user" href="javascript:void(0);" name="' . $user->id . '" class="uuid"> <i class="glyphicon glyphicon-edit"></i> Sửa </a>';
-                $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/'. $user->role. '/' . $user->id]]) .
+                $action[] = '<div style="float: left">' . Form::open(['method' => 'DELETE', 'url' => ['admin/'. $roles. '/' . $user->id]]) .
                     '<button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash-o"></i> Xóa</button>' .
                     Form::close() . '</div>';
 
@@ -307,17 +326,17 @@ class UserController extends Controller
                 }
                 return $full_address;
             })
-            ->addColumn('revenue_price', function ($user) {
-                if ($user->role == "shipper") {
-                    $data = 0;
-                    if ($user->revenues != null) {
-                        $data = round($user->revenues->total_price - $user->revenues->price_paid);
-                    }
-                    return number_format($data) . '<br/><a style="margin-top: 5px" href="#" onclick="shipperPaid([' . $user->id . ', \'price_paid\', ' . $data . '])" class="btn btn-xs btn-success"> Thanh toán</a>';
-                } else {
-                    return '';
-                }
-            })
+            // ->addColumn('revenue_price', function ($user) {
+            //     if ($user->role == "shipper") {
+            //         $data = 0;
+            //         if ($user->revenues != null) {
+            //             $data = round($user->revenues->total_price - $user->revenues->price_paid);
+            //         }
+            //         return number_format($data) . '<br/><a style="margin-top: 5px" href="#" onclick="shipperPaid([' . $user->id . ', \'price_paid\', ' . $data . '])" class="btn btn-xs btn-success"> Thanh toán</a>';
+            //     } else {
+            //         return '';
+            //     }
+            // })
             ->editColumn('avatar', function ($user) {
                 return ($user->avatar != null ? '<a href="javascript:void(0);" class="img_modal"> <img width="30" alt="' . $user->name . '" src="' . asset($user->avatar) . '"></a>' : "<img src=" . asset('public/img/default-avatar.jpg') . " width='30'/>");
             })
@@ -347,63 +366,63 @@ class UserController extends Controller
                     return '';
                 }
             })
-            ->addColumn('owe', function ($user) {
-                if ($user->role == "customer") {
-                    $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
-                        $query->where('status', 'completed');
-                    });
-                    if (Auth::user()->role == 'collaborators') {
-                        $user_id = Auth::user()->id;
-                        $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
-                        $booking = $booking->whereIn('last_agency', $scope);
-                    }
-                    $booking = $booking->select('bookings.*');
-                    $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
-                    return number_format($data) . '<br/><a style="margin-top: 5px" href="' . url('admin/customers/owe/' . $user->id) . '" class="btn btn-xs btn-success"> Chi tiết</a>';
-                } else {
-                    return '';
-                }
-            })
-            ->editColumn('total_COD', function ($user) {
-                if ($user->role == "customer") {
-                    $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
-                    if (Auth::user()->role == 'collaborators') {
-                        $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
-                        $cod = $cod->whereIn('last_agency', $scope);
-                    }
-                    $cod = $cod->sum('COD');
-                    return number_format($cod) . '<br/><a style="margin-top: 5px" href="' . url('admin/COD_details/' . $user->id) . '" class="btn btn-xs btn-success">Chi tiết</a>';
-                } else {
-                    return '';
-                }
-            })
-            ->addColumn('wallet', function ($user) {
-                if ($user->role == "customer") {
-                $wallet = 0;
-                    $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
-                    if (Auth::user()->role == 'collaborators') {
-                        $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
-                        $cod = $cod->whereIn('last_agency', $scope);
-                    }
-                    $cod = $cod->sum('COD');
-                    $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
-                        $query->where('status', 'completed');
-                    });
-                    if (Auth::user()->role == 'collaborators') {
-                        $user_id = Auth::user()->id;
-                        $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
-                        $booking = $booking->whereIn('last_agency', $scope);
-                    }
-                    $booking = $booking->select('bookings.*');
-                    $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
-                    $wallet = round($cod - $data);
-                    return number_format($wallet);
-                } else {
-                    return '';
-                }
-            })
+            // ->addColumn('owe', function ($user) {
+            //     if ($user->role == "customer") {
+            //         $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
+            //             $query->where('status', 'completed');
+            //         });
+            //         if (Auth::user()->role == 'collaborators') {
+            //             $user_id = Auth::user()->id;
+            //             $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
+            //             $booking = $booking->whereIn('last_agency', $scope);
+            //         }
+            //         $booking = $booking->select('bookings.*');
+            //         $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
+            //         return number_format($data) . '<br/><a style="margin-top: 5px" href="' . url('admin/customers/owe/' . $user->id) . '" class="btn btn-xs btn-success"> Chi tiết</a>';
+            //     } else {
+            //         return '';
+            //     }
+            // })
+            // ->editColumn('total_COD', function ($user) {
+            //     if ($user->role == "customer") {
+            //         $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
+            //         if (Auth::user()->role == 'collaborators') {
+            //             $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
+            //             $cod = $cod->whereIn('last_agency', $scope);
+            //         }
+            //         $cod = $cod->sum('COD');
+            //         return number_format($cod) . '<br/><a style="margin-top: 5px" href="' . url('admin/COD_details/' . $user->id) . '" class="btn btn-xs btn-success">Chi tiết</a>';
+            //     } else {
+            //         return '';
+            //     }
+            // })
+            // ->addColumn('wallet', function ($user) {
+            //     if ($user->role == "customer") {
+            //     $wallet = 0;
+            //         $cod = Booking::where('sender_id', $user->id)->where('status', 'completed')->where('COD', '>', 0)->where('COD_status', 'pending');
+            //         if (Auth::user()->role == 'collaborators') {
+            //             $scope = Collaborator::where('user_id', Auth::user()->id)->pluck('agency_id');
+            //             $cod = $cod->whereIn('last_agency', $scope);
+            //         }
+            //         $cod = $cod->sum('COD');
+            //         $booking = Booking::where('sender_id', $user->id)->where('owe', 0)->where(function ($query) {
+            //             $query->where('status', 'completed');
+            //         });
+            //         if (Auth::user()->role == 'collaborators') {
+            //             $user_id = Auth::user()->id;
+            //             $scope = Collaborator::where('user_id', $user_id)->pluck('agency_id');
+            //             $booking = $booking->whereIn('last_agency', $scope);
+            //         }
+            //         $booking = $booking->select('bookings.*');
+            //         $data = round(($booking->sum('price') + $booking->sum('incurred')) - $booking->sum('paid'));
+            //         $wallet = round($cod - $data);
+            //         return number_format($wallet);
+            //     } else {
+            //         return '';
+            //     }
+            // })
 
-            ->rawColumns(['avatar', 'action', 'revenue_price', 'revenue_cod', 'owe', 'total_COD', 'wallet', 'is_advance_money'])
+            ->rawColumns(['avatar', 'action',  'is_advance_money'])
             ->make(true);
     }
     public static function generateNo($type)
