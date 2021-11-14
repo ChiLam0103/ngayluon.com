@@ -244,7 +244,8 @@
                         </p>
                         <div class="skills-content">
                             <div class="progress">
-                                <span class="skill">Thưởng khi đăng ký giới thiệu tài xế <i class="val">100%</i></span>
+                                <span class="skill">Thưởng khi đăng ký giới thiệu tài xế <i
+                                        class="val">100%</i></span>
                                 <div class="progress-bar-wrap">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -252,7 +253,8 @@
                             </div>
 
                             <div class="progress">
-                                <span class="skill">Thưởng hoàn thành đơn hàng <i class="val">100%</i></span>
+                                <span class="skill">Thưởng hoàn thành đơn hàng <i
+                                        class="val">100%</i></span>
                                 <div class="progress-bar-wrap">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -268,7 +270,8 @@
                             </div>
 
                             <div class="progress">
-                                <span class="skill">Không lo “dính phốt” <i class="val">100%</i></span>
+                                <span class="skill">Không lo “dính phốt” <i
+                                        class="val">100%</i></span>
                                 <div class="progress-bar-wrap">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0"
                                         aria-valuemax="100"></div>
@@ -350,8 +353,8 @@
                 <div class="faq-list">
                     <ul>
                         <li data-aos="fade-up" data-aos-delay="100">
-                            <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse" class="collapse"
-                                data-bs-target="#faq-list-1">Giá ship có rẻ không? <i
+                            <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse"
+                                class="collapse" data-bs-target="#faq-list-1">Giá ship có rẻ không? <i
                                     class="bx bx-chevron-down icon-show"></i><i
                                     class="bx bx-chevron-up icon-close"></i></a>
                             <div id="faq-list-1" class="collapse show" data-bs-parent=".faq-list">
@@ -380,7 +383,8 @@
 
                         <li data-aos="fade-up" data-aos-delay="300">
                             <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse"
-                                data-bs-target="#faq-list-3" class="collapsed">Hàng hóa có bảo đảm an toàn cho shop
+                                data-bs-target="#faq-list-3" class="collapsed">Hàng hóa có bảo đảm an toàn cho
+                                shop
                                 không?<i class="bx bx-chevron-down icon-show"></i><i
                                     class="bx bx-chevron-up icon-close"></i></a>
                             <div id="faq-list-3" class="collapse" data-bs-parent=".faq-list">
@@ -395,8 +399,8 @@
 
                         <li data-aos="fade-up" data-aos-delay="400">
                             <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse"
-                                data-bs-target="#faq-list-4" class="collapsed">Đối soát phần tiền có nhanh không?<i
-                                    class="bx bx-chevron-down icon-show"></i><i
+                                data-bs-target="#faq-list-4" class="collapsed">Đối soát phần tiền có nhanh
+                                không?<i class="bx bx-chevron-down icon-show"></i><i
                                     class="bx bx-chevron-up icon-close"></i></a>
                             <div id="faq-list-4" class="collapse" data-bs-parent=".faq-list">
                                 <p>
@@ -422,7 +426,8 @@
                         </li>
                         <li data-aos="fade-up" data-aos-delay="400">
                             <i class="bx bx-help-circle icon-help"></i> <a data-bs-toggle="collapse"
-                                data-bs-target="#faq-list-5" class="collapsed">Về bảo hiểm hàng hóa đền bù như thế nào?
+                                data-bs-target="#faq-list-5" class="collapsed">Về bảo hiểm hàng hóa đền bù như thế
+                                nào?
                                 <i class="bx bx-chevron-down icon-show"></i><i
                                     class="bx bx-chevron-up icon-close"></i></a>
                             <div id="faq-list-5" class="collapse" data-bs-parent=".faq-list">
@@ -467,19 +472,22 @@
                             <div class="phone">
                                 <i class="bi bi-phone"></i>
                                 <h4>Gọi:</h4>
-                                <p> 0909.27.99.55 - 036.282.2241</p>
+                                <p>036.282.2241</p>
                             </div>
-
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d291.3022173260152!2d106.71497768803597!3d10.789865612685148!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528ac94c4fce7%3A0x44ca63bfd5427e65!2zQ8O0bmcgVHkgQ-G7lSBQaOG6p24gS2hvYSBI4buNYyBL4bu5IFRodeG6rXQgVMOibSDEkOG7qWM!5e0!3m2!1svi!2s!4v1618303451037!5m2!1svi!2s"
-                                frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen>></iframe>
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1647.5805331391286!2d106.67485958418891!3d10.839678775381229!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDUwJzIyLjYiTiAxMDbCsDQwJzMyLjQiRQ!5e0!3m2!1svi!2s!4v1633430635944!5m2!1svi!2s"
+                                width="100%" height="290px" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            {{-- <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.6290573131546!2d106.67341931407137!3d10.839673260988892!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529aca8651493%3A0x44f1cef5b7241597!2zMkEgTMOqIEhvw6BuZyBQaMOhaSwgUGjGsOG7nW5nIDE3LCBHw7IgVuG6pXAsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1633430266294!5m2!1svi!2s"
+                                width="100%" height="290px" style="border:0;" allowfullscreen=""
+                                loading="lazy"></iframe> --}}
                         </div>
 
                     </div>
 
                     <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-                        <form action="front-ent/feedback?type=contact" method="post" role="form" class="php-email-form" id="formContact"
-                            enctype="multipart/form-data" >
+                        <form action="front-ent/feedback?type=contact" method="post" role="form" class="php-email-form"
+                            id="formContact" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="row">
                                 <div class="form-group col-md-6">
@@ -530,13 +538,13 @@
                     <div class="col-lg-6">
                         <h4>Tham gia bản tin của chúng tôi</h4>
                         <p>Bạn hãy điền email bên dưới. Chúng tôi sẽ gửi cho bạn những bản tin mới nhất!</p>
-                        <form action="front-ent/feedback?type=newspaper" method="post" role="form" id="formFeedback"  class="php-email-form "
-                            class="php-email-form">
+                        <form action="front-ent/feedback?type=newspaper" method="post" role="form" id="formFeedback"
+                            class="php-email-form " class="php-email-form">
                             {{ csrf_field() }}
-                            <span style="color: red;" id="email_err"
-                                        class="help-block"></span>
-                            <input type="email" name="email" id="email"><input type="button" id="btnFeedback" value="Đăng ký">
-                            
+                            <span style="color: red;" id="email_err" class="help-block"></span>
+                            <input type="email" name="email" id="email"><input type="button" id="btnFeedback"
+                                value="Đăng ký">
+
                         </form>
                     </div>
                 </div>
@@ -549,9 +557,11 @@
 
                     <div class="col-lg-3 col-md-6 footer-contact">
                         <h3>NGAY & LUÔN</h3>
+                        <h4>CTY TNHH Thương Mại & Dịch Vụ Vận Chuyển SG Nhật Minh</h4>
                         <p>
-                            142/9 Ngô Tất Tố, P.22, Q.Bình Thạnh <br><br>
-                            <strong>Phone:</strong> 0909.27.99.55 - 036.282.2241<br>
+                            2A Lê Hoàng Phái, Phường 17, Gò Vấp <br><br>
+                            <strong>MST:</strong>212271163<br>
+                            <strong>Phone:</strong>036.282.2241<br>
                             <strong>Email:</strong> caominhnhat2110@gmail.com<br>
                         </p>
                     </div>
@@ -681,8 +691,6 @@
     <!-- Template Main JS File -->
     <script src="public/front_ent/js/main.js"></script>
 
-    <!-- Load Facebook SDK for JavaScript -->
-    <div id="fb-root"></div>
     <script>
         //function check formart email, phone
         function isEmail(email) {
@@ -711,21 +719,7 @@
             }
             return flag;
         }
-        window.fbAsyncInit = function() {
-            FB.init({
-                xfbml: true,
-                version: 'v10.0'
-            });
-        };
 
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
 
         // Add the following code if you want the name of the file appear on select
         $(".custom-file-input").on("change", function() {
@@ -814,10 +808,34 @@
         });
     </script>
 
-    <!-- Your Chat Plugin code -->
-    <div class="fb-customerchat" attribution="setup_tool" page_id="107353267862744">
+    <!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
     </div>
 
+    <script>
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "198086467511934");
+        chatbox.setAttribute("attribution", "biz_inbox");
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                xfbml: true,
+                version: 'v12.0'
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 </body>
 
 </html>
