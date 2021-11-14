@@ -104,7 +104,7 @@ class BookingController extends Controller
 
                 $action[] = '<div style="margin-top: 5px; display: inline-flex"><a href="' . url('admin/booking/print/new/' . $b->id) . '" class="btn btn-xs btn-info"><i class="fa fa-print" aria-hidden="true"></i> in hóa đơn</a>';
                 $action[] = '<a style="background: rgba(159,158,25,0.81)" href="#"  name="' . $b->id . '" class="btn btn-xs btn-primary btnEdit"><i class="fa fa-edit"></i> Sửa</a>';
-                $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/new/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
+                $action[] = '<a style="background: rgba(73,4,70,0.87)" href="' . url('admin/booking/delete/' . $b->id) . '" onclick="if(!confirm(\'Bạn chắc chắn muốn xóa đơn hàng này không ?\')) return false;" class="btn btn-xs btn-primary"><i class="fa fa-trash"></i> Xóa</a></div>';
                 return implode(' ', $action);
             })
             ->editColumn('uuid', function ($b) {

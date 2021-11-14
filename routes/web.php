@@ -147,7 +147,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'admi
         // Route::get('assign/{id}', 'BookingController@assign');
         // Route::get('reassign/{category}/{id}', 'BookingController@reAssign');
         // Route::get('update/{active}/{id}', 'BookingController@updateBooking');
-        // Route::get('delete/{active}/{id}', 'BookingController@deleteBooking');
+        Route::get('delete/{active}/{id}', 'BookingController@deleteBooking');
         // Route::get('cancel/{active}/{id}', 'BookingController@cancelBooking');
         // Route::put('update/{active}/{id}', 'BookingController@postUpdateBooking');
         // Route::post('assign/{id}', 'BookingController@postAssign');
