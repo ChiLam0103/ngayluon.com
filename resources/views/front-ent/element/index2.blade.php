@@ -472,7 +472,7 @@
                             <div class="phone">
                                 <i class="bi bi-phone"></i>
                                 <h4>Gọi:</h4>
-                                <p>036.282.2241</p>
+                                <p>0939.11.8282</p>
                             </div>
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1647.5805331391286!2d106.67485958418891!3d10.839678775381229!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDUwJzIyLjYiTiAxMDbCsDQwJzMyLjQiRQ!5e0!3m2!1svi!2s!4v1633430635944!5m2!1svi!2s"
@@ -560,8 +560,8 @@
                         <h4>CTY TNHH Thương Mại & Dịch Vụ Vận Chuyển SG Nhật Minh</h4>
                         <p>
                             2A Lê Hoàng Phái, Phường 17, Gò Vấp <br><br>
-                            <strong>MST:</strong>212271163<br>
-                            <strong>Phone:</strong>036.282.2241<br>
+                            <strong>MST:</strong>0316959850<br>
+                            <strong>Phone:</strong>0939.11.8282<br>
                             <strong>Email:</strong> caominhnhat2110@gmail.com<br>
                         </p>
                     </div>
